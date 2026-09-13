@@ -187,7 +187,6 @@
       background:var(--panel-2);border:1px solid var(--line);font-size:12.5px;white-space:nowrap}
   .mi .ico{width:26px;height:26px;flex:0 0 26px}
   .mi.emblem{padding-left:9px;color:var(--hy);border-color:color-mix(in srgb,var(--hy) 40%,transparent)}
-  .c-meta .none{font-size:12.5px;color:var(--ink-dim)}
 
   @media (max-width:760px){
     .head-row,.tier{grid-template-columns:1fr}
@@ -470,6 +469,76 @@ const META = {
 "Brambleback":[["Riftbeast Ascension",["Giant Slayer","Edge of Night","Quicksilver"]]]
 };
 
+/* Recommended items per champion, from each champion's Mobalytics page
+   (mobalytics.gg/tft/champions/<name>, "Recommended Items" panel, patch 18.2). */
+const BIS = {
+"Akali":["Hand of Justice","Infinity Edge","Edge of Night"],
+"Camille":["Bloodthirster","Sterak's Gage","Titan's Resolve"],
+"Cinderling":["Infinity Edge","Spear of Shojin","Striker's Flail"],
+"Karma":["Blue Buff","Jeweled Gauntlet","Rabadon's Deathcap"],
+"Kobuko":["Warmog's Armor","Bramble Vest","Dragon's Claw"],
+"Leona":["Bramble Vest","Dragon's Claw","Spirit Visage"],
+"Ornn":["Warmog's Armor","Giant Slayer","Adaptive Helm"],
+"Pebbles":["Void Staff","Morellonomicon","Spear of Shojin"],
+"Rakan":["Protector's Vow","Spirit Visage","Warmog's Armor"],
+"Rek'Sai":["Evenshroud","Sunfire Cape","Warmog's Armor"],
+"Varus":["Guinsoo's Rageblade","Giant Slayer","Kraken's Fury"],
+"Veigar":["Nashor's Tooth","Jeweled Gauntlet","Rabadon's Deathcap"],
+"Xayah":["Guinsoo's Rageblade","Giant Slayer","Infinity Edge"],
+"Yorick":["Warmog's Armor","Steadfast Heart","Gargoyle Stoneplate"],
+"Alistar":["Spirit Visage","Sunfire Cape","Gargoyle Stoneplate"],
+"Caitlyn":["Guinsoo's Rageblade","Infinity Edge","Last Whisper"],
+"Elise":["Spirit Visage","Bramble Vest","Dragon's Claw"],
+"Gromp":["Void Staff","Morellonomicon","Spear of Shojin"],
+"Kayle":["Guinsoo's Rageblade","Giant Slayer","Rabadon's Deathcap"],
+"LeBlanc":["Blue Buff","Jeweled Gauntlet","Rabadon's Deathcap"],
+"Murkwolf":["Hand of Justice","Infinity Edge","Edge of Night"],
+"Scuttlecrab":["Warmog's Armor","Bramble Vest","Dragon's Claw"],
+"Sejuani":["Gargoyle Stoneplate","Warmog's Armor","Protector's Vow"],
+"Shen":["Sunfire Cape","Evenshroud","Protector's Vow"],
+"Teemo":["Jeweled Gauntlet","Nashor's Tooth","Striker's Flail"],
+"Warwick":["Bloodthirster","Sterak's Gage","Titan's Resolve"],
+"Yunara":["Spear of Shojin","Deathblade","Striker's Flail"],
+"Azir":["Guinsoo's Rageblade","Rabadon's Deathcap","Giant Slayer"],
+"Cassiopeia":["Blue Buff","Jeweled Gauntlet","Nashor's Tooth"],
+"Diana":["Jeweled Gauntlet","Hand of Justice","Titan's Resolve"],
+"Fiddlesticks":["Ionic Spark","Crownguard","Morellonomicon"],
+"Hecarim":["Protector's Vow","Warmog's Armor","Bramble Vest"],
+"Kha'Zix":["Hand of Justice","Edge of Night","Jeweled Gauntlet"],
+"Kog'Maw":["Infinity Edge","Spear of Shojin","Striker's Flail"],
+"Krug":["Warmog's Armor","Bramble Vest","Protector's Vow"],
+"Mama Beak":["Guinsoo's Rageblade","Giant Slayer","Last Whisper"],
+"Master Yi":["Quicksilver","Giant Slayer","Edge of Night"],
+"Rammus":["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"],
+"Rengar":["Guinsoo's Rageblade","Titan's Resolve","Edge of Night"],
+"Tristana":["Guinsoo's Rageblade","Hextech Gunblade","Kraken's Fury"],
+"Vi":["Evenshroud","Sunfire Cape","Steadfast Heart"],
+"Ahri":["Blue Buff","Jeweled Gauntlet","Striker's Flail"],
+"Amumu":["Bramble Vest","Dragon's Claw","Warmog's Armor"],
+"Aphelios":["Guinsoo's Rageblade","Giant Slayer","Kraken's Fury"],
+"Brambleback":["Bloodthirster","Sterak's Gage","Titan's Resolve"],
+"Ezreal":["Spear of Shojin","Deathblade","Striker's Flail"],
+"Lillia":["Warmog's Armor","Steadfast Heart","Gargoyle Stoneplate"],
+"Malphite":["Gargoyle Stoneplate","Steadfast Heart","Warmog's Armor"],
+"Morgana":["Void Staff","Morellonomicon","Adaptive Helm"],
+"Nidalee":["Bloodthirster","Sterak's Gage","Titan's Resolve"],
+"Sentinel":["Protector's Vow","Adaptive Helm","Warmog's Armor"],
+"Sett":["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"],
+"Sivir":["Spear of Shojin","Infinity Edge","Last Whisper"],
+"Soraka":["Void Staff","Blue Buff","Jeweled Gauntlet"],
+"Zyra":["Void Staff","Morellonomicon","Blue Buff"],
+"Alune":["Spear of Shojin","Red Buff","Void Staff"],
+"Ashe":["Red Buff","Last Whisper","Spear of Shojin"],
+"Draven":["Kraken's Fury","Guinsoo's Rageblade","Deathblade"],
+"Elder Dragon":["Infinity Edge","Striker's Flail","Deathblade"],
+"Gnar":["Bloodthirster","Sterak's Gage","Titan's Resolve"],
+"Ivern":["Spear of Shojin","Blue Buff","Adaptive Helm"],
+"Kennen":["Edge of Night","Jeweled Gauntlet","Hand of Justice"],
+"Lux":["Spear of Shojin","Jeweled Gauntlet","Rabadon's Deathcap"],
+"Maokai":["Evenshroud","Protector's Vow","Sunfire Cape"],
+"Taric":["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"]
+};
+
 /* item name -> [componentA, componentB, statLine, bandKey], built from BANDS */
 const RECIPE = {};
 BANDS.forEach(b => b.items.forEach(([n,a,c,e]) => { RECIPE[n] = [a,c,e,b.k]; }));
@@ -580,14 +649,17 @@ const metaItem = name => {
     : `<span class="mi emblem" data-item="${esc(name)}" tabindex="0">${esc(name)}</span>`;
 };
 function metaHTML(c){
-  const m = META[c.n];
-  if (!m) return `<div class="c-meta"><div class="mh"><b>Meta build</b>
-      <i>not a carry in the current <a href="${METASRC}" target="_blank" rel="noopener">Mobalytics meta comps</a></i></div>
-      <div class="none">Use the item bands above: ${c.r.includes("Tank") ? "frontline items" : side(c) === "ap" ? "Rod items" : side(c) === "ad" ? "Sword items" : "either AD or AP"}.</div></div>`;
+  const bis = BIS[c.n] || [], m = META[c.n] || [];
+  const rows = [];
+  if (bis.length) rows.push(`<div class="build"><span class="bl">Recommended</span>${bis.map(metaItem).join("")}</div>`);
+  m.forEach(([comp, items]) => rows.push(`<div class="build"><span class="bl">${esc(comp)}</span>${items.map(metaItem).join("")}</div>`));
+  if (!rows.length) return "";
+  const src = m.length
+    ? `<a href="${METASRC}" target="_blank" rel="noopener">Mobalytics</a> champion page and meta comps`
+    : `<a href="${METASRC.replace("team-comps","champions")}" target="_blank" rel="noopener">Mobalytics</a> champion page`;
   return `<div class="c-meta"><div class="mh"><b>Meta build</b>
-      <i>patch 18.2 &middot; <a href="${METASRC}" target="_blank" rel="noopener">Mobalytics meta comps</a> &middot; hover an item for its recipe</i></div>
-    <div class="builds">${m.map(([comp, items]) =>
-      `<div class="build"><span class="bl">${esc(comp)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div></div>`;
+      <i>patch 18.2 &middot; ${src} &middot; hover an item for its recipe</i></div>
+    <div class="builds">${rows.join("")}</div></div>`;
 }
 
 /* champion chips */
