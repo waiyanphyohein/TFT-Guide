@@ -158,6 +158,37 @@
   .tell .arw{color:var(--ink-dim);margin-left:auto;font-size:15px}
   .tell .to{font-size:12.5px;font-weight:600;color:var(--c);white-space:nowrap}
 
+
+  /* ---- recipe tooltip ---- */
+  .ico,.mi{cursor:help}
+  #tip{position:fixed;z-index:50;pointer-events:none;opacity:0;transition:opacity .1s;
+       background:var(--panel-2);border:1px solid #3C5145;border-radius:6px;padding:9px 11px;
+       box-shadow:0 8px 24px rgba(0,0,0,.45);max-width:260px;font-size:12.5px;line-height:1.35}
+  #tip.on{opacity:1}
+  #tip b{display:block;font-size:13px;margin-bottom:6px}
+  #tip .rec{display:flex;align-items:center;gap:6px}
+  #tip .rec .comp{width:26px;height:26px;flex:0 0 26px}
+  #tip .rec .plus,#tip .rec .eq{color:var(--ink-dim);font-size:14px}
+  #tip .rec .ico{width:28px;height:28px;flex:0 0 28px;cursor:default}
+  #tip .cn{font-size:11.5px;color:var(--ink-dim);margin-top:5px}
+  #tip .fx{color:var(--ink-dim);margin-top:5px}
+
+  /* ---- meta build ---- */
+  .c-meta{border-top:1px solid var(--line);padding-top:11px;margin-bottom:12px}
+  .c-meta .mh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .c-meta .mh b{font-size:14px;font-weight:600;color:var(--t)}
+  .c-meta .mh i{font-style:normal;font-size:11.5px;color:var(--ink-dim)}
+  .c-meta .mh a{color:var(--ink-dim);text-decoration:underline dotted}
+  .c-meta .mh a:hover{color:var(--ink)}
+  .builds{display:grid;gap:6px}
+  .build{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .build .bl{font-size:11.5px;color:var(--ink-dim);min-width:112px}
+  .mi{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border-radius:4px;
+      background:var(--panel-2);border:1px solid var(--line);font-size:12.5px;white-space:nowrap}
+  .mi .ico{width:26px;height:26px;flex:0 0 26px}
+  .mi.emblem{padding-left:9px;color:var(--hy);border-color:color-mix(in srgb,var(--hy) 40%,transparent)}
+  .c-meta .none{font-size:12.5px;color:var(--ink-dim)}
+
   @media (max-width:760px){
     .head-row,.tier{grid-template-columns:1fr}
     .cost{text-align:left;padding:9px 12px 2px;border-right:0;border-bottom:1px solid var(--line);background:var(--panel-2)}
@@ -171,6 +202,7 @@
     .cell.right::before{content:"AD \2014 physical damage";color:var(--ad)}
     .rl .arw{display:none}
     .stats{grid-template-columns:repeat(2,1fr)}
+    .build .bl{flex-basis:100%;min-width:0}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -254,6 +286,7 @@
   any normal browser, to see them.
 </div></noscript>
 </div>
+<div id="tip" role="tooltip" aria-hidden="true"></div>
 
 <script>
 const CHAMPS = [
@@ -414,6 +447,33 @@ const BANDS = [
 const TELLS = [["Spellweaver","AP","ap"],["Solar / Lunar","AP","ap"],["Hunter","AD","ad"],
                ["Rapidfire","AD","ad"],["Adaptor","either","hy"],["Executioner","either","hy"]];
 
+/* Meta builds: carry items from the current Mobalytics meta comps (patch 18.2).
+   Source: https://mobalytics.gg/tft/team-comps — the six featured comps and their
+   "Carries Items" panel. An entry lists comp name and the three recommended items. */
+const METASRC = "https://mobalytics.gg/tft/team-comps";
+const META = {
+"Draven":[["AD Exodia",["Guinsoo's Rageblade","Deathblade","Kraken's Fury"]],["The Final Forest",["Deathblade","Guinsoo's Rageblade","Kraken's Fury"]]],
+"Ezreal":[["The Final Forest",["Last Whisper","Deathblade","Spear of Shojin"]]],
+"Kennen":[["The Final Forest",["Thief's Gloves"]],["AD Exodia",["Thief's Gloves"]],["Ashe to Ashes",["Thief's Gloves"]]],
+"Maokai":[["AD Exodia",["Warmog's Armor","Gargoyle Stoneplate","Evenshroud"]],["The Final Forest",["Warmog's Armor","Dragon's Claw","Bramble Vest"]]],
+"Sivir":[["Ashe to Ashes",["Infinity Edge","Spear of Shojin","Striker's Flail"]],["The Hunters",["Striker's Flail","Spear of Shojin","Infinity Edge"]]],
+"Ashe":[["Ashe to Ashes",["Red Buff","Last Whisper","Spear of Shojin"]],["The Hunters",["Red Buff","Giant Slayer","Spear of Shojin"]]],
+"Amumu":[["Ashe to Ashes",["Warmog's Armor","Bramble Vest","Gargoyle Stoneplate"]]],
+"Elder Dragon":[["AD Exodia",["Deathblade","Infinity Edge","Hand of Justice"]],["Riftbeast Ascension",["Infinity Edge","Last Whisper","Hand of Justice"]]],
+"Ahri":[["Bloom and Doom",["Jeweled Gauntlet","Striker's Flail","Spear of Shojin"]]],
+"Sett":[["Bloom and Doom",["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"]]],
+"Morgana":[["Bloom and Doom",["Morellonomicon","Void Staff","Adaptive Helm"]]],
+"Nidalee":[["The Hunters",["Infinity Edge","Hunter Emblem","Sterak's Gage"]]],
+"Malphite":[["The Hunters",["Warmog's Armor","Crownguard","Gargoyle Stoneplate"]]],
+"Pebbles":[["Riftbeast Ascension",["Blue Buff","Rabadon's Deathcap","Jeweled Gauntlet"]]],
+"Sentinel":[["Riftbeast Ascension",["Sunfire Cape","Protector's Vow","Warmog's Armor"]]],
+"Brambleback":[["Riftbeast Ascension",["Giant Slayer","Edge of Night","Quicksilver"]]]
+};
+
+/* item name -> [componentA, componentB, statLine, bandKey], built from BANDS */
+const RECIPE = {};
+BANDS.forEach(b => b.items.forEach(([n,a,c,e]) => { RECIPE[n] = [a,c,e,b.k]; }));
+
 const MAXES = {hp:1800, mm:150, ad:125, ar:75, mr:75};
 const STATC = {hp:"var(--c-belt)", mm:"var(--c-tear)", ad:"var(--c-bf)", ar:"var(--c-vest)", mr:"var(--c-cloak)"};
 
@@ -443,7 +503,7 @@ wireImgs(document.getElementById("key"));
 
 /* items */
 /* the diagonal recipe icon stays underneath as the fallback if the art 404s */
-const icon = (name,a,b) => `<span class="ico" role="img" aria-label="${esc(name)}">
+const icon = (name,a,b) => `<span class="ico" role="img" aria-label="${esc(name)}" data-item="${esc(name)}" tabindex="0">
   <span class="sl a" style="--c:var(--c-${a})"><i></i><svg><use href="#g-${a}"/></svg></span>
   <span class="sl b" style="--c:var(--c-${b})"><i></i><svg><use href="#g-${b}"/></svg></span>
   <svg class="dg" viewBox="0 0 34 34"><line x1="34" y1="0" x2="0" y2="34"/></svg>
@@ -467,6 +527,68 @@ wireImgs(document.getElementById("bands"));
 document.getElementById("tells").innerHTML = TELLS.map(([n,to,k]) =>
   `<div class="tell" style="--c:var(--${k})"><b>${esc(n)}</b><span class="arw">&rarr;</span>
    <span class="to">${esc(to)}</span></div>`).join("");
+
+/* recipe tooltip: hover or focus any completed-item icon */
+const tip = document.getElementById("tip");
+const compTile = k => `<span class="comp" style="--c:var(--c-${k})"><svg><use href="#g-${k}"/></svg>
+  ${COMPIMG[k] ? `<img class="cimg iimg" src="${ITEMBASE}${COMPIMG[k]}.png?v=74" alt="" referrerpolicy="no-referrer">` : ""}</span>`;
+function tipHTML(name){
+  const r = RECIPE[name];
+  if (!r) return `<b>${esc(name)}</b><div class="fx">Emblem &mdash; from an augment, carousel or Spatula recipe.</div>`;
+  const [a,c,e] = r;
+  return `<b>${esc(name)}</b>
+    <div class="rec">${compTile(a)}<span class="plus">+</span>${compTile(c)}<span class="eq">=</span>${icon(name,a,c)}</div>
+    <div class="cn">${esc(COMP[a][0])} + ${esc(COMP[c][0])}</div>
+    <div class="fx">${esc(e)}</div>`;
+}
+let tipFor = null;
+function showTip(el){
+  if (tip.contains(el)) return;
+  const name = el.dataset.item; if (!name) return;
+  tipFor = el;
+  tip.innerHTML = tipHTML(name); wireImgs(tip);
+  tip.querySelectorAll("[data-item]").forEach(n => { n.removeAttribute("data-item"); n.removeAttribute("tabindex"); });
+  tip.setAttribute("aria-hidden","false");
+  const r = el.getBoundingClientRect(), pad = 8;
+  tip.style.left = "0px"; tip.style.top = "0px"; tip.classList.add("on");
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = r.left + r.width/2 - w/2, y = r.top - h - pad;
+  if (y < pad) y = r.bottom + pad;
+  x = Math.max(pad, Math.min(x, window.innerWidth - w - pad));
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip(){ tipFor = null; tip.classList.remove("on"); tip.setAttribute("aria-hidden","true"); }
+const tipTarget = e => e.target.closest && e.target.closest("[data-item]");
+document.addEventListener("mouseover", e => { const t = tipTarget(e); if (t && t !== tipFor) showTip(t); });
+document.addEventListener("mouseout", e => { const t = tipTarget(e); if (t && !t.contains(e.relatedTarget)) hideTip(); });
+document.addEventListener("focusin", e => { const t = tipTarget(e); if (t) showTip(t); });
+document.addEventListener("focusout", hideTip);
+document.addEventListener("keydown", e => { if (e.key === "Escape") hideTip(); });
+/* touch: tap toggles, tap elsewhere closes */
+document.addEventListener("click", e => {
+  const t = tipTarget(e);
+  if (!t) { if (tipFor) hideTip(); return; }
+  if (t === tipFor) hideTip(); else showTip(t);
+});
+window.addEventListener("scroll", () => { if (tipFor) hideTip(); }, {passive:true});
+
+/* meta build tile */
+const metaItem = name => {
+  const r = RECIPE[name];
+  return r
+    ? `<span class="mi" data-item="${esc(name)}" tabindex="0">${icon(name,r[0],r[1])}${esc(name)}</span>`
+    : `<span class="mi emblem" data-item="${esc(name)}" tabindex="0">${esc(name)}</span>`;
+};
+function metaHTML(c){
+  const m = META[c.n];
+  if (!m) return `<div class="c-meta"><div class="mh"><b>Meta build</b>
+      <i>not a carry in the current <a href="${METASRC}" target="_blank" rel="noopener">Mobalytics meta comps</a></i></div>
+      <div class="none">Use the item bands above: ${c.r.includes("Tank") ? "frontline items" : side(c) === "ap" ? "Rod items" : side(c) === "ad" ? "Sword items" : "either AD or AP"}.</div></div>`;
+  return `<div class="c-meta"><div class="mh"><b>Meta build</b>
+      <i>patch 18.2 &middot; <a href="${METASRC}" target="_blank" rel="noopener">Mobalytics meta comps</a> &middot; hover an item for its recipe</i></div>
+    <div class="builds">${m.map(([comp, items]) =>
+      `<div class="build"><span class="bl">${esc(comp)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div></div>`;
+}
 
 /* champion chips */
 function initials(n){
@@ -523,6 +645,7 @@ function card(c){
       ${statRow(c,"hp","Health")}${statRow(c,"mm","Mana")}${statRow(c,"ad","Attack dmg")}
       ${statRow(c,"ar","Armour")}${statRow(c,"mr","Magic res")}
     </div>
+    ${metaHTML(c)}
     <div class="c-ability"><b>${esc(c.a)}</b>
       ${c.d.split("\n").map(p => `<p>${esc(p)}</p>`).join("")}</div>
   </article>`;
