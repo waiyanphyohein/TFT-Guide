@@ -3,7 +3,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/", "destination": "/tft-set18-ap-ad-chart.html" }
+    { "source": "/", "destination": "/tft-set18-ap-ad-chart" }
   ],
   "headers": [
     {
