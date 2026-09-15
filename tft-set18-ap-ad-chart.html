@@ -188,6 +188,67 @@
   .mi .ico{width:26px;height:26px;flex:0 0 26px}
   .mi.emblem{padding-left:9px;color:var(--hy);border-color:color-mix(in srgb,var(--hy) 40%,transparent)}
 
+
+  /* ---- meta comps ---- */
+  .cbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px;align-items:center}
+  .cbar select,.cbar input{font:inherit;font-size:13px;color:var(--ink);background:var(--panel);
+     border:1px solid var(--line);border-radius:4px;padding:7px 10px;min-width:150px}
+  .cbar select:focus,.cbar input:focus{outline:none;border-color:#4A6355;background:var(--panel-2)}
+  .cbar .cnt{font-size:12.5px;color:var(--ink-dim);margin-left:auto}
+  .cbar .reset{font:inherit;font-size:12.5px;color:var(--ink-dim);background:none;border:1px solid var(--line);
+     border-radius:3px;padding:6px 10px;cursor:pointer}
+  .cbar .reset:hover{color:var(--ink);border-color:#3C5145}
+  .comps{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px}
+  .cp{border:1px solid var(--line);border-left:3px solid var(--c);background:var(--panel);padding:13px 15px;
+      display:flex;flex-direction:column;gap:9px}
+  .cp-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .cp-name{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .tag{font-size:11.5px;padding:2px 7px;border-radius:3px;border:1px solid var(--line);color:var(--ink-dim);white-space:nowrap}
+  .tag.hard{color:#E07A42;border-color:rgba(224,122,66,.4)} .tag.medium{color:#D6B457;border-color:rgba(214,180,87,.4)}
+  .cp-open{margin-left:auto;font:inherit;font-size:12.5px;color:var(--ink);background:var(--panel-2);
+      border:1px solid var(--line);border-radius:3px;padding:5px 10px;cursor:pointer}
+  .cp-open:hover{border-color:#4A6355}
+  .traits{display:flex;flex-wrap:wrap;gap:5px}
+  .tr{font:inherit;font-size:11.5px;color:var(--ink-dim);background:var(--panel-2);border:1px solid var(--line);
+      border-radius:3px;padding:2px 7px;cursor:pointer;display:inline-flex;gap:5px;align-items:center}
+  .tr b{color:var(--ink);font-weight:600}
+  .tr:hover,.tr.hit{border-color:#4A6355;color:var(--ink)}
+  .tr.hit{background:color-mix(in srgb,var(--ap) 18%,transparent)}
+  .board{display:flex;flex-wrap:wrap;gap:5px}
+  .board .u.hit{outline:2px solid var(--ink);outline-offset:1px}
+  .board .u.alt{opacity:.55}
+  .cp-carry{display:grid;gap:5px}
+  .cp-carry .build .bl{min-width:96px}
+  .cp-lbl{font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em}
+  .cp-empty{grid-column:1/-1}
+  .c-comps{border-top:1px solid var(--line);padding-top:11px;margin-bottom:12px}
+  .c-comps b{display:block;font-size:14px;font-weight:600;color:var(--t);margin-bottom:6px}
+  .c-comps .row{display:flex;flex-wrap:wrap;gap:6px}
+  .cc{font:inherit;font-size:12.5px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);
+      border-radius:3px;padding:5px 10px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+  .cc:hover{border-color:#4A6355}
+  .cc i{font-style:normal;color:var(--ink-dim);font-size:11.5px}
+  .c-comps .none{font-size:12.5px;color:var(--ink-dim)}
+  .tell{cursor:pointer} .tell:hover{background:var(--panel-2)}
+
+  /* ---- overlay ---- */
+  #ov{position:fixed;inset:0;z-index:60;background:rgba(6,10,8,.72);display:none;align-items:flex-start;
+      justify-content:center;padding:28px 14px;overflow-y:auto}
+  #ov.on{display:flex}
+  .ovp{width:min(760px,100%);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c);
+       padding:18px 20px 22px;display:grid;gap:14px;position:relative}
+  .ovx{position:absolute;top:8px;right:8px;font:inherit;font-size:20px;line-height:1;color:var(--ink-dim);
+       background:none;border:0;cursor:pointer;padding:6px 10px}
+  .ovx:hover{color:var(--ink)}
+  .ovp h3{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:24px;font-weight:600;margin:0;letter-spacing:-.015em}
+  .ovp .sub{font-size:13px;color:var(--ink-dim)}
+  .ovp h4{font-size:12px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px;font-weight:600}
+  .ovp ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-dim)}
+  .ovp li{margin:3px 0}
+  .ovp .board .u{font-size:13px}
+  .ovp .ext{font-size:12.5px} .ovp .ext a{color:var(--ink-dim)}
+  body.lock{overflow:hidden}
+
   @media (max-width:760px){
     .head-row,.tier{grid-template-columns:1fr}
     .cost{text-align:left;padding:9px 12px 2px;border-right:0;border-bottom:1px solid var(--line);background:var(--panel-2)}
@@ -202,6 +263,8 @@
     .rl .arw{display:none}
     .stats{grid-template-columns:repeat(2,1fr)}
     .build .bl{flex-basis:100%;min-width:0}
+    .comps{grid-template-columns:1fr}
+    .cbar select,.cbar input{flex:1 1 140px;min-width:0}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -277,6 +340,16 @@
 
 <div id="cards" class="hide"></div>
 
+<h2>Meta comps</h2>
+<div class="cbar">
+  <select id="f-trait" aria-label="Filter by trait"><option value="">Any trait</option></select>
+  <select id="f-role" aria-label="Filter by role"><option value="">Any role</option></select>
+  <input id="f-champ" type="search" placeholder="Champion" autocomplete="off" aria-label="Filter by champion">
+  <button class="reset" id="f-reset">Clear</button>
+  <span class="cnt" id="f-cnt"></span>
+</div>
+<div class="comps" id="comps"></div>
+
 <h2>Trait shortcuts</h2>
 <div class="tells" id="tells"></div>
 
@@ -286,6 +359,7 @@
 </div></noscript>
 </div>
 <div id="tip" role="tooltip" aria-hidden="true"></div>
+<div id="ov" role="dialog" aria-modal="true" aria-label="Comp details"></div>
 
 <script>
 const CHAMPS = [
@@ -539,6 +613,42 @@ const BIS = {
 "Taric":["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"]
 };
 
+/* Current meta comps (Mobalytics, patch 18.2). Board order follows the guide;
+   alts are listed as interchangeable by the guide. Carries pair with their items. */
+const COMPS = [
+{n:"The Final Forest",diff:"Hard",style:"Fast 9",k:"ad",slug:"elderwood-cap-3HBMcPmR81fWMyuppwi8smQJ37O",
+ board:["Draven","Maokai","Ezreal","Kennen","Gnar","Ivern","Taric","Amumu","Alistar"],alts:[],
+ carries:[["Draven",["Deathblade","Guinsoo's Rageblade","Kraken's Fury"]],["Ezreal",["Last Whisper","Deathblade","Spear of Shojin"]],["Maokai",["Warmog's Armor","Dragon's Claw","Bramble Vest"]],["Kennen",["Thief's Gloves"]]],
+ when:["Strong opener to winstreak","Econ augment or encounter","Executioner emblem for Draven"],
+ tips:["Angle in if you get an early Maokai or Ivern, they scale","Leftover items go on Gnar","Taric is the main tank if Maokai is contested","At level 10 add Elderwood Lux to cap the board","Pair Taric with Maokai","Inferno gives built-in anti-heal"]},
+{n:"Ashe to Ashes",diff:"Hard",style:"Fast 9",k:"ad",slug:"ashe-to-ashes-3J9V7i6GFrOujQPGxcWbr4cqwKC",
+ board:["Ashe","Amumu","Sivir","Kennen","Ivern","Lillia","Tristana","Vi","Shen"],alts:[],
+ carries:[["Ashe",["Red Buff","Last Whisper","Spear of Shojin"]],["Sivir",["Infinity Edge","Spear of Shojin","Striker's Flail"]],["Amumu",["Warmog's Armor","Bramble Vest","Gargoyle Stoneplate"]],["Kennen",["Thief's Gloves"]]],
+ when:["AD components","Econ augment or encounter"],
+ tips:["If Amumu will not upgrade, make Lillia the main tank","With AP items, itemize Kennen or Ivern instead","Lose-streak into carousel Sivir items if the opener is weak"]},
+{n:"AD Exodia",diff:"Hard",style:"Fast 9",k:"ad",slug:"ad-fast-9-3HIz3Cx7oNI4RGtlcnOVu0H4xFh",
+ board:["Draven","Maokai","Elder Dragon","Kennen","Ivern","Taric","Amumu","Sentinel"],alts:["Morgana"],
+ carries:[["Draven",["Guinsoo's Rageblade","Deathblade","Kraken's Fury"]],["Elder Dragon",["Deathblade","Infinity Edge","Hand of Justice"]],["Maokai",["Warmog's Armor","Gargoyle Stoneplate","Evenshroud"]],["Kennen",["Thief's Gloves"]]],
+ when:["Strong opener to winstreak","Econ augment"],
+ tips:["Field Ivern and Maokai as soon as you find them","Morgana can replace Draven for Invoker","Pair Taric with the Elder Dragon","Taric can main-tank if Maokai comes late"]},
+{n:"Bloom and Doom",diff:"Medium",style:"Fast 8",k:"ap",slug:"bloom-and-doom-3IYZrgrxpycIWCeI7z4uJ44MTMA",
+ board:["Ahri","Morgana","Sett","Ivern","Taric","Sentinel","Krug","Karma","Pebbles"],alts:["Elise","Cassiopeia","Fiddlesticks","Alune"],
+ carries:[["Ahri",["Jeweled Gauntlet","Striker's Flail","Spear of Shojin"]],["Morgana",["Morellonomicon","Void Staff","Adaptive Helm"]],["Sett",["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"]]],
+ when:["Invoker emblem for Ahri makes this much stronger","AP components","Blossom or Coven opener","Econ augment"],
+ tips:["Swap in the alternates to play around Coven","Invoker emblem goes on Ahri","Alpha Mark Krug so he dies early","Place Ahri on the same side as the enemy carries"]},
+{n:"The Hunters",diff:"Medium",style:"Fast 8",k:"ad",slug:"the-hunters-3IgkJx9eBNudXmmIjllH0uIcjp0",
+ board:["Ashe","Malphite","Nidalee","Sivir","Sentinel","Kog'Maw","Krug","Cinderling","Rek'Sai"],alts:["Aphelios","Brambleback"],
+ carries:[["Sivir",["Striker's Flail","Spear of Shojin","Infinity Edge"]],["Ashe",["Red Buff","Giant Slayer","Spear of Shojin"]],["Nidalee",["Infinity Edge","Hunter Emblem","Sterak's Gage"]],["Malphite",["Warmog's Armor","Crownguard","Gargoyle Stoneplate"]]],
+ when:["AD components","Hunter emblem","Econ augment"],
+ tips:["Sivir holds Red Buff until Ashe shows up","Sentinel can main-tank if Malphite is contested","Snowballing: take Item Primal, otherwise look for Execute","Kog'Maw applies Shred and Sunder","Krug goes in the Blackthorn hex","If carries are contested, hold Aphelios and Brambleback on the rolldown"]},
+{n:"Riftbeast Ascension",diff:"Medium",style:"Fast 8",k:"hy",slug:"riftbeasts-3GPdjNA6ylpo7iCTllcNRj1b8fs",
+ board:["Elder Dragon","Sentinel","Brambleback","Pebbles","Gnar","Taric","Krug","Murkwolf"],alts:[],
+ carries:[["Pebbles",["Blue Buff","Rabadon's Deathcap","Jeweled Gauntlet"]],["Elder Dragon",["Infinity Edge","Last Whisper","Hand of Justice"]],["Brambleback",["Giant Slayer","Edge of Night","Quicksilver"]],["Sentinel",["Sunfire Cape","Protector's Vow","Warmog's Armor"]]],
+ when:["Riftbeast opener","Econ augment"],
+ tips:["Elder Dragon takes two slots and counts as two Riftbeasts","Alpha Mark the Elder Dragon","Pair Taric with the Elder Dragon","Pebbles is the 3-star that matters most"]}
+];
+const COMPBASE = "https://mobalytics.gg/tft/comps-guide/";
+
 /* item name -> [componentA, componentB, statLine, bandKey], built from BANDS */
 const RECIPE = {};
 BANDS.forEach(b => b.items.forEach(([n,a,c,e]) => { RECIPE[n] = [a,c,e,b.k]; }));
@@ -662,6 +772,15 @@ function metaHTML(c){
     <div class="builds">${rows.join("")}</div></div>`;
 }
 
+function compsHTML(c){
+  const list = compsFor(c.n);
+  const body = list.length
+    ? `<div class="row">${list.map(cp => `<button class="cc" data-open="${esc(cp.n)}">${esc(cp.n)}
+         <i>${cp.alts.includes(c.n) ? "alternate" : cp.carries.some(([n]) => n === c.n) ? "carry" : "board"}</i></button>`).join("")}</div>`
+    : `<div class="none">Not in a current meta comp. <button class="cc" data-filter-role="${esc(roleOf(c))}">Show ${esc(roleOf(c))} comps</button></div>`;
+  return `<div class="c-comps"><b>Meta comps</b>${body}</div>`;
+}
+
 /* champion chips */
 function initials(n){
   if (n.includes(" ")) return n.split(" ").map(w => w[0]).join("").slice(0,2);
@@ -718,6 +837,7 @@ function card(c){
       ${statRow(c,"ar","Armour")}${statRow(c,"mr","Magic res")}
     </div>
     ${metaHTML(c)}
+    ${compsHTML(c)}
     <div class="c-ability"><b>${esc(c.a)}</b>
       ${c.d.split("\n").map(p => `<p>${esc(p)}</p>`).join("")}</div>
   </article>`;
@@ -777,6 +897,111 @@ filters.addEventListener("click", e => {
     t.style.display = (want === "all" || t.dataset.cost === want) ? "" : "none";
   });
 });
+/* ---- meta comps: section, filters, overlay ---- */
+const byName = Object.fromEntries(CHAMPS.map(c => [c.n, c]));
+const traitsOf = c => c.t.split(" \u00b7 ").map(t => t.trim()).filter(t => !t.startsWith("Avatar"));
+const roleOf = c => c.r.replace(/^(AP|AD) /, "");
+function compTraits(cp){
+  const n = {};
+  cp.board.forEach(name => { const c = byName[name]; if (c) traitsOf(c).forEach(t => { n[t] = (n[t]||0) + 1; }); });
+  if (cp.board.includes("Elder Dragon")) n["Riftbeast"] = (n["Riftbeast"]||0) + 1;
+  return Object.entries(n).sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+}
+const compsFor = name => COMPS.filter(cp => cp.board.includes(name) || cp.alts.includes(name));
+const fTrait = document.getElementById("f-trait"), fRole = document.getElementById("f-role"),
+      fChamp = document.getElementById("f-champ"), fCnt = document.getElementById("f-cnt"),
+      compsEl = document.getElementById("comps");
+{
+  const traits = new Set(), roles = new Set();
+  CHAMPS.forEach(c => { traitsOf(c).forEach(t => traits.add(t)); roles.add(roleOf(c)); });
+  [...traits].sort().forEach(t => fTrait.insertAdjacentHTML("beforeend", `<option>${esc(t)}</option>`));
+  [...roles].sort().forEach(r => fRole.insertAdjacentHTML("beforeend", `<option>${esc(r)}</option>`));
+}
+const boardChip = (name, cls) => {
+  const c = byName[name];
+  return c ? chip(c).replace('class="u', `class="u ${cls||""}`) : `<span class="u">${esc(name)}</span>`;
+};
+function compCard(cp, f){
+  const tr = compTraits(cp);
+  const hitName = n => (f.champ && n.toLowerCase().includes(f.champ)) || (f.role && byName[n] && roleOf(byName[n]) === f.role) ? "hit" : "";
+  return `<article class="cp" style="--c:var(--${cp.k})" data-comp="${esc(cp.n)}">
+    <div class="cp-head"><span class="cp-name">${esc(cp.n)}</span>
+      <span class="tag ${cp.diff.toLowerCase()}">${esc(cp.diff)}</span><span class="tag">${esc(cp.style)}</span>
+      <button class="cp-open" data-open="${esc(cp.n)}">Details</button></div>
+    <div class="traits">${tr.map(([t,n]) => `<button class="tr${f.trait === t ? " hit" : ""}" data-trait="${esc(t)}"><b>${n}</b>${esc(t)}</button>`).join("")}</div>
+    <div class="board">${cp.board.map(n => boardChip(n, hitName(n))).join("")}${cp.alts.map(n => boardChip(n, "alt " + hitName(n))).join("")}</div>
+    <div class="cp-carry">${cp.carries.map(([n, items]) =>
+      `<div class="build"><span class="bl">${esc(n)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div>
+  </article>`;
+}
+function renderComps(){
+  const f = {trait:fTrait.value, role:fRole.value, champ:fChamp.value.trim().toLowerCase()};
+  const list = COMPS.filter(cp => {
+    const all = cp.board.concat(cp.alts);
+    if (f.trait && !compTraits(cp).some(([t]) => t === f.trait)) return false;
+    if (f.role && !all.some(n => byName[n] && roleOf(byName[n]) === f.role)) return false;
+    if (f.champ && !all.some(n => n.toLowerCase().includes(f.champ))) return false;
+    return true;
+  });
+  fCnt.textContent = `${list.length} of ${COMPS.length} comps`;
+  compsEl.innerHTML = list.length ? list.map(cp => compCard(cp, f)).join("")
+    : `<div class="empty cp-empty">No current meta comp matches that filter. Try clearing one of them.</div>`;
+  wireImgs(compsEl);
+}
+[fTrait, fRole].forEach(el => el.addEventListener("change", renderComps));
+fChamp.addEventListener("input", renderComps);
+document.getElementById("f-reset").addEventListener("click", () => { fTrait.value = ""; fRole.value = ""; fChamp.value = ""; renderComps(); });
+function filterComps(o){
+  if ("trait" in o) fTrait.value = [...fTrait.options].some(x => x.value === o.trait) ? o.trait : "";
+  if ("role" in o) fRole.value = o.role;
+  if ("champ" in o) fChamp.value = o.champ;
+  renderComps();
+  compsEl.scrollIntoView({block:"start", behavior:"smooth"});
+}
+renderComps();
+
+/* overlay */
+const ov = document.getElementById("ov");
+function openComp(name){
+  const cp = COMPS.find(x => x.n === name); if (!cp) return;
+  const tr = compTraits(cp);
+  ov.innerHTML = `<div class="ovp" style="--c:var(--${cp.k})">
+    <button class="ovx" aria-label="Close">&times;</button>
+    <div><h3>${esc(cp.n)}</h3><div class="sub">${esc(cp.diff)} &middot; ${esc(cp.style)} &middot; patch 18.2</div></div>
+    <div><h4>Synergies</h4><div class="traits">${tr.map(([t,n]) => `<button class="tr" data-trait="${esc(t)}"><b>${n}</b>${esc(t)}</button>`).join("")}</div></div>
+    <div><h4>Final board</h4><div class="board">${cp.board.map(n => boardChip(n)).join("")}</div>
+      ${cp.alts.length ? `<div class="sub" style="margin-top:6px">Interchangeable: ${cp.alts.map(esc).join(", ")}</div>` : ""}</div>
+    <div><h4>Carries and items</h4><div class="cp-carry">${cp.carries.map(([n, items]) =>
+      `<div class="build"><span class="bl">${esc(n)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div></div>
+    <div><h4>When to play it</h4><ul>${cp.when.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div><h4>Tips</h4><ul>${cp.tips.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>
+    <div class="ext"><a href="${COMPBASE}${cp.slug}" target="_blank" rel="noopener">Full guide on Mobalytics</a></div>
+  </div>`;
+  wireImgs(ov);
+  ov.classList.add("on"); document.body.classList.add("lock");
+  ov.querySelector(".ovx").focus();
+}
+function closeOv(){ ov.classList.remove("on"); document.body.classList.remove("lock"); ov.innerHTML = ""; }
+ov.addEventListener("click", e => { if (e.target === ov || e.target.closest(".ovx")) closeOv(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && ov.classList.contains("on")) closeOv(); });
+
+/* delegated clicks: open a comp, filter by trait, jump to a champion */
+document.addEventListener("click", e => {
+  const open = e.target.closest("[data-open]");
+  if (open){ openComp(open.dataset.open); return; }
+  const fr = e.target.closest("[data-filter-role]");
+  if (fr){ filterComps({role: fr.dataset.filterRole, trait:"", champ:""}); return; }
+  const tr = e.target.closest(".tr[data-trait]");
+  if (tr){ closeOv(); filterComps({trait: tr.dataset.trait}); return; }
+  const u = e.target.closest(".board .u[data-name], #cards .board .u[data-name]");
+  if (u){ closeOv(); q.value = u.dataset.name; run(); q.scrollIntoView({block:"center", behavior:"smooth"}); }
+});
+document.getElementById("tells").addEventListener("click", e => {
+  const t = e.target.closest(".tell"); if (!t) return;
+  const label = t.querySelector("b").textContent;
+  filterComps({trait: label.includes("/") ? label.split("/")[0].trim() : label});
+});
+
 </script>
 </body>
 </html>
