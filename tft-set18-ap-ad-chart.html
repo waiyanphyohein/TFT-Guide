@@ -205,6 +205,12 @@
   .cp-name{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:19px;font-weight:600;letter-spacing:-.01em}
   .tag{font-size:11.5px;padding:2px 7px;border-radius:3px;border:1px solid var(--line);color:var(--ink-dim);white-space:nowrap}
   .tag.hard{color:#E07A42;border-color:rgba(224,122,66,.4)} .tag.medium{color:#D6B457;border-color:rgba(214,180,87,.4)}
+  .tag.easy{color:#4FB393;border-color:rgba(79,179,147,.4)}
+  .tag.src-meta{color:var(--ap);border-color:color-mix(in srgb,var(--ap) 45%,transparent)}
+  .tag.src-stats{color:#57A9E0;border-color:rgba(87,169,224,.45)}
+  .tag.src-community{color:var(--ink-dim);border-style:dashed}
+  .stat{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--ink-dim)}
+  .stat b{color:var(--ink);font-weight:600} .stat i{font-style:normal}
   .cp-open{margin-left:auto;font:inherit;font-size:12.5px;color:var(--ink);background:var(--panel-2);
       border:1px solid var(--line);border-radius:3px;padding:5px 10px;cursor:pointer}
   .cp-open:hover{border-color:#4A6355}
@@ -342,6 +348,8 @@
 
 <h2>Meta comps</h2>
 <div class="cbar">
+  <select id="f-src" aria-label="Filter by source"><option value="">All sources</option>
+    <option value="meta">Meta comps</option><option value="stats">Data comps</option><option value="community">Community comps</option></select>
   <select id="f-trait" aria-label="Filter by trait"><option value="">Any trait</option></select>
   <select id="f-role" aria-label="Filter by role"><option value="">Any role</option></select>
   <input id="f-champ" type="search" placeholder="Champion" autocomplete="off" aria-label="Filter by champion">
@@ -647,7 +655,43 @@ const COMPS = [
  when:["Riftbeast opener","Econ augment"],
  tips:["Elder Dragon takes two slots and counts as two Riftbeasts","Alpha Mark the Elder Dragon","Pair Taric with the Elder Dragon","Pebbles is the 3-star that matters most"]}
 ];
+COMPS.forEach(cp => { cp.src = "meta"; });
+
+/* Data comps: Mobalytics "Comps Stats" tier list (Diamond+, patch 18.2), built from
+   match data around the top synergy pairs. Two more entries there (Riftbeast Inferno,
+   Hunter Riftbeast) share a board with AD Exodia and The Hunters above, so they are
+   folded into those as stats rather than repeated. */
+[
+{n:"Lunar Adaptor",k:"hy",board:["Amumu","Sentinel","Aphelios","Nidalee","Alune","Diana","Kog'Maw","Vi","Varus"],
+ stats:{place:3.44,win:"11.8%",pick:"0.07%",top4:"75.2%"}},
+{n:"Blackthorn Executioner",k:"ap",board:["Malphite","Soraka","Zyra","Kennen","Amumu","Azir","Fiddlesticks","Yorick"],
+ stats:{place:3.80,win:"18.9%",pick:"0.07%",top4:"64.5%"}}
+].forEach(cp => COMPS.push({diff:"",style:"",src:"stats",alts:[],carries:[],when:[],tips:[],
+  slug:"", ...cp}));
+COMPS.find(cp => cp.n === "AD Exodia").stats = {place:3.53,win:"31.1%",pick:"0.42%",top4:"65.0%",as:"Riftbeast Inferno"};
+COMPS.find(cp => cp.n === "The Hunters").stats = {place:3.93,win:"15.0%",pick:"0.22%",top4:"61.7%",as:"Hunter Riftbeast"};
+
+/* Community comps: mobalytics.gg/tft/community-comps, the entries with two or more
+   votes on patch 18.2. Player-made, not vetted; treat as ideas rather than a meta call. */
+[
+{n:"Immortal Elise",style:"Level 7 slow roll",diff:"Medium",votes:14,by:"zzombie pt",k:"ap",
+ board:["Diana","Hecarim","Elise","Alune","Taric","Sentinel","Aphelios","Morgana","Rakan"]},
+{n:"Caitlyn & Carapateur",style:"Level 6 slow roll",diff:"Easy",votes:8,by:"BarbeRousse",k:"ad",
+ board:["Caitlyn","Scuttlecrab","Sejuani","Ashe","Sivir","Tristana","Vi","Rakan"]},
+{n:"Tee'Maw'Gana",style:"Level 6 slow roll",diff:"Easy",votes:5,by:"marc abel",k:"hy",
+ board:["Malphite","Morgana","Kog'Maw","Teemo","Sentinel","Gnar","Krug","Kobuko","Pebbles","Rek'Sai"]},
+{n:"Big Infernal Eclipse",style:"Fast 9",diff:"Medium",votes:3,by:"",k:"hy",
+ board:["Alune","Amumu","Aphelios","Shen","Kennen","Diana","Kayle","Sejuani","Leona"]},
+{n:"Maître Yi & Vi",style:"Level 7 slow roll",diff:"Easy",votes:2,by:"BarbeRousse",k:"ad",
+ board:["Kog'Maw","Master Yi","Vi","Nidalee","Sett","Krug","Gromp","Yorick"]}
+].forEach(cp => COMPS.push({src:"community",alts:[],carries:[],when:[],tips:[],slug:"", ...cp}));
+
 const COMPBASE = "https://mobalytics.gg/tft/comps-guide/";
+const SRC = {
+  meta:      ["Meta", "Curated by Mobalytics Challenger experts", "https://mobalytics.gg/tft/team-comps"],
+  stats:     ["Data", "Top boards from Diamond+ match data", "https://mobalytics.gg/tft/team-comps-tier-list"],
+  community: ["Community", "Player-submitted, ranked by votes", "https://mobalytics.gg/tft/community-comps"]
+};
 
 /* item name -> [componentA, componentB, statLine, bandKey], built from BANDS */
 const RECIPE = {};
@@ -776,8 +820,8 @@ function compsHTML(c){
   const list = compsFor(c.n);
   const body = list.length
     ? `<div class="row">${list.map(cp => `<button class="cc" data-open="${esc(cp.n)}">${esc(cp.n)}
-         <i>${cp.alts.includes(c.n) ? "alternate" : cp.carries.some(([n]) => n === c.n) ? "carry" : "board"}</i></button>`).join("")}</div>`
-    : `<div class="none">Not in a current meta comp. <button class="cc" data-filter-role="${esc(roleOf(c))}">Show ${esc(roleOf(c))} comps</button></div>`;
+         <i>${cp.src !== "meta" ? SRC[cp.src][0].toLowerCase() + " &middot; " : ""}${cp.alts.includes(c.n) ? "alternate" : cp.carries.some(([n]) => n === c.n) ? "carry" : "board"}</i></button>`).join("")}</div>`
+    : `<div class="none">Not in any listed comp. <button class="cc" data-filter-role="${esc(roleOf(c))}">Show ${esc(roleOf(c))} comps</button></div>`;
   return `<div class="c-comps"><b>Meta comps</b>${body}</div>`;
 }
 
@@ -908,7 +952,7 @@ function compTraits(cp){
   return Object.entries(n).sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]));
 }
 const compsFor = name => COMPS.filter(cp => cp.board.includes(name) || cp.alts.includes(name));
-const fTrait = document.getElementById("f-trait"), fRole = document.getElementById("f-role"),
+const fSrc = document.getElementById("f-src"), fTrait = document.getElementById("f-trait"), fRole = document.getElementById("f-role"),
       fChamp = document.getElementById("f-champ"), fCnt = document.getElementById("f-cnt"),
       compsEl = document.getElementById("comps");
 {
@@ -921,13 +965,18 @@ const boardChip = (name, cls) => {
   const c = byName[name];
   return c ? chip(c).replace('class="u', `class="u ${cls||""}`) : `<span class="u">${esc(name)}</span>`;
 };
+const statLine = cp => cp.stats
+  ? `<div class="stat"><span><b>${cp.stats.place.toFixed(2)}</b> avg place</span><span><b>${cp.stats.top4}</b> top 4</span>
+     <span><b>${cp.stats.win}</b> win</span><span><b>${cp.stats.pick}</b> pick</span>${cp.stats.as ? `<i>tracked as &ldquo;${esc(cp.stats.as)}&rdquo;</i>` : ""}</div>`
+  : cp.votes != null ? `<div class="stat"><span><b>${cp.votes}</b> votes</span>${cp.by ? `<i>by ${esc(cp.by)}</i>` : ""}</div>` : "";
 function compCard(cp, f){
   const tr = compTraits(cp);
   const hitName = n => (f.champ && n.toLowerCase().includes(f.champ)) || (f.role && byName[n] && roleOf(byName[n]) === f.role) ? "hit" : "";
   return `<article class="cp" style="--c:var(--${cp.k})" data-comp="${esc(cp.n)}">
     <div class="cp-head"><span class="cp-name">${esc(cp.n)}</span>
-      <span class="tag ${cp.diff.toLowerCase()}">${esc(cp.diff)}</span><span class="tag">${esc(cp.style)}</span>
+      <span class="tag src-${cp.src}">${SRC[cp.src][0]}</span>${cp.diff ? `<span class="tag ${cp.diff.toLowerCase()}">${esc(cp.diff)}</span>` : ""}${cp.style ? `<span class="tag">${esc(cp.style)}</span>` : ""}
       <button class="cp-open" data-open="${esc(cp.n)}">Details</button></div>
+    ${statLine(cp)}
     <div class="traits">${tr.map(([t,n]) => `<button class="tr${f.trait === t ? " hit" : ""}" data-trait="${esc(t)}"><b>${n}</b>${esc(t)}</button>`).join("")}</div>
     <div class="board">${cp.board.map(n => boardChip(n, hitName(n))).join("")}${cp.alts.map(n => boardChip(n, "alt " + hitName(n))).join("")}</div>
     <div class="cp-carry">${cp.carries.map(([n, items]) =>
@@ -935,9 +984,10 @@ function compCard(cp, f){
   </article>`;
 }
 function renderComps(){
-  const f = {trait:fTrait.value, role:fRole.value, champ:fChamp.value.trim().toLowerCase()};
+  const f = {src:fSrc.value, trait:fTrait.value, role:fRole.value, champ:fChamp.value.trim().toLowerCase()};
   const list = COMPS.filter(cp => {
     const all = cp.board.concat(cp.alts);
+    if (f.src && cp.src !== f.src) return false;
     if (f.trait && !compTraits(cp).some(([t]) => t === f.trait)) return false;
     if (f.role && !all.some(n => byName[n] && roleOf(byName[n]) === f.role)) return false;
     if (f.champ && !all.some(n => n.toLowerCase().includes(f.champ))) return false;
@@ -948,9 +998,9 @@ function renderComps(){
     : `<div class="empty cp-empty">No current meta comp matches that filter. Try clearing one of them.</div>`;
   wireImgs(compsEl);
 }
-[fTrait, fRole].forEach(el => el.addEventListener("change", renderComps));
+[fSrc, fTrait, fRole].forEach(el => el.addEventListener("change", renderComps));
 fChamp.addEventListener("input", renderComps);
-document.getElementById("f-reset").addEventListener("click", () => { fTrait.value = ""; fRole.value = ""; fChamp.value = ""; renderComps(); });
+document.getElementById("f-reset").addEventListener("click", () => { fSrc.value = ""; fTrait.value = ""; fRole.value = ""; fChamp.value = ""; renderComps(); });
 function filterComps(o){
   if ("trait" in o) fTrait.value = [...fTrait.options].some(x => x.value === o.trait) ? o.trait : "";
   if ("role" in o) fRole.value = o.role;
@@ -967,15 +1017,19 @@ function openComp(name){
   const tr = compTraits(cp);
   ov.innerHTML = `<div class="ovp" style="--c:var(--${cp.k})">
     <button class="ovx" aria-label="Close">&times;</button>
-    <div><h3>${esc(cp.n)}</h3><div class="sub">${esc(cp.diff)} &middot; ${esc(cp.style)} &middot; patch 18.2</div></div>
+    <div><h3>${esc(cp.n)}</h3><div class="sub">${SRC[cp.src][0]} comp${cp.diff ? " &middot; " + esc(cp.diff) : ""}${cp.style ? " &middot; " + esc(cp.style) : ""} &middot; patch 18.2</div>${statLine(cp)}</div>
     <div><h4>Synergies</h4><div class="traits">${tr.map(([t,n]) => `<button class="tr" data-trait="${esc(t)}"><b>${n}</b>${esc(t)}</button>`).join("")}</div></div>
     <div><h4>Final board</h4><div class="board">${cp.board.map(n => boardChip(n)).join("")}</div>
       ${cp.alts.length ? `<div class="sub" style="margin-top:6px">Interchangeable: ${cp.alts.map(esc).join(", ")}</div>` : ""}</div>
-    <div><h4>Carries and items</h4><div class="cp-carry">${cp.carries.map(([n, items]) =>
-      `<div class="build"><span class="bl">${esc(n)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div></div>
-    <div><h4>When to play it</h4><ul>${cp.when.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>
-    <div><h4>Tips</h4><ul>${cp.tips.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>
-    <div class="ext"><a href="${COMPBASE}${cp.slug}" target="_blank" rel="noopener">Full guide on Mobalytics</a></div>
+    ${cp.carries.length
+      ? `<div><h4>Carries and items</h4><div class="cp-carry">${cp.carries.map(([n, items]) =>
+          `<div class="build"><span class="bl">${esc(n)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div></div>`
+      : `<div><h4>Recommended items per champion</h4><div class="sub" style="margin-bottom:6px">No carry list is published for this comp, so these are each unit's own recommended items.</div>
+         <div class="cp-carry">${cp.board.filter(n => BIS[n] && byName[n] && !byName[n].r.includes("Tank")).map(n =>
+          `<div class="build"><span class="bl">${esc(n)}</span>${BIS[n].map(metaItem).join("")}</div>`).join("")}</div></div>`}
+    ${cp.when.length ? `<div><h4>When to play it</h4><ul>${cp.when.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    ${cp.tips.length ? `<div><h4>Tips</h4><ul>${cp.tips.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    <div class="ext">${SRC[cp.src][1]} &middot; <a href="${cp.slug ? COMPBASE + cp.slug : SRC[cp.src][2]}" target="_blank" rel="noopener">${cp.slug ? "Full guide" : "Source list"} on Mobalytics</a></div>
   </div>`;
   wireImgs(ov);
   ov.classList.add("on"); document.body.classList.add("lock");
