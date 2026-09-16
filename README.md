@@ -116,7 +116,7 @@ All data files are plain JSON and can be hand-edited when needed.
 Each champion object:
 ```json
 {
-  "n": "Ahri", "c": 4, "r": "ap",
+  "n": "Ahri", "c": 4, "r": "AP Caster",
   "t": ["Rebel", "Mage"],
   "a": "Orb of Deception",
   "d": "Fires an orb dealing magic damage.",

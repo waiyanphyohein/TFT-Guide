@@ -567,7 +567,7 @@ function metaHTML(c){
     ? `<a href="${METASRC}" target="_blank" rel="noopener">Mobalytics</a> champion page and meta comps`
     : `<a href="${METASRC.replace("team-comps","champions")}" target="_blank" rel="noopener">Mobalytics</a> champion page`;
   return `<div class="c-meta"><div class="mh"><b>Meta build</b>
-      <i>patch 18.2 &middot; ${src} &middot; hover an item for its recipe</i></div>
+      <i>patch ${_PATCH} &middot; ${src} &middot; hover an item for its recipe</i></div>
     <div class="builds">${rows.join("")}</div></div>`;
 }
 

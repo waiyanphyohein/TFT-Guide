@@ -99,7 +99,7 @@ function buildDataBlock() {
     `const COMPS = ${JSON.stringify(comps)};`,
   ];
 
-  return lines.join("\n");
+  return { block: lines.join("\n"), patchStr, setName };
 }
 
 function build() {
@@ -116,13 +116,10 @@ function build() {
     process.exit(1);
   }
 
-  const block = buildDataBlock();
+  const { block, patchStr, setName } = buildDataBlock();
   html = html.replace("// __INJECT_DATA__", block);
 
-  // Update the patch stamp dynamically
-  const champs = loadJSON(path.join(ROOT, "data", "champions.json"));
-  const patchStr = champs._meta.patch;
-  const setName  = champs._meta.setName;
+  // Update the patch stamp dynamically (values already parsed in buildDataBlock)
   html = html.replace(/__PATCH__/g, patchStr);
   html = html.replace(/__SET_NAME__/g, setName);
 

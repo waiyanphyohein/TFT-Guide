@@ -130,7 +130,7 @@ export default async function handler(req) {
   };
 
   try {
-    await kvSet(dataKey, JSON.stringify(submission));
+    await kvSet(dataKey, submission);
     const r = await kvIncr(voteKey); // start at 1 (submitter's implicit upvote)
     return new Response(JSON.stringify({ ok: true, votes: (r && r.result) ? r.result : 1 }), {
       status: 201, headers: { ...CORS_HEADERS, "Content-Type": "application/json" }

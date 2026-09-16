@@ -46,7 +46,10 @@ function get(url) {
       if (res.statusCode !== 200) return reject(new Error(`HTTP ${res.statusCode} for ${url}`));
       const chunks = [];
       res.on("data", c => chunks.push(c));
-      res.on("end", () => resolve(JSON.parse(Buffer.concat(chunks).toString("utf8"))));
+      res.on("end", () => {
+        try { resolve(JSON.parse(Buffer.concat(chunks).toString("utf8"))); }
+        catch (e) { reject(e); }
+      });
       res.on("error", reject);
     }).on("error", reject);
   });
