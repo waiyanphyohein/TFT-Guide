@@ -1,13 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
+  "outputDirectory": "dist",
+  "buildCommand": "node build.js",
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
     { "source": "/api/vote",          "destination": "/api/vote" },
     { "source": "/api/vote-scores",   "destination": "/api/vote-scores" },
     { "source": "/api/submit-comp",   "destination": "/api/submit-comp" },
-    { "source": "/api/pending-comps", "destination": "/api/pending-comps" },
-    { "source": "/",                  "destination": "/dist/index.html" }
+    { "source": "/api/pending-comps", "destination": "/api/pending-comps" }
   ],
   "headers": [
     {
