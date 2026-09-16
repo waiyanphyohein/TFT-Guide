@@ -236,7 +236,7 @@ async function main() {
       `\n### ⚠️ Ambiguous AP/AD classification (${ambiguous.length}) — please review`,
       "| Champion | Guessed | Ability snippet |",
       "|----------|---------|-----------------|",
-      ...ambiguous.map(a => `| ${a.name} | ${a.side} | ${a.desc.replace(/\|/g,"\\|")} |`),
+      ...ambiguous.map(a => `| ${a.name} | ${a.side} | ${a.desc.replace(/\\/g,"\\\\").replace(/\|/g,"\\|")} |`),
     ].join("\n") : "",
   ].filter(Boolean).join("\n");
 

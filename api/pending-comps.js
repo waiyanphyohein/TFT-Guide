@@ -3,9 +3,8 @@
  *
  * GET /api/pending-comps?patch=<patch>
  *
- * Returns pending community comp submissions that have accumulated ≥3 votes.
- * Called by the daily GitHub Actions workflow (fetch-comps.js) to promote
- * submissions into data/comps.json.
+ * Returns pending community comp submissions with ≥3 votes.
+ * Fully paginates the KV SCAN to avoid missing keys beyond the first page.
  *
  * Environment variables required:
  *   KV_REST_API_URL
@@ -24,13 +23,27 @@ const PROMOTE_THRESHOLD = 3;
 
 function kvUrl(p) { return process.env.KV_REST_API_URL + p; }
 
-async function kv(method, p) {
+async function kvGet(p) {
   const res = await fetch(kvUrl(p), {
-    method,
+    method: "GET",
     headers: { Authorization: "Bearer " + process.env.KV_REST_API_TOKEN },
   });
-  if (!res.ok) throw new Error("KV " + method + " " + p + " -> " + res.status);
+  if (!res.ok) throw new Error("KV GET " + p + " -> " + res.status);
   return res.json();
+}
+
+async function scanAllKeys(pattern) {
+  const keys = [];
+  let cursor = "0";
+  do {
+    const result = await kvGet(
+      "/scan/" + cursor + "?match=" + encodeURIComponent(pattern) + "&count=200"
+    );
+    const [nextCursor, page] = (result && result.result) ? result.result : ["0", []];
+    if (Array.isArray(page)) keys.push(...page);
+    cursor = String(nextCursor);
+  } while (cursor !== "0");
+  return keys;
 }
 
 export default async function handler(req) {
@@ -46,17 +59,14 @@ export default async function handler(req) {
   const url   = new URL(req.url);
   const patch = url.searchParams.get("patch") || "*";
 
-  // Scan for all pending keys for this patch
-  const pattern = "pending:" + patch + ":*";
-  let keys = [];
+  let keys;
   try {
-    const scan = await kv("GET", "/scan/0?match=" + encodeURIComponent(pattern) + "&count=200");
-    keys = (scan && scan.result && scan.result[1]) ? scan.result[1] : [];
+    keys = await scanAllKeys("pending:" + patch + ":*");
   } catch (err) {
-    return new Response("KV error: " + err.message, { status: 502 });
+    return new Response("KV scan error: " + err.message, { status: 502 });
   }
 
-  // Filter to data keys only (not vote-count or IP keys)
+  // Only data keys (not :<slug>:votes or ip- keys)
   const dataKeys = keys.filter(k => !k.endsWith(":votes") && !k.includes("ip-"));
 
   // Fetch data + votes in parallel
@@ -64,10 +74,10 @@ export default async function handler(req) {
     dataKeys.map(async key => {
       const voteKey = key + ":votes";
       const [dataRes, votesRes] = await Promise.all([
-        kv("GET", "/get/" + key),
-        kv("GET", "/get/" + voteKey).catch(() => ({ result: 0 })),
+        kvGet("/get/" + key),
+        kvGet("/get/" + voteKey).catch(() => ({ result: 0 })),
       ]);
-      const data  = dataRes && dataRes.result ? JSON.parse(dataRes.result) : null;
+      const data  = (dataRes && dataRes.result) ? JSON.parse(dataRes.result) : null;
       const votes = (votesRes && votesRes.result) ? parseInt(votesRes.result, 10) : 0;
       return data ? { ...data, votes } : null;
     })

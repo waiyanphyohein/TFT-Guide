@@ -1,14 +1,10 @@
 /**
  * api/vote-scores.js — Vercel Edge Function
  *
- * GET /api/vote-scores
+ * GET /api/vote-scores?patch=<patch>
  *
- * Returns a JSON object mapping comp name → net score (upvotes − downvotes)
- * for the current patch. Used by the daily GitHub Actions workflow to write
- * data/scores.json before rebuilding the page.
- *
- * The patch is read from the ?patch= query parameter or defaults to fetching
- * all keys matching the vote:* pattern.
+ * Returns a JSON object mapping comp slug → net score (upvotes − downvotes).
+ * Fully paginates the KV SCAN to avoid missing keys beyond the first page.
  *
  * Environment variables required:
  *   KV_REST_API_URL
@@ -27,13 +23,27 @@ function kvUrl(p) {
   return process.env.KV_REST_API_URL + p;
 }
 
-async function kv(method, p) {
+async function kvGet(p) {
   const res = await fetch(kvUrl(p), {
-    method,
+    method: "GET",
     headers: { Authorization: "Bearer " + process.env.KV_REST_API_TOKEN },
   });
-  if (!res.ok) throw new Error("KV " + method + " " + p + " -> " + res.status);
+  if (!res.ok) throw new Error("KV GET " + p + " -> " + res.status);
   return res.json();
+}
+
+async function scanAllKeys(pattern) {
+  const keys = [];
+  let cursor = "0";
+  do {
+    const result = await kvGet(
+      "/scan/" + cursor + "?match=" + encodeURIComponent(pattern) + "&count=200"
+    );
+    const [nextCursor, page] = (result && result.result) ? result.result : ["0", []];
+    if (Array.isArray(page)) keys.push(...page);
+    cursor = String(nextCursor);
+  } while (cursor !== "0");
+  return keys;
 }
 
 export default async function handler(req) {
@@ -46,29 +56,25 @@ export default async function handler(req) {
     });
   }
 
-  const url    = new URL(req.url);
-  const patch  = url.searchParams.get("patch") || "*";
-  const cursor = url.searchParams.get("cursor") || "0";
+  const url   = new URL(req.url);
+  const patch = url.searchParams.get("patch") || "*";
 
-  // SCAN for all vote keys (pattern: vote:<patch>:*:up|down)
-  const pattern = "vote:" + patch + ":*";
-  let keys = [];
+  let keys;
   try {
-    const scan = await kv("GET", "/scan/" + cursor + "?match=" + encodeURIComponent(pattern) + "&count=200");
-    keys = (scan && scan.result && scan.result[1]) ? scan.result[1] : [];
+    keys = await scanAllKeys("vote:" + patch + ":*");
   } catch (err) {
-    return new Response("KV error: " + err.message, { status: 502 });
+    return new Response("KV scan error: " + err.message, { status: 502 });
   }
 
   // Fetch all values in parallel
   const entries = await Promise.allSettled(
     keys.map(async key => {
-      const res = await kv("GET", "/get/" + key);
+      const res = await kvGet("/get/" + key);
       return { key, value: (res && res.result) ? parseInt(res.result, 10) : 0 };
     })
   );
 
-  // Aggregate into { compName: netScore }
+  // Aggregate into { compSlug: netScore }
   const scores = {};
   for (const entry of entries) {
     if (entry.status !== "fulfilled") continue;

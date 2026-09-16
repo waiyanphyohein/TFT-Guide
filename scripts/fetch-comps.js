@@ -182,11 +182,16 @@ async function main() {
     if ((pending.votes ?? 0) < 3) continue;
     if (existingNames.has(pending.n)) continue; // already present
     comps.push({
-      src: "community", k: "hy", slug: "", diff: pending.diff || "",
-      style: pending.style || "", alts: [], carries: [],
-      when: pending.when || [], tips: pending.tips || [],
-      board: pending.board || [], votes: pending.votes, by: pending.by || "",
       ...pending,
+      src: "community", k: pending.k || "hy", slug: pending.slug || "",
+      diff:  pending.diff  || "",
+      style: pending.style || "",
+      alts:  pending.alts  || [],
+      carries: pending.carries || [],
+      when:  pending.when  || [],
+      tips:  pending.tips  || [],
+      board: pending.board || [],
+      by:    pending.by    || "",
     });
     compsAdded++;
     existingNames.add(pending.n);

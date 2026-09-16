@@ -292,7 +292,7 @@
   #submit-toggle{font:inherit;font-size:13px;color:var(--ink-dim);background:var(--panel);
     border:1px solid var(--line);border-radius:3px;padding:6px 12px;cursor:pointer;margin-bottom:14px}
   #submit-toggle:hover{color:var(--ink);border-color:#3C5145}
-  #submit-form{display:none;background:var(--panel);border:1px solid var(--line);
+  #submit-form{background:var(--panel);border:1px solid var(--line);
     padding:16px 18px;margin-bottom:14px;display:none}
   #submit-form.open{display:block}
   #submit-form h3{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:17px;font-weight:600;margin:0 0 12px}
@@ -455,7 +455,7 @@ BANDS.forEach(b => b.items.forEach(([n,a,c,e]) => { RECIPE[n] = [a,c,e,b.k]; }))
 const MAXES = {hp:1800, mm:150, ad:125, ar:75, mr:75};
 const STATC = {hp:"var(--c-belt)", mm:"var(--c-tear)", ad:"var(--c-bf)", ar:"var(--c-vest)", mr:"var(--c-cloak)"};
 
-const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 const side = c => c.t.includes("Adaptor") ? "fx" : (c.r.startsWith("AP") ? "ap" : "ad");
 const tvar = s => s === "fx" ? "var(--hy)" : "var(--" + s + ")";
 

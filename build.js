@@ -22,12 +22,10 @@ const DIST_DIR = path.join(ROOT, "dist");
 const DIST_OUT = path.join(DIST_DIR, "index.html");
 
 // Data files to inject. Order matters: later files can reference earlier ones.
-const DATA_FILES = [
-  { file: path.join(ROOT, "data", "items.json"),     vars: ["COMPONENTS","BANDS","TELLS"] },
-  { file: path.join(ROOT, "data", "champions.json"), vars: ["CHAMPS","BIS","META_BUILDS","IMGBASE"] },
-  { file: path.join(ROOT, "data", "comps.json"),     vars: ["COMPS","SRC","COMPBASE"] },
-];
-
+// DATA_FILES documents which data/ files feed which JS variables (for reference):
+// items.json     → COMPONENTS, BANDS, TELLS
+// champions.json → CHAMPS, BIS, META_BUILDS, IMGBASE
+// comps.json     → COMPS, SRC, COMPBASE
 // Optional: merge community-score overrides written by the daily workflow
 const SCORE_FILE = path.join(ROOT, "data", "scores.json");
 
