@@ -1,0 +1,917 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="TFT Set 18 Enchanted Wilds: which items give ability power vs attack damage, and which of the 65 champions use each. Searchable, with stats and abilities.">
+<meta name="robots" content="noindex">
+<title>TFT Set 18 — AP vs AD</title>
+<style>
+  :root{
+    --bg:#0E1511; --panel:#16211A; --panel-2:#1B2822; --line:#2A3A31;
+    --ink:#E6EADF; --ink-dim:#8FA096;
+    --ap:#9B87F5; --ad:#E07A42; --hy:#D6B457; --as:#4FB393; --tk:#7C8C83;
+    --c-bf:#E05C3E; --c-bow:#D9C24A; --c-rod:#9B87F5; --c-tear:#57A9E0;
+    --c-vest:#7D93A8; --c-cloak:#B07AC4; --c-belt:#5FB36A; --c-glove:#E38AA8;
+    --k1:#9AA5A0; --k2:#4FB36A; --k3:#3D8FD4; --k4:#B45AC4; --k5:#D8A63C;
+  }
+  *{box-sizing:border-box}
+  html{background:var(--bg);-webkit-text-size-adjust:100%}
+  body{margin:0;min-height:100vh;background:
+      radial-gradient(900px 500px at 12% -10%, rgba(155,135,245,.11), transparent 60%),
+      radial-gradient(900px 500px at 90% -5%, rgba(224,122,66,.11), transparent 60%), var(--bg);
+    color:var(--ink);font:15px/1.5 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:36px 20px 64px}
+  h1{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+     font-size:clamp(26px,4.4vw,40px);line-height:1.05;letter-spacing:-.015em;font-weight:600;margin:0 0 4px}
+  h1 .ap{color:var(--ap)} h1 .ad{color:var(--ad)}
+  .stamp{font-size:12.5px;color:var(--ink-dim)}
+  h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+     font-size:20px;font-weight:600;letter-spacing:-.01em;margin:38px 0 12px;
+     padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+  .rules{display:grid;gap:8px;margin:22px 0 0}
+  .rl{display:flex;align-items:center;gap:14px;padding:13px 16px;
+      background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c)}
+  .rl .arw{color:var(--ink-dim);font-size:17px;margin-left:auto}
+  .rl .got{font-size:14px;font-weight:600;color:var(--c);white-space:nowrap}
+  .bigcomp{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:7px;
+      background:color-mix(in srgb,var(--c) 16%,transparent);border:1px solid color-mix(in srgb,var(--c) 42%,transparent)}
+  .bigcomp svg{width:21px;height:21px;stroke:var(--c);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+  .key{display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .key-i{background:var(--panel);padding:10px 12px;display:flex;align-items:center;gap:9px}
+  .key-i b{font-weight:550;font-size:12.5px;display:block;line-height:1.25}
+  .key-i i{font-style:normal;font-size:11px;color:var(--ink-dim)}
+  .comp{width:24px;height:24px;flex:0 0 24px;display:grid;place-items:center;border-radius:5px;
+      background:color-mix(in srgb,var(--c) 16%,transparent);border:1px solid color-mix(in srgb,var(--c) 42%,transparent)}
+  .comp svg{width:15px;height:15px;stroke:var(--c);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .comp{position:relative;overflow:hidden}
+  .comp .cimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+
+  .band{border:1px solid var(--line);border-left:3px solid var(--c);background:var(--panel);margin-bottom:10px}
+  .band-head{display:flex;align-items:center;gap:10px;padding:10px 16px}
+  .band-title{font-size:15px;font-weight:650;color:var(--c)}
+  .band-note{font-size:12.5px;color:var(--ink-dim)}
+  .band-n{margin-left:auto;font-size:12px;color:var(--ink-dim)}
+  .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+  .item{background:var(--panel);padding:9px 12px;display:flex;gap:10px;align-items:center}
+  .item b{display:block;font-weight:550;font-size:13.5px;line-height:1.25}
+  .item s{display:block;text-decoration:none;font-size:11.5px;color:var(--c);opacity:.9;margin-top:1px}
+  .ico{position:relative;width:34px;height:34px;flex:0 0 34px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--panel-2)}
+  .ico .sl{position:absolute;inset:0}
+  .ico .sl.a{clip-path:polygon(0 0,100% 0,0 100%)}
+  .ico .sl.b{clip-path:polygon(100% 0,100% 100%,0 100%)}
+  .ico .sl i{position:absolute;inset:0;background:color-mix(in srgb,var(--c) 24%,transparent)}
+  .ico .sl svg{position:absolute;width:14px;height:14px;stroke:var(--c);fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+  .ico .sl.a svg{top:2px;left:2px} .ico .sl.b svg{bottom:2px;right:2px}
+  .ico .dg{position:absolute;inset:0} .ico .dg line{stroke:var(--line);stroke-width:1}
+  .ico .iimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+             display:block;background:#101A14}
+  .mini{display:inline-grid;place-items:center;width:13px;height:13px;vertical-align:-2px;margin-right:1px}
+  .mini svg{width:12px;height:12px;stroke:var(--c);fill:none;stroke-width:2.2;
+            stroke-linecap:round;stroke-linejoin:round}
+  .item s{display:flex;align-items:center;gap:1px}
+  .item s em{font-style:normal;margin-left:4px}
+
+  /* ---- search ---- */
+  .searchbar{position:relative;margin:0 0 12px}
+  .searchbar svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;
+                 stroke:var(--ink-dim);fill:none;stroke-width:2;stroke-linecap:round;pointer-events:none}
+  #q{width:100%;font:inherit;font-size:14.5px;color:var(--ink);background:var(--panel);
+     border:1px solid var(--line);border-radius:4px;padding:11px 40px 11px 36px}
+  #q::placeholder{color:var(--ink-dim)}
+  #q:focus{outline:none;border-color:#4A6355;background:var(--panel-2)}
+  #clr{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;
+       color:var(--ink-dim);cursor:pointer;font:inherit;font-size:18px;padding:4px 10px;line-height:1;display:none}
+  #clr:hover{color:var(--ink)}
+
+  .filters{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .filters button{font:inherit;font-size:12.5px;color:var(--ink-dim);cursor:pointer;background:var(--panel);
+    border:1px solid var(--line);border-radius:3px;padding:5px 12px;transition:color .12s,border-color .12s,background .12s}
+  .filters button:hover{color:var(--ink);border-color:#3C5145}
+  .filters button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink);border-color:#4A6355}
+  .filters button:focus-visible,#q:focus-visible{outline:2px solid var(--ap);outline-offset:2px}
+
+  .grid{border:1px solid var(--line);background:var(--panel)}
+  .head-row,.tier{display:grid;grid-template-columns:52px 1fr 146px 1fr;border-bottom:1px solid var(--line)}
+  .tier:last-child{border-bottom:0}
+  .head-row{background:var(--panel-2)}
+  .head-row div{padding:8px 12px;font-size:12px;color:var(--ink-dim)}
+  .head-row .h-ap{color:var(--ap)} .head-row .h-ad{color:var(--ad)} .head-row .h-fx{color:var(--hy);text-align:center}
+  .head-row b{font-weight:700;letter-spacing:.01em}
+  .head-row i{font-style:normal;color:var(--ink-dim);font-weight:400}
+  .rl em{font-style:normal;color:var(--c);font-weight:700}
+  .c-scale{font-size:12.5px;color:var(--ink-dim);margin:0 0 12px;
+           padding:6px 10px;border-left:2px solid var(--t);background:var(--panel-2)}
+  .c-scale b{color:var(--t);font-weight:700}
+  .cost{padding:13px 0 0;text-align:center;font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:20px;border-right:1px solid var(--line)}
+  .cell{padding:10px 12px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+  .cell.mid{border-left:1px solid var(--line);border-right:1px solid var(--line);justify-content:center;background:rgba(214,180,87,.035)}
+  .u{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12.5px;padding:2px 9px 2px 2px;
+     border-radius:20px;background:color-mix(in srgb,var(--t) 13%,transparent);cursor:pointer;
+     border:1px solid color-mix(in srgb,var(--t) 32%,transparent);color:var(--ink);white-space:nowrap;
+     transition:border-color .12s,background .12s}
+  .u:hover{background:color-mix(in srgb,var(--t) 24%,transparent);border-color:color-mix(in srgb,var(--t) 60%,transparent)}
+  .u:focus-visible{outline:2px solid var(--t);outline-offset:2px}
+  .u.tankrole{opacity:.62}
+  .por{position:relative;display:block;flex:0 0 22px;width:22px;height:22px}
+  .por svg,.por img{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .por img{object-fit:cover;background:#0E1511;
+           clip-path:polygon(50% 3%,93% 26%,93% 74%,50% 97%,7% 74%,7% 26%)}
+  .por .hexbg polygon{fill:color-mix(in srgb,var(--k) 26%,#0E1511);stroke:var(--k);stroke-width:6}
+  .por .hexbg text{fill:var(--k);font:600 36px ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+                   text-anchor:middle;dominant-baseline:central}
+  .por .ring polygon{fill:none;stroke:var(--k);stroke-width:7}
+
+  .legend{display:flex;flex-wrap:wrap;gap:13px;margin:0 0 14px;font-size:12px;color:var(--ink-dim)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--k)}
+
+  /* ---- detail cards ---- */
+  #cards{display:grid;gap:10px}
+  .card{border:1px solid var(--line);border-left:3px solid var(--t);background:var(--panel);padding:14px 16px}
+  .c-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .c-top .por{width:42px;height:42px;flex:0 0 42px}
+  .c-name{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:20px;font-weight:600;letter-spacing:-.01em}
+  .c-role{font-size:12.5px;font-weight:600;color:var(--t);border:1px solid color-mix(in srgb,var(--t) 38%,transparent);
+          background:color-mix(in srgb,var(--t) 12%,transparent);border-radius:3px;padding:2px 8px}
+  .c-cost{margin-left:auto;font-size:12.5px;color:var(--k)}
+  .c-traits{font-size:12.5px;color:var(--ink-dim);margin:6px 0 12px}
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:13px}
+  .st .lab{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-dim);margin-bottom:3px}
+  .st .lab b{color:var(--ink);font-weight:600;font-size:12px}
+  .st .track{height:4px;border-radius:2px;background:var(--panel-2);overflow:hidden}
+  .st .fill{height:100%;background:var(--s);border-radius:2px}
+  .c-ability{border-top:1px solid var(--line);padding-top:11px}
+  .c-ability b{display:block;font-size:14px;font-weight:600;margin-bottom:4px;color:var(--t)}
+  .c-ability p{margin:0 0 6px;font-size:13.5px;color:var(--ink-dim);max-width:78ch}
+  .c-ability p:last-child{margin-bottom:0}
+  .empty{border:1px dashed var(--line);padding:22px;text-align:center;color:var(--ink-dim);font-size:13.5px}
+  .hide{display:none}
+
+  .tells{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .tell{background:var(--panel);padding:11px 14px;display:flex;align-items:center;gap:9px}
+  .tell b{font-size:13.5px;font-weight:550}
+  .tell .arw{color:var(--ink-dim);margin-left:auto;font-size:15px}
+  .tell .to{font-size:12.5px;font-weight:600;color:var(--c);white-space:nowrap}
+
+
+  /* ---- recipe tooltip ---- */
+  .ico,.mi{cursor:help}
+  #tip{position:fixed;z-index:50;pointer-events:none;opacity:0;transition:opacity .1s;
+       background:var(--panel-2);border:1px solid #3C5145;border-radius:6px;padding:9px 11px;
+       box-shadow:0 8px 24px rgba(0,0,0,.45);max-width:260px;font-size:12.5px;line-height:1.35}
+  #tip.on{opacity:1}
+  #tip b{display:block;font-size:13px;margin-bottom:6px}
+  #tip .rec{display:flex;align-items:center;gap:6px}
+  #tip .rec .comp{width:26px;height:26px;flex:0 0 26px}
+  #tip .rec .plus,#tip .rec .eq{color:var(--ink-dim);font-size:14px}
+  #tip .rec .ico{width:28px;height:28px;flex:0 0 28px;cursor:default}
+  #tip .cn{font-size:11.5px;color:var(--ink-dim);margin-top:5px}
+  #tip .fx{color:var(--ink-dim);margin-top:5px}
+
+  /* ---- meta build ---- */
+  .c-meta{border-top:1px solid var(--line);padding-top:11px;margin-bottom:12px}
+  .c-meta .mh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .c-meta .mh b{font-size:14px;font-weight:600;color:var(--t)}
+  .c-meta .mh i{font-style:normal;font-size:11.5px;color:var(--ink-dim)}
+  .c-meta .mh a{color:var(--ink-dim);text-decoration:underline dotted}
+  .c-meta .mh a:hover{color:var(--ink)}
+  .builds{display:grid;gap:6px}
+  .build{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .build .bl{font-size:11.5px;color:var(--ink-dim);min-width:112px}
+  .mi{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border-radius:4px;
+      background:var(--panel-2);border:1px solid var(--line);font-size:12.5px;white-space:nowrap}
+  .mi .ico{width:26px;height:26px;flex:0 0 26px}
+  .mi.emblem{padding-left:9px;color:var(--hy);border-color:color-mix(in srgb,var(--hy) 40%,transparent)}
+
+
+  /* ---- meta comps ---- */
+  .cbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px;align-items:center}
+  .cbar select,.cbar input{font:inherit;font-size:13px;color:var(--ink);background:var(--panel);
+     border:1px solid var(--line);border-radius:4px;padding:7px 10px;min-width:150px}
+  .cbar select:focus,.cbar input:focus{outline:none;border-color:#4A6355;background:var(--panel-2)}
+  .cbar .cnt{font-size:12.5px;color:var(--ink-dim);margin-left:auto}
+  .cbar .reset{font:inherit;font-size:12.5px;color:var(--ink-dim);background:none;border:1px solid var(--line);
+     border-radius:3px;padding:6px 10px;cursor:pointer}
+  .cbar .reset:hover{color:var(--ink);border-color:#3C5145}
+  .comps{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px}
+  .cp{border:1px solid var(--line);border-left:3px solid var(--c);background:var(--panel);padding:13px 15px;
+      display:flex;flex-direction:column;gap:9px}
+  .cp-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .cp-name{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .tag{font-size:11.5px;padding:2px 7px;border-radius:3px;border:1px solid var(--line);color:var(--ink-dim);white-space:nowrap}
+  .tag.hard{color:#E07A42;border-color:rgba(224,122,66,.4)} .tag.medium{color:#D6B457;border-color:rgba(214,180,87,.4)}
+  .tag.easy{color:#4FB393;border-color:rgba(79,179,147,.4)}
+  .tag.src-meta{color:var(--ap);border-color:color-mix(in srgb,var(--ap) 45%,transparent)}
+  .tag.src-stats{color:#57A9E0;border-color:rgba(87,169,224,.45)}
+  .tag.src-community{color:var(--ink-dim);border-style:dashed}
+  .stat{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--ink-dim)}
+  .stat b{color:var(--ink);font-weight:600} .stat i{font-style:normal}
+  .cp-open{margin-left:auto;font:inherit;font-size:12.5px;color:var(--ink);background:var(--panel-2);
+      border:1px solid var(--line);border-radius:3px;padding:5px 10px;cursor:pointer}
+  .cp-open:hover{border-color:#4A6355}
+  .traits{display:flex;flex-wrap:wrap;gap:5px}
+  .tr{font:inherit;font-size:11.5px;color:var(--ink-dim);background:var(--panel-2);border:1px solid var(--line);
+      border-radius:3px;padding:2px 7px;cursor:pointer;display:inline-flex;gap:5px;align-items:center}
+  .tr b{color:var(--ink);font-weight:600}
+  .tr:hover,.tr.hit{border-color:#4A6355;color:var(--ink)}
+  .tr.hit{background:color-mix(in srgb,var(--ap) 18%,transparent)}
+  .board{display:flex;flex-wrap:wrap;gap:5px}
+  .board .u.hit{outline:2px solid var(--ink);outline-offset:1px}
+  .board .u.alt{opacity:.55}
+  .cp-carry{display:grid;gap:5px}
+  .cp-carry .build .bl{min-width:96px}
+  .cp-lbl{font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em}
+  .cp-when,.cp-tips{border-top:1px solid var(--line);padding-top:8px}
+  .cp-when ul,.cp-tips ul{margin:4px 0 0;padding-left:16px;font-size:12.5px;color:var(--ink-dim)}
+  .cp-when li,.cp-tips li{margin:2px 0}
+  .cp-empty{grid-column:1/-1}
+  .c-comps{border-top:1px solid var(--line);padding-top:11px;margin-bottom:12px}
+  .c-comps b{display:block;font-size:14px;font-weight:600;color:var(--t);margin-bottom:6px}
+  .c-comps .row{display:flex;flex-wrap:wrap;gap:6px}
+  .cc{font:inherit;font-size:12.5px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);
+      border-radius:3px;padding:5px 10px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+  .cc:hover{border-color:#4A6355}
+  .cc i{font-style:normal;color:var(--ink-dim);font-size:11.5px}
+  .c-comps .none{font-size:12.5px;color:var(--ink-dim)}
+  .tell{cursor:pointer} .tell:hover{background:var(--panel-2)}
+
+  /* ---- overlay ---- */
+  #ov{position:fixed;inset:0;z-index:60;background:rgba(6,10,8,.72);display:none;align-items:flex-start;
+      justify-content:center;padding:28px 14px;overflow-y:auto}
+  #ov.on{display:flex}
+  .ovp{width:min(760px,100%);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c);
+       padding:18px 20px 22px;display:grid;gap:14px;position:relative}
+  .ovx{position:absolute;top:8px;right:8px;font:inherit;font-size:20px;line-height:1;color:var(--ink-dim);
+       background:none;border:0;cursor:pointer;padding:6px 10px}
+  .ovx:hover{color:var(--ink)}
+  .ovp h3{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:24px;font-weight:600;margin:0;letter-spacing:-.015em}
+  .ovp .sub{font-size:13px;color:var(--ink-dim)}
+  .ovp h4{font-size:12px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px;font-weight:600}
+  .ovp ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-dim)}
+  .ovp li{margin:3px 0}
+  .ovp .board .u{font-size:13px}
+  .ovp .ext{font-size:12.5px} .ovp .ext a{color:var(--ink-dim)}
+  body.lock{overflow:hidden}
+
+  @media (max-width:760px){
+    .head-row,.tier{grid-template-columns:1fr}
+    .cost{text-align:left;padding:9px 12px 2px;border-right:0;border-bottom:1px solid var(--line);background:var(--panel-2)}
+    .cell.mid{border-left:0;border-right:0;justify-content:flex-start}
+    .cell{border-bottom:1px solid var(--line)}
+    .tier:last-child .cell:last-child{border-bottom:0}
+    .head-row{display:none}
+    .cell::before{flex-basis:100%;font-size:11px;color:var(--ink-dim);margin-bottom:1px}
+    .cell.left::before{content:"AP \2014 magic damage";color:var(--ap)}
+    .cell.mid::before{content:"Adaptor \2014 either";color:var(--hy)}
+    .cell.right::before{content:"AD \2014 physical damage";color:var(--ad)}
+    .rl .arw{display:none}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .build .bl{flex-basis:100%;min-width:0}
+    .comps{grid-template-columns:1fr}
+    .cbar select,.cbar input{flex:1 1 140px;min-width:0}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ---- stale tag ---- */
+  .tag.stale{color:#E07A42;border-color:rgba(224,122,66,.4);font-style:italic}
+
+  /* ---- vote widget ---- */
+  .cp-vote{display:flex;align-items:center;gap:8px;padding-top:8px;border-top:1px solid var(--line);margin-top:4px}
+  .vote-btn{font:inherit;font-size:15px;background:none;border:1px solid var(--line);border-radius:4px;
+    padding:3px 9px;cursor:pointer;color:var(--ink-dim);transition:border-color .12s,background .12s}
+  .vote-btn:hover{border-color:#4A6355;background:var(--panel-2)}
+  .vote-btn.voted{border-color:#4FB393;background:color-mix(in srgb,#4FB393 14%,transparent);color:var(--ink)}
+  .vote-thanks{font-size:12px;color:#4FB393}
+
+  /* ---- submit comp modal ---- */
+  #submit-toggle{font:inherit;font-size:13px;color:var(--ink-dim);background:var(--panel);
+    border:1px solid var(--line);border-radius:3px;padding:6px 12px;cursor:pointer;margin-bottom:14px}
+  #submit-toggle:hover{color:var(--ink);border-color:#3C5145}
+  #submit-form{background:var(--panel);border:1px solid var(--line);
+    padding:16px 18px;margin-bottom:14px;display:none}
+  #submit-form.open{display:block}
+  #submit-form h3{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:17px;font-weight:600;margin:0 0 12px}
+  .sf-row{display:grid;grid-template-columns:160px 1fr;align-items:start;gap:6px 12px;margin-bottom:8px}
+  .sf-row label{font-size:13px;color:var(--ink-dim);padding-top:9px}
+  .sf-row input,.sf-row textarea,.sf-row select{font:inherit;font-size:13.5px;color:var(--ink);
+    background:var(--panel-2);border:1px solid var(--line);border-radius:4px;padding:8px 10px;width:100%}
+  .sf-row textarea{resize:vertical;min-height:60px}
+  .sf-row input:focus,.sf-row textarea:focus,.sf-row select:focus{outline:none;border-color:#4A6355}
+  .sf-actions{display:flex;gap:8px;margin-top:12px}
+  .sf-submit{font:inherit;font-size:13.5px;background:color-mix(in srgb,var(--ap) 22%,transparent);
+    color:var(--ink);border:1px solid color-mix(in srgb,var(--ap) 45%,transparent);
+    border-radius:4px;padding:8px 18px;cursor:pointer}
+  .sf-submit:hover{background:color-mix(in srgb,var(--ap) 34%,transparent)}
+  .sf-cancel{font:inherit;font-size:13.5px;background:none;color:var(--ink-dim);
+    border:1px solid var(--line);border-radius:4px;padding:8px 14px;cursor:pointer}
+  .sf-cancel:hover{color:var(--ink);border-color:#3C5145}
+  .sf-msg{font-size:13px;color:#4FB393;margin-top:8px;display:none}
+  @media (max-width:600px){.sf-row{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="g-bf" viewBox="0 0 24 24"><path d="M20 4 11 13"/><path d="M8 10l6 6"/><path d="M11 17l-4 4"/><path d="M5 18l1 1"/></symbol>
+  <symbol id="g-bow" viewBox="0 0 24 24"><path d="M7 3a13 13 0 0 1 0 18"/><path d="M7 3v18"/><path d="M6 12h11"/><path d="M14 9l4 3-4 3"/></symbol>
+  <symbol id="g-rod" viewBox="0 0 24 24"><path d="M5 20 15 10"/><path d="M18 3v7"/><path d="M14.5 6.5h7"/><path d="M16 4.5l4 4"/><path d="M20 4.5l-4 4"/></symbol>
+  <symbol id="g-tear" viewBox="0 0 24 24"><path d="M12 3c4 5.5 6.5 8.5 6.5 11.5a6.5 6.5 0 0 1-13 0C5.5 11.5 8 8.5 12 3z"/></symbol>
+  <symbol id="g-vest" viewBox="0 0 24 24"><path d="M12 3l7.5 3v6.5c0 4.5-3.5 7.5-7.5 9-4-1.5-7.5-4.5-7.5-9V6z"/><path d="M8.5 12h7"/></symbol>
+  <symbol id="g-cloak" viewBox="0 0 24 24"><path d="M9 3l3 2.5L15 3l3.5 5-2 13h-9l-2-13z"/><path d="M12 5.5V21"/></symbol>
+  <symbol id="g-belt" viewBox="0 0 24 24"><path d="M2 9h20v6H2z"/><path d="M9 7h6v10H9z"/></symbol>
+  <symbol id="g-glove" viewBox="0 0 24 24"><path d="M7.5 11V7.5a2 2 0 0 1 4 0V11"/><path d="M11.5 11V6a2 2 0 0 1 4 0v5"/><path d="M15.5 11V8.5a1.8 1.8 0 0 1 3.5 0V14a7 7 0 0 1-7 7h-1a7 7 0 0 1-7-7v-3.5a1.8 1.8 0 0 1 3.5 0"/></symbol>
+</defs></svg>
+
+<div class="wrap">
+<h1>Set 18 <span class="ap">AP</span> / <span class="ad">AD</span></h1>
+<div class="stamp">Enchanted Wilds · patch 18.2 · 65 champions</div>
+
+<div class="rules">
+  <div class="rl" style="--c:var(--ap)">
+    <span class="bigcomp" style="--c:var(--ap)"><svg><use href="#g-rod"/></svg></span>
+    <span>Ability says <b>magic damage</b> <em>= AP</em></span>
+    <span class="arw">&rarr;</span><span class="got">Rod items</span>
+  </div>
+  <div class="rl" style="--c:var(--ad)">
+    <span class="bigcomp" style="--c:var(--ad)"><svg><use href="#g-bf"/></svg></span>
+    <span>Ability says <b>physical damage</b> <em>= AD</em></span>
+    <span class="arw">&rarr;</span><span class="got">Sword items</span>
+  </div>
+</div>
+
+<h2>Components</h2>
+<div class="key" id="key"></div>
+
+<h2>Items</h2>
+<div id="bands"></div>
+
+<h2>Champions</h2>
+<div class="searchbar">
+  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+  <input id="q" type="search" autocomplete="off" spellcheck="false"
+         placeholder="Search a champion, trait, role or ability — try Nidalee, Spellweaver, or burn">
+  <button id="clr" aria-label="Clear search">&times;</button>
+</div>
+
+<div id="browse">
+  <div class="legend">
+    <span><i class="dot" style="--k:var(--k1)"></i>1</span>
+    <span><i class="dot" style="--k:var(--k2)"></i>2</span>
+    <span><i class="dot" style="--k:var(--k3)"></i>3</span>
+    <span><i class="dot" style="--k:var(--k4)"></i>4</span>
+    <span><i class="dot" style="--k:var(--k5)"></i>5 cost</span>
+    <span style="opacity:.62">faded = tank role</span>
+    <span>tap any name for stats</span>
+  </div>
+  <div class="filters" id="filters">
+    <button aria-pressed="true" data-cost="all">All</button>
+    <button aria-pressed="false" data-cost="1">1</button>
+    <button aria-pressed="false" data-cost="2">2</button>
+    <button aria-pressed="false" data-cost="3">3</button>
+    <button aria-pressed="false" data-cost="4">4</button>
+    <button aria-pressed="false" data-cost="5">5</button>
+  </div>
+  <div class="grid" id="grid">
+    <div class="head-row"><div></div><div class="h-ap"><b>AP</b> <i>&mdash; magic damage</i></div>
+      <div class="h-fx"><b>Adaptor</b> <i>&mdash; either</i></div>
+      <div class="h-ad"><b>AD</b> <i>&mdash; physical damage</i></div></div>
+  </div>
+</div>
+
+<div id="cards" class="hide"></div>
+
+<h2>Meta comps</h2>
+<div class="cbar">
+  <select id="f-src" aria-label="Filter by source"><option value="">All sources</option>
+    <option value="meta">Meta comps</option><option value="stats">Data comps</option><option value="community">Community comps</option></select>
+  <select id="f-trait" aria-label="Filter by trait"><option value="">Any trait</option></select>
+  <select id="f-role" aria-label="Filter by role"><option value="">Any role</option></select>
+  <input id="f-champ" type="search" placeholder="Champion" autocomplete="off" aria-label="Filter by champion">
+  <button class="reset" id="f-reset">Clear</button>
+  <span class="cnt" id="f-cnt"></span>
+</div>
+<div class="comps" id="comps"></div>
+
+<button id="submit-toggle">+ Submit a comp</button>
+<div id="submit-form" role="form" aria-label="Submit a comp">
+  <h3>Submit a comp</h3>
+  <div class="sf-row"><label for="sf-name">Comp name</label>
+    <input id="sf-name" type="text" placeholder="e.g. Invoker Fast 8" maxlength="80"></div>
+  <div class="sf-row"><label for="sf-board">Board units</label>
+    <input id="sf-board" type="text" placeholder="Comma-separated champion names" maxlength="300"></div>
+  <div class="sf-row"><label for="sf-style">Style</label>
+    <input id="sf-style" type="text" placeholder="e.g. Fast 8, Level 6 slow roll" maxlength="60"></div>
+  <div class="sf-row"><label for="sf-diff">Difficulty</label>
+    <select id="sf-diff"><option value="">—</option><option>Easy</option><option>Medium</option><option>Hard</option></select></div>
+  <div class="sf-row"><label for="sf-when">When to play</label>
+    <textarea id="sf-when" placeholder="One condition per line" rows="3"></textarea></div>
+  <div class="sf-row"><label for="sf-tips">Tips</label>
+    <textarea id="sf-tips" placeholder="One tip per line" rows="3"></textarea></div>
+  <div class="sf-actions">
+    <button class="sf-submit" id="sf-submit">Submit</button>
+    <button class="sf-cancel" id="sf-cancel">Cancel</button>
+  </div>
+  <div class="sf-msg" id="sf-msg"></div>
+</div>
+
+<h2>Trait shortcuts</h2>
+<div class="tells" id="tells"></div>
+
+<noscript><div class="empty" style="margin-top:24px">
+  This page builds its item and champion lists with JavaScript. Enable it, or open the file in
+  any normal browser, to see them.
+</div></noscript>
+</div>
+<div id="tip" role="tooltip" aria-hidden="true"></div>
+<div id="ov" role="dialog" aria-modal="true" aria-label="Comp details"></div>
+
+<script>
+/* === AUTO-GENERATED — do not edit. Run: node build.js === */
+const _PATCH = "18.2";
+const _SET_NAME = "Enchanted Wilds";
+const IMGBASE = "https://tftraits.com/assets/set18/champions/";
+const ITEMBASE = "https://cdn.mobalytics.gg/assets/tft/images/game-items/set18/";
+const COMPBASE = "https://mobalytics.gg/tft/comps-guide/";
+const IMG = {"Akali":"da_18_akali_ad","Camille":"da_18_camille","Cinderling":"da_cinderling18","Karma":"da_karma18","Kobuko":"da_18_kobuko","Leona":"da_18_leona","Ornn":"da_18_ornn","Pebbles":"da_18_sentry","Rakan":"da_18_rakan","Rek'Sai":"da_18_reksai","Varus":"da_18_varus","Veigar":"da_18_veigar","Xayah":"da_18_xayah","Yorick":"da_18_yorick","Alistar":"da_18_alistar","Caitlyn":"da_18_caitlyn","Elise":"da_18_elise","Gromp":"da_gromp18_ap","Kayle":"da_18_kayle","LeBlanc":"da_18_leblanc","Murkwolf":"da_murkwolf18","Scuttlecrab":"da_scuttlecrab18","Sejuani":"da_18_sejuani","Shen":"da_18_shen","Teemo":"da_18_teemo","Warwick":"da_18_warwick","Yunara":"da_18_yunara","Azir":"da_18_azir","Cassiopeia":"da_18_cassiopeia","Diana":"da_18_diana","Fiddlesticks":"da_fiddlesticks18","Hecarim":"da_18_hecarim","Kha'Zix":"da_18_khazix","Kog'Maw":"da_kogmaw18_ad","Krug":"da_krug18","Mama Beak":"da_crimsonraptor18","Master Yi":"da_18_masteryi_ad","Rammus":"da_18_rammus","Rengar":"da_18_rengar","Tristana":"da_18_tristana","Vi":"da_vi18","Ahri":"da_18_ahri","Amumu":"da_amumu18","Aphelios":"da_18_aphelios","Brambleback":"da_brambleback18","Ezreal":"da_18_ezreal","Lillia":"da_18_lillia","Malphite":"da_18_malphite","Morgana":"da_18_morgana","Nidalee":"da_nidalee18_ap","Sentinel":"da_sentinel18","Sett":"da_18_sett","Sivir":"da_18_sivir","Soraka":"da_18_soraka","Zyra":"da_18_zyra","Alune":"da_18_alune","Ashe":"da_18_ashe","Draven":"da_draven18","Elder Dragon":"da_18_elderdragon","Gnar":"da_18_gnarsmall","Ivern":"da_18_ivern","Kennen":"da_18_kennen","Lux":"da_lux18_base","Maokai":"da_18_maokai","Taric":"da_taric18"};
+const CHAMPS = [{"n":"Akali","c":1,"r":"AD Fighter","t":"Ravager · Inferno · Adaptor","a":"Kunai Strike","d":"Adaptor AD: Throw a volley of kunai at the target, dealing 145/220/380% AD + 10/15/25 AP physical damage. If the target is Burning, deal an additional 35/52/80% AD damage.\nAdaptor AP: If the Ability kills, cast it again.","hp":650,"ms":0,"mm":25,"ad":40,"ar":35,"mr":35},{"n":"Camille","c":1,"r":"AD Fighter","t":"Ravager · Coven","a":"Defensive Sweep","d":"Slice the target for 160/240/410% AD + 10/15/25 AP physical damage and gain 60/90/200 Shield for 2 seconds.","hp":700,"ms":0,"mm":25,"ad":40,"ar":40,"mr":40},{"n":"Cinderling","c":1,"r":"AD Caster","t":"Riftbeast · Hunter","a":"Razor Leaves","d":"Summon five razor-sharp leaves that converge on the current target, dealing a total of 310/465/700% AD + 30/45/70 AP physical damage and applying 20% Wound and 1% Burn for 4 seconds.\nScarlet Buff: Cinderling gains 22% Attack Damage each cast.","hp":500,"ms":0,"mm":50,"ad":40,"ar":25,"mr":25},{"n":"Karma","c":1,"r":"AP Caster","t":"Blossom · Spellweaver","a":"Karmic Bond","d":"Tether the current target, dealing 280/420/630 AP magic damage over 1.5 seconds. Then release a burst of power around them, dealing 120/180/270 AP magic damage to all enemies in a 1 hex radius and 30% Slowing them for 2 seconds.","hp":500,"ms":0,"mm":40,"ad":25,"ar":25,"mr":25},{"n":"Kobuko","c":1,"r":"AP Tank","t":"Sprykin · Brawler","a":"Dance of Life","d":"Restore 265/315/460 AP + 7% max Health over 2 seconds. The next attack is replaced with a bash that deals 10% max Health + 70/105/150 AP magic damage.","hp":700,"ms":0,"mm":90,"ad":55,"ar":40,"mr":40},{"n":"Leona","c":1,"r":"AP Tank","t":"Solar · Defender","a":"Shield Bash","d":"Passive: Start combat with 60/80/100 AP bonus Armor and Magic Resist that decays over 12 seconds.\nActive: Bash the current target, dealing 150/270/405% Armor magic damage and Stunning them for 1.5 seconds.","hp":750,"ms":0,"mm":90,"ad":50,"ar":40,"mr":40},{"n":"Ornn","c":1,"r":"AP Tank","t":"Elderwood · Defender","a":"Bellows Breath","d":"Active: Gain 400/460/550 AP Shield for 4 seconds and deal 200/300/450 AP magic damage to enemies in a cone.\nQuest: Each player combat, Ornn stores damage blocked as Forge Power, doubled at 3-star. Gain an Artifact Anvil each time he gains enough Forge Power.","hp":700,"ms":30,"mm":100,"ad":40,"ar":40,"mr":40},{"n":"Pebbles","c":1,"r":"AP Caster","t":"Riftbeast · Invoker","a":"Azure Laser","d":"Begin consuming 35% max Mana per second and channeling a laser on the target. Each second while casting, deal 160/240/360 AP magic damage to them and reduce their Magic Resist by 3.\nTeal Buff: Gain 2 Mana Regen for every 4 seconds channeled.","hp":500,"ms":0,"mm":70,"ad":35,"ar":25,"mr":25},{"n":"Rakan","c":1,"r":"AP Tank","t":"Juggernaut · Fae · Vanguard","a":"Entrancing Dance","d":"Gain 270/320/415 AP Shield for 4 seconds. Then grant the ally who has dealt the most damage this combat decaying Attack Speed for 4 seconds.","hp":700,"ms":0,"mm":105,"ad":45,"ar":35,"mr":35},{"n":"Rek'Sai","c":1,"r":"AP Tank","t":"Brawler · Blackthorn","a":"Uproot","d":"Passive: Restore 10/14/20 Health each second, tripled for 3 seconds after casting.\nActive: Lunge out of the ground, Stunning adjacent enemies for 1 second and dealing 70/105/160 AP magic damage to them.","hp":700,"ms":0,"mm":100,"ad":50,"ar":40,"mr":40},{"n":"Varus","c":1,"r":"AD Caster","t":"Rapidfire · Inferno","a":"Piercing Arrow","d":"Wind up, then fire an arrow at the most enemies in line with the target. It deals 415/625/1000% AD + 30/45/70 AP physical damage to enemies hit, reduced by 40% for each enemy it passes through (minimum 40%).","hp":500,"ms":0,"mm":120,"ad":40,"ar":25,"mr":25},{"n":"Veigar","c":1,"r":"AP Caster","t":"Sprykin · Spellweaver · Blackthorn","a":"Primordial Burst","d":"Launch a giant blast at the target that deals 175/265/395 AP magic damage, increased to 265/400/595 AP if they're below 30% max Health.\nIf they die, permanently gain 3% Ability Power.","hp":500,"ms":0,"mm":30,"ad":25,"ar":25,"mr":25},{"n":"Xayah","c":1,"r":"AD Carry","t":"Elderwood · Fae · Rapidfire","a":"Deadly Plumage","d":"Gain 50% Attack Speed for the next 5 attacks. These attacks are replaced with feathers that deal 68/102/155% AD physical damage and reduce Armor by 2 AP.","hp":450,"ms":0,"mm":50,"ad":45,"ar":25,"mr":25},{"n":"Yorick","c":1,"r":"AD Tank","t":"Juggernaut · Summoner · Blossom","a":"Last Rites","d":"Passive: On death, spawn a Spirit Walker with 200/400/750 + 20% max Health which immediately taunts, forcing enemies to attack it.\nActive: Restore 280/325/435 AP Health and strike the target, dealing 150/225/340 AP physical damage.","hp":650,"ms":0,"mm":110,"ad":50,"ar":35,"mr":35},{"n":"Alistar","c":2,"r":"AP Tank","t":"Elderwood · Brawler","a":"Triumphant Roar","d":"Roar, restoring 8% max Health, cleansing disables, and healing the two lowest percent Health allies for 80/105/130 AP. Then slam the current target, dealing 100/150/225 AP magic damage and Stunning them for 1.5 seconds.","hp":950,"ms":0,"mm":90,"ad":50,"ar":45,"mr":45},{"n":"Caitlyn","c":2,"r":"AD Specialist","t":"Hunter · Coven","a":"Headshot","d":"Passive: Every third attack is replaced with a Headshot that deals 190/285/470% AD + 20/30/45 AP physical damage.","hp":550,"ms":0,"mm":3,"ad":50,"ar":30,"mr":30},{"n":"Elise","c":2,"r":"AP Tank","t":"Vanguard · Coven","a":"Spider Queen","d":"Transform into a spider and gain 375/475/725 max Health. Attacks while in Spider Form deal 35/50/80 AP bonus magic damage and heal for 55/90/170 AP. Subsequent casts grant 175% decaying Attack Speed for 4 seconds.","hp":900,"ms":0,"mm":70,"ad":20,"ar":45,"mr":45},{"n":"Gromp","c":2,"r":"AP Caster","t":"Riftbeast · Adaptor","a":"Belchy Bubble","d":"Adaptor AP: Belch a noxious bubble at the current target that explodes on the first enemy hit, dealing 225/340/535 AP magic damage. Enemies within a 1 hex radius take 160/240/360 AP magic damage over 3 seconds.\nAdaptor AD: Heavily slows the target.\nPurple Buff: Every 5 seconds, Gromp gains 30% Ability Power.","hp":550,"ms":0,"mm":45,"ad":30,"ar":30,"mr":30},{"n":"Kayle","c":2,"r":"AP Specialist","t":"Solar · Rapidfire","a":"Solar Judgement","d":"Passive: Kayle ascends based on her star level, granting stacking bonuses.\n1st Ascension: Attacks deal 62/92/105 AP bonus magic damage.\n2nd: Attacks 20% Shred enemies hit for 2 seconds.\n3rd: Attacks fire waves, dealing 35 AP magic damage to all other units hit.\n4th: Gain infinite range. Every 3rd wave is much larger.","hp":550,"ms":0,"mm":0,"ad":10,"ar":30,"mr":30},{"n":"LeBlanc","c":2,"r":"AP Caster","t":"Elderwood · Spellweaver","a":"Mirror Image","d":"Passive: After player combat, your strongest LeBlanc has a 10/15/40% chance to create a copy of an ally on your board, increased by 4% per takedown.\nActive: Launch a mirror image at the current target, dealing 260/390/615 AP magic damage and 100/150/230 AP to adjacent enemies.","hp":550,"ms":0,"mm":40,"ad":30,"ar":30,"mr":30},{"n":"Murkwolf","c":2,"r":"AD Reaper","t":"Riftbeast · Ravager","a":"Rending Claws","d":"Leap to the lowest Health enemy within 3 hexes and deal 100/150/225% AD + 20/30/45 AP physical damage. The next 2 attacks gain 175% Attack Speed and deal 60/90/135% AD bonus physical damage.\nGrey Buff: Gain Precision and 25% Critical Strike Chance, increased up to 75% based on missing Health.","hp":700,"ms":0,"mm":40,"ad":50,"ar":40,"mr":40},{"n":"Scuttlecrab","c":2,"r":"AD Tank","t":"Juggernaut · Riftbeast","a":"Can You Dig It?","d":"Passive: Attacks are replaced by a dance that deals 50/75/112.5% AD physical damage to all adjacent enemies.\nActive: Burrow underground, gaining 15% Durability for 3 seconds and healing 325/400/675 AP over the duration.\nGreen Buff: When allies fall below 50% Health, they restore 15% max Health.","hp":950,"ms":0,"mm":100,"ad":50,"ar":45,"mr":45},{"n":"Sejuani","c":2,"r":"AP Tank","t":"Juggernaut · Solar","a":"Sun's Wrath","d":"Gain 225/250/275 AP + 10% max Health Shield for 4 seconds. Then cleave in a cone, dealing 90/135/205 AP magic damage and strike in a line, dealing 120/180/270 AP magic damage to enemies hit.","hp":900,"ms":0,"mm":100,"ad":50,"ar":45,"mr":45},{"n":"Shen","c":2,"r":"AP Tank","t":"Inferno · Defender","a":"Ki Barrier","d":"Grant 350/430/550 AP Shield to Shen and 200/275/375 AP Shield to a nearby damaged ally for 4 seconds. Both of their next 3 attacks gain 40% Attack Speed and deal 35/55/80 AP bonus magic damage.","hp":900,"ms":0,"mm":90,"ad":50,"ar":45,"mr":45},{"n":"Teemo","c":2,"r":"AP Caster","t":"Sprykin · Invoker","a":"Fungus Among Us","d":"Throw 2 clusters of mushrooms that deal 60/90/135 AP magic damage to the 3 nearest enemies. Then hurl a giant mushroom that deals 135/200/310 AP magic damage to the target.\nEach cast has a 10/12/15% chance to forage an extra mushroom. Red: 1 reroll. Green: 1 Tactician Health. Yellow: 2 XP.","hp":550,"ms":0,"mm":50,"ad":35,"ar":30,"mr":30},{"n":"Warwick","c":2,"r":"AD Fighter","t":"Ravager · Blackthorn","a":"Jaws of The Beast","d":"Bite the current target, dealing 215/325/500% AD physical damage and healing for 20% AP of the damage dealt. Gain 20% Attack Speed for the rest of combat.","hp":750,"ms":0,"mm":40,"ad":45,"ar":45,"mr":45},{"n":"Yunara","c":2,"r":"AD Caster","t":"Blossom · Executioner","a":"Cultivation of Spirit","d":"Dash, then launch an orb at the current target that deals 160/240/370% AD physical damage and splits, dealing 35% of that to 2 nearby enemies.","hp":550,"ms":0,"mm":35,"ad":42,"ar":30,"mr":30},{"n":"Azir","c":3,"r":"AP Carry","t":"Summoner · Executioner · Blackthorn","a":"Arise!","d":"Gain 150% Attack Speed and summon 2 soldiers for the next 6 attacks. These attacks are replaced by commands which direct each soldier to deal 43/65/103 AP magic damage per attack.","hp":650,"ms":0,"mm":35,"ad":30,"ar":35,"mr":35},{"n":"Cassiopeia","c":3,"r":"AP Caster","t":"Spellweaver · Coven","a":"Noxious Blast","d":"Poison the target and the nearest non-poisoned enemy, dealing 400/600/950 AP magic damage over 15 seconds. Poisons stack.","hp":650,"ms":0,"mm":30,"ad":30,"ar":35,"mr":35},{"n":"Diana","c":3,"r":"AP Fighter","t":"Lunar · Vanguard · Ravager","a":"Pale Barrier","d":"Gain 150/275/500 shield for 2 seconds and send out 6 moonlight orbs spread among enemies within 2 hexes, each dealing 75/115/180 AP magic damage.","hp":850,"ms":0,"mm":40,"ad":30,"ar":50,"mr":50},{"n":"Fiddlesticks","c":3,"r":"AP Tank","t":"Spellweaver · Defender · Flora Fatalis","a":"Harvest","d":"Reduce the Magic Resist of the 3 nearest enemies by 10. Then drain life from them over 2 seconds, healing for 410/485/850 AP Health and dealing 70/105/170 AP magic damage to each over the duration.","hp":null,"ms":0,"mm":90,"ad":50,"ar":55,"mr":55},{"n":"Hecarim","c":3,"r":"AP Tank","t":"Elderwood · Vanguard","a":"Spirit of Dread","d":"Gain 50 Armor and Magic Resist for 3 seconds and restore 375/475/685 AP Health over the duration. Launch spectral riders at the 3 nearest enemies, dealing 80/120/195 AP magic damage and Stunning them for 1.5/1.5/1.75 seconds.","hp":1100,"ms":0,"mm":110,"ad":50,"ar":50,"mr":50},{"n":"Kha'Zix","c":3,"r":"AP Reaper","t":"Rival","a":"Taste Their Fear","d":"Leap to the farthest enemy within 3 hexes, dealing 285/400/580 AP magic damage. If they have no adjacent allies, deal 310/445/660 AP magic damage instead and gain 10 mana.","hp":950,"ms":0,"mm":25,"ad":40,"ar":55,"mr":55},{"n":"Kog'Maw","c":3,"r":"AD Caster","t":"Invoker · Adaptor · Caustic","a":"Raining Artillery","d":"Adaptor AD: Launch acid at the target and the other nearest enemy, dealing 145/220/375% AD + 20/30/50 AP physical damage. Enemies below 50% max Health take 140% of that instead.\nAdaptor AP: Damages enemies over time.","hp":650,"ms":0,"mm":55,"ad":40,"ar":35,"mr":35},{"n":"Krug","c":3,"r":"AD Tank","t":"Riftbeast · Brawler","a":"Rock and Roll","d":"Passive: On death, split into two Kruglettes with 50/100/180 + 12% max Health which immediately taunt.\nActive: Gain 175/225/325 AP max Health, then roll into the target, dealing 135/200/335% AD + 8% max Health damage.\nSlate Buff: On death, Krug and Kruglettes Shield allies for 8% max Health.","hp":1100,"ms":0,"mm":135,"ad":55,"ar":40,"mr":40},{"n":"Mama Beak","c":3,"r":"AD Carry","t":"Summoner · Riftbeast · Rapidfire","a":"Flock Family","d":"Summon 4 untargetable Tiny Beaks nearby for 5 AP seconds. Whenever Mama Beak attacks, Tiny Beaks attack the same enemy, dealing 22/33/48% AD physical damage.\nOrange Buff: Dealing physical damage reduces enemy Armor by 2.","hp":650,"ms":0,"mm":60,"ad":55,"ar":35,"mr":35},{"n":"Master Yi","c":3,"r":"AD Specialist","t":"Blossom · Adaptor","a":"Wuju Style","d":"Passive: Every third attack is a Double Strike. On takedown, gain a burst of movement speed.\nAdaptor AD: Double Strikes grant 12% + 3% AP stacking Attack Speed.\nAdaptor AP: Double Strikes deal bonus damage and heal.","hp":850,"ms":0,"mm":3,"ad":60,"ar":55,"mr":55},{"n":"Rammus","c":3,"r":"AD Tank","t":"Sprykin · Defender","a":"Defensive Ball Curl","d":"Taunt, forcing enemies to attack this champion. For 4 seconds, gain 350/450/550 AP Shield and 60 Armor and Magic Resist.\nWhen the Shield breaks, deal 50/75/120% Armor + 50/75/120% MR physical damage to enemies in 2 hexes.","hp":1100,"ms":0,"mm":80,"ad":50,"ar":50,"mr":50},{"n":"Rengar","c":3,"r":"AD Fighter","t":"Rival","a":"Savagery","d":"Jump to the lowest percent Health enemy within 3 hexes and stab them, dealing 255/385/615% AD physical damage. Then heal for 60/90/90 AP, increased up to 120/180/180 AP based on their missing Health.","hp":900,"ms":0,"mm":50,"ad":60,"ar":55,"mr":55},{"n":"Tristana","c":3,"r":"AD Carry","t":"Sprykin · Fae · Hunter","a":"Explosive Charge","d":"Attach an explosive charge to the target that lasts 4 seconds. While active, gain infinite range and 40% + 20% AP Attack Speed. After the duration, the charge explodes and splits damage between all enemies within 2 hexes, dealing 160/240/385% AD physical damage + 10/15/25% AD for each attack while casting.","hp":650,"ms":0,"mm":60,"ad":55,"ar":35,"mr":35},{"n":"Vi","c":3,"r":"AD Tank","t":"Primal · Juggernaut","a":"Furious Fists","d":"Passive: On attack, restore 2% max Health.\nActive: Unleash a primal roar, restoring 200/265/360 AP Health. Then gain 85/100/125% Attack Speed, 15% Durability, and become Unstoppable for 3 seconds.","hp":1100,"ms":0,"mm":60,"ad":45,"ar":50,"mr":50},{"n":"Ahri","c":4,"r":"AP Caster","t":"Blossom · Spellweaver","a":"Spirit Bomb","d":"Launch a spirit bomb at the location within 4 hexes that has the most surrounding enemies. It deals 455/685/3500 AP magic damage to enemies in a 3 hex radius, reduced by 21% per hex away from the epicenter.","hp":850,"ms":0,"mm":100,"ad":40,"ar":40,"mr":40},{"n":"Amumu","c":4,"r":"AP Tank","t":"Juggernaut · Inferno","a":"Tantrum","d":"Passive: Every second, restore 2.5/2.5/4% + 20/25/100 AP Health and deal 12/18/150 AP magic damage to enemies within 1 hex.\nActive: Deal 100/150/2000 AP magic damage to enemies within 2 hexes and Stun them for 1/1/6 seconds, increased if the target is Burning.","hp":1300,"ms":0,"mm":125,"ad":70,"ar":60,"mr":60},{"n":"Aphelios","c":4,"r":"AD Carry","t":"Rapidfire · Lunar","a":"Moonlight's Onslaught","d":"Equip Severum and swipe the target 5 times over 2 seconds, each dealing 70/105/850% AD physical damage.\nAfter the onslaught finishes, fire a blast that deals 450/675/5000% AD + 40/60/225 AP physical damage split among all enemies in a 2 hex radius.","hp":850,"ms":0,"mm":70,"ad":60,"ar":40,"mr":40},{"n":"Brambleback","c":4,"r":"AD Fighter","t":"Riftbeast · Ravager","a":"Crimson Fury","d":"Passive: When the target dies, leap at the next target, dealing 155/235/1000% AD physical damage.\nActive: Gain 80/80/300% Attack Damage for 8 seconds. During this time ignore 15% Armor.\nRed Buff: Attacks 1% Burn enemies and heal Brambleback for 4% max Health.","hp":1100,"ms":0,"mm":40,"ad":120,"ar":65,"mr":65},{"n":"Ezreal","c":4,"r":"AD Caster","t":"Elderwood · Executioner","a":"Forest's Flurry","d":"Blink away from the current target, deal 250/375/1200% AD physical damage to them, and gain 30/30/100% AP Attack Speed.\nEvery 4th cast consumes that Attack Speed and fires a blast through the largest group of enemies, dealing 385/580/2500% AD physical damage, reduced by 25% per enemy passed through (minimum 50%).","hp":850,"ms":0,"mm":30,"ad":45,"ar":40,"mr":40},{"n":"Lillia","c":4,"r":"AP Tank","t":"Fae · Defender","a":"Lilting Lullaby","d":"Restore 325/475/800 AP Health and send 4 butterflies at nearby enemies. Enemies hit take 90/135/2000 AP magic damage and Sleep for 1.5/1.75/8 seconds. If they take 1000 damage, they wake up and take an additional 10% max Health magic damage.","hp":1300,"ms":0,"mm":140,"ad":40,"ar":60,"mr":60},{"n":"Malphite","c":4,"r":"AP Tank","t":"Monolith · Blackthorn","a":"Petrified Bark","d":"Gain 700/850/2000 AP Shield for 4 seconds and become petrified. When the shield breaks, unleash a wave of dark energy, dealing 30/45/999% MR + 30/45/999% Armor + 40/60/2000 AP magic damage to enemies within 2/2/3 hexes.","hp":1300,"ms":0,"mm":80,"ad":70,"ar":70,"mr":70},{"n":"Morgana","c":4,"r":"AP Fighter","t":"Invoker · Coven","a":"Withering Curse","d":"Passive: Gain 25% Omnivamp.\nActive: Fire a dark blast at 3 nearby enemies, dealing 60/90/500 AP magic damage and cursing them for 4 seconds. Then spawn a 2 hex withering zone for the same duration that deals 33/50/500 AP magic damage per second. Cursed enemies take 22/33/240 AP more damage per curse.","hp":1100,"ms":0,"mm":65,"ad":45,"ar":60,"mr":60},{"n":"Nidalee","c":4,"r":"AP Carry","t":"Primal · Adaptor","a":"Javelin Toss","d":"Adaptor AP: Gain 150% Attack Speed for the next 3 attacks. These attacks are replaced with javelins that deal 170/255/2000 AP magic damage. The 3rd attack instead targets the furthest enemy with the least items and deals 300/450/3000 AP magic damage.\nAdaptor AD: Transform into a melee cougar Assassin that swipes enemies.","hp":850,"ms":0,"mm":45,"ad":35,"ar":30,"mr":30},{"n":"Sentinel","c":4,"r":"AP Tank","t":"Riftbeast · Invoker · Vanguard","a":"Azure Shockwave","d":"Gain 350/450/2000 AP + 10% max Health Shield for 4 seconds. Slam the ground, sending a fissure in the direction of the most enemies. Enemies hit are briefly knocked up, take 100/150/3500 AP magic damage, and are Mana Reaved for 10.\nBlue Buff: Each time Sentinel casts, allies gain 2 Mana Regen.","hp":1300,"ms":0,"mm":150,"ad":75,"ar":60,"mr":60},{"n":"Sett","c":4,"r":"AD Tank","t":"Blossom · Brawler","a":"Haymaker","d":"Passive: Upon falling below 40% max Health the first time each combat, gain 100 mana.\nActive: Wind up a big punch, rapidly healing for 12% + 225/275/2000 AP before dealing 150/225/5000% AD + 6% max Health physical damage in a large cone.","hp":1200,"ms":0,"mm":135,"ad":80,"ar":60,"mr":60},{"n":"Sivir","c":4,"r":"AD Caster","t":"Primal · Hunter","a":"Boomerang Blade","d":"Throw a large crossblade that deals 190/285/1050% AD + 15/20/100 AP physical damage to the current target and bounces 8 times between nearby enemies, dealing 20/20/40% of that each bounce. When this kills an enemy, bounce 3/3/6 additional times.","hp":850,"ms":0,"mm":40,"ad":50,"ar":40,"mr":40},{"n":"Soraka","c":4,"r":"AP Caster","t":"Executioner · Flora Fatalis","a":"Starcall","d":"Call down a star on the current target, dealing 225/335/1000 AP magic damage. If a star has previously fallen on them, call down 3 additional stars that each deal 100/150/1000 AP magic damage.","hp":850,"ms":0,"mm":30,"ad":30,"ar":40,"mr":40},{"n":"Zyra","c":4,"r":"AP Caster","t":"Summoner · Thornmaiden","a":"Rampant Growth","d":"Spawn 2/2/4 plants around the battlefield that attack the nearest enemy 10 times. Each attack deals 35/53/225 AP magic damage.","hp":850,"ms":0,"mm":45,"ad":40,"ar":40,"mr":40},{"n":"Alune","c":5,"r":"AP Caster","t":"Lunar · Spellweaver · Attuned","a":"Moonfall","d":"Rain 9 moonshards split among the 3 nearest enemies, dealing 55/83/500 AP magic damage each.\nIf the moon is full, instead crash it onto the board, dealing 2350/3600/7500 AP magic damage split among all enemies.","hp":900,"ms":0,"mm":35,"ad":40,"ar":45,"mr":45},{"n":"Ashe","c":5,"r":"AD Caster","t":"Hunter · Blossom","a":"Spirit Rift","d":"Fire an arrow through the most enemies in a line that deals 465/700/1000% AD physical damage, reduced by 80/80/40% per enemy hit (minimum 20%).\nThe arrow leaves a trail for 4/4/20 seconds that deals 5/8/200% AD + 2/3/10% max Health physical damage per second to enemies within and 20% Slows them.","hp":900,"ms":0,"mm":80,"ad":75,"ar":45,"mr":45},{"n":"Draven","c":5,"r":"AD Carry","t":"Bounty Seeker","a":"Whirling Death","d":"Passive: Attacks target random enemies in range and apply a bleed dealing 140/210/3000% AD physical damage over 12 seconds. Every attack has a 12% AP chance to deal 50/50/900% bonus physical damage and apply 2 bleeds instead.\nActive: Throw two giant axes towards the enemy with the most bleeds, dealing 100/150/400% AD physical damage and consuming their bleed, instantly dealing the remaining damage. The axes return, dealing 30/45/100% AD physical damage.","hp":900,"ms":0,"mm":110,"ad":48,"ar":45,"mr":45},{"n":"Elder Dragon","c":5,"r":"AD Fighter","t":"Riftbeast · Apex Predator","a":"Heat Without Equal","d":"Passive: Attacks deal 75/75/100% damage to enemies adjacent to the target.\nActive: Become invulnerable and fly into the air. On return, stun all enemies for 1.25/1.25/99 seconds, gain 15/15/100% Omnivamp, and Ignite them. Ignited enemies take 2/2/20% max Health physical damage per second.\nFlame Breath: Spew fire in a line, dealing 285/435/7000% AD + 20/30/200 AP physical damage.\nElder Dragon Buff: Damaging an enemy below 12% Health executes them.","hp":1800,"ms":0,"mm":60,"ad":125,"ar":75,"mr":75},{"n":"Gnar","c":5,"r":"AD Specialist","t":"Sprykin · Elderwood · Brawler","a":"Rage Gene","d":"Passive: Gain 5/5/50 Rage per second and 5/5/20 Rage per attack.\nActive: Transform into Mega Gnar and leap into the largest group of enemies within 3 hexes, dealing 100/150/2000% AD physical damage, reducing Armor and Magic Resist by 15/20/250 AP, and Stunning for 1/1/15 second. Mega Gnar gains 400/600/15000 Health.\nGrab n' Throw: Throw the target at the farthest enemy, dealing 380/570/9000% AD physical damage.","hp":900,"ms":0,"mm":70,"ad":100,"ar":55,"mr":55},{"n":"Ivern","c":5,"r":"AP Caster","t":"Greenfather","a":"Triggerseed","d":"Passive: Shields from this Ability can critically strike with Precision.\nActive: Grant 2/2/10 allies 185/350/3000 AP Shield and 10/15/100% Damage Amp for 6 seconds. Then deal 155/235/2000 AP magic damage to enemies adjacent to them. After casting 6 times, also grant 100% stacking Attack Speed to targets.","hp":null,"ms":0,"mm":80,"ad":60,"ar":55,"mr":55},{"n":"Kennen","c":5,"r":"AP Reaper","t":"Inferno · Executioner","a":"Firestorm","d":"Charge up, gaining 15% Ability Power per Burning enemy. Then gain 250/350/3000 AP Shield for 2.5 seconds and rush through a nearby group of enemies, dealing 80/120/1500 AP magic damage to each.\nAfter rushing, unleash a 2 hex firestorm dealing a total of 475/715/5000 AP magic damage split among all enemies hit over 2 seconds.","hp":1200,"ms":0,"mm":40,"ad":50,"ar":60,"mr":60},{"n":"Lux","c":5,"r":"AP Caster","t":"Avatar (9 origins)","a":"Final Spark","d":"Passive: On cast, all allies that share a trait with Lux gain 3/3/100 AP mana.\nActive: Fire a laser towards the largest group of enemies that deals 375/565/6500 AP magic damage, reduced by 25/25/10% for each enemy hit.\nThe chosen Avatar origin adds a bonus effect and counts twice toward that trait.","hp":900,"ms":0,"mm":70,"ad":40,"ar":40,"mr":40},{"n":"Maokai","c":5,"r":"AP Tank","t":"Juggernaut · Old Growth","a":"Sow the Seeds","d":"Passive: After every 650/650/300 damage blocked, a sapling jumps towards a nearby enemy and deals 7/7/75% max Health magic damage. On death, 3/5/10 saplings jump out.\nActive: Deal 6/6/100% max Health magic damage to target and restore 330/400/2000 AP + 10/10/100% missing Health.","hp":1150,"ms":0,"mm":90,"ad":80,"ar":60,"mr":60},{"n":"Taric","c":5,"r":"AP Tank","t":"Emerald Aspect · Vanguard","a":"Emerald Radiance","d":"Passive: The first time Taric or his paired ally drops below 50% Health, unleash emerald energy from both, granting 100/225/10000 + 15/15/100% max Health Shield to allies within 3 hexes.\nActive: Restore 250/375/3000 AP Health. Taric and his paired ally deal 100/150/1000 AP bonus magic damage on their next 2 attacks.","hp":1300,"ms":0,"mm":65,"ad":55,"ar":65,"mr":65}];
+const BIS = {"Akali":["Hand of Justice","Infinity Edge","Edge of Night"],"Camille":["Bloodthirster","Sterak's Gage","Titan's Resolve"],"Cinderling":["Infinity Edge","Spear of Shojin","Striker's Flail"],"Karma":["Blue Buff","Jeweled Gauntlet","Rabadon's Deathcap"],"Kobuko":["Warmog's Armor","Bramble Vest","Dragon's Claw"],"Leona":["Bramble Vest","Dragon's Claw","Spirit Visage"],"Ornn":["Warmog's Armor","Giant Slayer","Adaptive Helm"],"Pebbles":["Void Staff","Morellonomicon","Spear of Shojin"],"Rakan":["Protector's Vow","Spirit Visage","Warmog's Armor"],"Rek'Sai":["Evenshroud","Sunfire Cape","Warmog's Armor"],"Varus":["Guinsoo's Rageblade","Giant Slayer","Kraken's Fury"],"Veigar":["Nashor's Tooth","Jeweled Gauntlet","Rabadon's Deathcap"],"Xayah":["Guinsoo's Rageblade","Giant Slayer","Infinity Edge"],"Yorick":["Warmog's Armor","Steadfast Heart","Gargoyle Stoneplate"],"Alistar":["Spirit Visage","Sunfire Cape","Gargoyle Stoneplate"],"Caitlyn":["Guinsoo's Rageblade","Infinity Edge","Last Whisper"],"Elise":["Spirit Visage","Bramble Vest","Dragon's Claw"],"Gromp":["Void Staff","Morellonomicon","Spear of Shojin"],"Kayle":["Guinsoo's Rageblade","Giant Slayer","Rabadon's Deathcap"],"LeBlanc":["Blue Buff","Jeweled Gauntlet","Rabadon's Deathcap"],"Murkwolf":["Hand of Justice","Infinity Edge","Edge of Night"],"Scuttlecrab":["Warmog's Armor","Bramble Vest","Dragon's Claw"],"Sejuani":["Gargoyle Stoneplate","Warmog's Armor","Protector's Vow"],"Shen":["Sunfire Cape","Evenshroud","Protector's Vow"],"Teemo":["Jeweled Gauntlet","Nashor's Tooth","Striker's Flail"],"Warwick":["Bloodthirster","Sterak's Gage","Titan's Resolve"],"Yunara":["Spear of Shojin","Deathblade","Striker's Flail"],"Azir":["Guinsoo's Rageblade","Rabadon's Deathcap","Giant Slayer"],"Cassiopeia":["Blue Buff","Jeweled Gauntlet","Nashor's Tooth"],"Diana":["Jeweled Gauntlet","Hand of Justice","Titan's Resolve"],"Fiddlesticks":["Ionic Spark","Crownguard","Morellonomicon"],"Hecarim":["Protector's Vow","Warmog's Armor","Bramble Vest"],"Kha'Zix":["Hand of Justice","Edge of Night","Jeweled Gauntlet"],"Kog'Maw":["Infinity Edge","Spear of Shojin","Striker's Flail"],"Krug":["Warmog's Armor","Bramble Vest","Protector's Vow"],"Mama Beak":["Guinsoo's Rageblade","Giant Slayer","Last Whisper"],"Master Yi":["Quicksilver","Giant Slayer","Edge of Night"],"Rammus":["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"],"Rengar":["Guinsoo's Rageblade","Titan's Resolve","Edge of Night"],"Tristana":["Guinsoo's Rageblade","Hextech Gunblade","Kraken's Fury"],"Vi":["Evenshroud","Sunfire Cape","Steadfast Heart"],"Ahri":["Blue Buff","Jeweled Gauntlet","Striker's Flail"],"Amumu":["Bramble Vest","Dragon's Claw","Warmog's Armor"],"Aphelios":["Guinsoo's Rageblade","Giant Slayer","Kraken's Fury"],"Brambleback":["Bloodthirster","Sterak's Gage","Titan's Resolve"],"Ezreal":["Spear of Shojin","Deathblade","Striker's Flail"],"Lillia":["Warmog's Armor","Steadfast Heart","Gargoyle Stoneplate"],"Malphite":["Gargoyle Stoneplate","Steadfast Heart","Warmog's Armor"],"Morgana":["Void Staff","Morellonomicon","Adaptive Helm"],"Nidalee":["Bloodthirster","Sterak's Gage","Titan's Resolve"],"Sentinel":["Protector's Vow","Adaptive Helm","Warmog's Armor"],"Sett":["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"],"Sivir":["Spear of Shojin","Infinity Edge","Last Whisper"],"Soraka":["Void Staff","Blue Buff","Jeweled Gauntlet"],"Zyra":["Void Staff","Morellonomicon","Blue Buff"],"Alune":["Spear of Shojin","Red Buff","Void Staff"],"Ashe":["Red Buff","Last Whisper","Spear of Shojin"],"Draven":["Kraken's Fury","Guinsoo's Rageblade","Deathblade"],"Elder Dragon":["Infinity Edge","Striker's Flail","Deathblade"],"Gnar":["Bloodthirster","Sterak's Gage","Titan's Resolve"],"Ivern":["Spear of Shojin","Blue Buff","Adaptive Helm"],"Kennen":["Edge of Night","Jeweled Gauntlet","Hand of Justice"],"Lux":["Spear of Shojin","Jeweled Gauntlet","Rabadon's Deathcap"],"Maokai":["Evenshroud","Protector's Vow","Sunfire Cape"],"Taric":["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"]};
+const META = {"Draven":[["AD Exodia",["Guinsoo's Rageblade","Deathblade","Kraken's Fury"]],["The Final Forest",["Deathblade","Guinsoo's Rageblade","Kraken's Fury"]]],"Ezreal":[["The Final Forest",["Last Whisper","Deathblade","Spear of Shojin"]]],"Kennen":[["The Final Forest",["Thief's Gloves"]],["AD Exodia",["Thief's Gloves"]],["Ashe to Ashes",["Thief's Gloves"]]],"Maokai":[["AD Exodia",["Warmog's Armor","Gargoyle Stoneplate","Evenshroud"]],["The Final Forest",["Warmog's Armor","Dragon's Claw","Bramble Vest"]]],"Sivir":[["Ashe to Ashes",["Infinity Edge","Spear of Shojin","Striker's Flail"]],["The Hunters",["Striker's Flail","Spear of Shojin","Infinity Edge"]]],"Ashe":[["Ashe to Ashes",["Red Buff","Last Whisper","Spear of Shojin"]],["The Hunters",["Red Buff","Giant Slayer","Spear of Shojin"]]],"Amumu":[["Ashe to Ashes",["Warmog's Armor","Bramble Vest","Gargoyle Stoneplate"]]],"Elder Dragon":[["AD Exodia",["Deathblade","Infinity Edge","Hand of Justice"]],["Riftbeast Ascension",["Infinity Edge","Last Whisper","Hand of Justice"]]],"Ahri":[["Bloom and Doom",["Jeweled Gauntlet","Striker's Flail","Spear of Shojin"]]],"Sett":[["Bloom and Doom",["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"]]],"Morgana":[["Bloom and Doom",["Morellonomicon","Void Staff","Adaptive Helm"]]],"Nidalee":[["The Hunters",["Infinity Edge","Hunter Emblem","Sterak's Gage"]]],"Malphite":[["The Hunters",["Warmog's Armor","Crownguard","Gargoyle Stoneplate"]]],"Pebbles":[["Riftbeast Ascension",["Blue Buff","Rabadon's Deathcap","Jeweled Gauntlet"]]],"Sentinel":[["Riftbeast Ascension",["Sunfire Cape","Protector's Vow","Warmog's Armor"]]],"Brambleback":[["Riftbeast Ascension",["Giant Slayer","Edge of Night","Quicksilver"]]]};
+const METASRC = "https://mobalytics.gg/tft/team-comps";
+const BANDS = [{"k":"ap","title":"Ability power","note":"casters only","items":[["Rabadon's Deathcap","rod","rod","50 AP","rabadons-deathcap"],["Jeweled Gauntlet","glove","rod","35 AP · crit","jeweled-gauntlet"],["Archangel's Staff","tear","rod","30 AP · stacks","archangels-staff"],["Void Staff","tear","bow","35 AP · shred","voidstaff"],["Nashor's Tooth","bow","belt","18 AP · speed","nashor's-tooth"],["Morellonomicon","rod","belt","20 AP · burn","morellonomicon"],["Crownguard","rod","vest","20 AP · shield","crownguard"],["Ionic Spark","cloak","rod","15 AP · aura","ionic-spark"]]},{"k":"hy","title":"Both at once","note":"safe to slam early","items":[["Spear of Shojin","tear","bf","15% AD · 15 AP","spear-of-shojin2"],["Blue Buff","tear","tear","15% AD · 15 AP","blue-buff2"],["Hand of Justice","tear","glove","15% AD · 15 AP","hand-of-justice"],["Hextech Gunblade","rod","bf","20% AD · 20 AP","hextech-gunblade"],["Bloodthirster","cloak","bf","15% AD · 15 AP","bloodthirster"],["Giant Slayer","bow","bf","15% AD · 15 AP","giant-slayer"],["Edge of Night","vest","bf","10% AD · 10 AP","edge-of-night"],["Adaptive Helm","tear","cloak","10% AD · 10 AP","adaptive-helm"],["Titan's Resolve","bow","vest","stacks both","titans-resolve"]]},{"k":"ad","title":"Attack damage","note":"attackers only","items":[["Deathblade","bf","bf","55% AD","deathblade"],["Infinity Edge","glove","bf","35% AD · crit","infinity-edge"],["Sterak's Gage","belt","bf","40% AD · 300 HP","sterak's-gage"],["Last Whisper","glove","bow","15% AD · sunder","last-whisper"],["Kraken's Fury","bow","cloak","10% AD · stacks","krakensfury"]]},{"k":"as","title":"Attack speed","note":"either type, if they auto-attack","items":[["Red Buff","bow","bow","45% speed · burn","redbuff"],["Guinsoo's Rageblade","bow","rod","stacking speed","guinsoos-rageblade"],["Quicksilver","glove","cloak","speed · CC immune","quicksilver"],["Striker's Flail","glove","belt","crit · amp","guardbreaker"]]},{"k":"tk","title":"No damage stat","note":"frontline","items":[["Warmog's Armor","belt","belt","500 HP","warmogs-armor"],["Bramble Vest","vest","vest","65 armour","bramble-vest"],["Dragon's Claw","cloak","cloak","75 MR","dragons-claw"],["Gargoyle Stoneplate","cloak","vest","scaling resists","gargoyle-stoneplate"],["Sunfire Cape","belt","vest","burn aura","sunfire-cape"],["Steadfast Heart","glove","vest","18% durability","steadfast-hammer"],["Evenshroud","cloak","belt","sunder aura","evenshroud"],["Protector's Vow","tear","vest","shield at 40%","fimbulwinter"],["Spirit Visage","tear","belt","300 HP · regen","spiritvisage"],["Thief's Gloves","glove","glove","2 random items","thiefs-gloves"]]}];
+const COMP  = Object.fromEntries(Object.entries({"bf":["B.F. Sword","Attack damage","bf-sword"],"bow":["Recurve Bow","Attack speed","recurve-bow"],"rod":["Large Rod","Ability power","needlessly-large-rod"],"tear":["Tear","Mana","tear-of-the-goddess"],"vest":["Chain Vest","Armour","chain-vest"],"cloak":["Negatron","Magic resist","negatron-cloak"],"belt":["Giant’s Belt","Health","giants-belt"],"glove":["Sparring Gloves","Crit","sparring-gloves"]}).map(([k,[n,s,_img]]) => [k,[n,s]]));
+const COMPIMG = Object.fromEntries(Object.entries({"bf":["B.F. Sword","Attack damage","bf-sword"],"bow":["Recurve Bow","Attack speed","recurve-bow"],"rod":["Large Rod","Ability power","needlessly-large-rod"],"tear":["Tear","Mana","tear-of-the-goddess"],"vest":["Chain Vest","Armour","chain-vest"],"cloak":["Negatron","Magic resist","negatron-cloak"],"belt":["Giant’s Belt","Health","giants-belt"],"glove":["Sparring Gloves","Crit","sparring-gloves"]}).map(([k,[_n,_s,img]]) => [k,img]));
+const ITEMIMG = Object.fromEntries([{"k":"ap","title":"Ability power","note":"casters only","items":[["Rabadon's Deathcap","rod","rod","50 AP","rabadons-deathcap"],["Jeweled Gauntlet","glove","rod","35 AP · crit","jeweled-gauntlet"],["Archangel's Staff","tear","rod","30 AP · stacks","archangels-staff"],["Void Staff","tear","bow","35 AP · shred","voidstaff"],["Nashor's Tooth","bow","belt","18 AP · speed","nashor's-tooth"],["Morellonomicon","rod","belt","20 AP · burn","morellonomicon"],["Crownguard","rod","vest","20 AP · shield","crownguard"],["Ionic Spark","cloak","rod","15 AP · aura","ionic-spark"]]},{"k":"hy","title":"Both at once","note":"safe to slam early","items":[["Spear of Shojin","tear","bf","15% AD · 15 AP","spear-of-shojin2"],["Blue Buff","tear","tear","15% AD · 15 AP","blue-buff2"],["Hand of Justice","tear","glove","15% AD · 15 AP","hand-of-justice"],["Hextech Gunblade","rod","bf","20% AD · 20 AP","hextech-gunblade"],["Bloodthirster","cloak","bf","15% AD · 15 AP","bloodthirster"],["Giant Slayer","bow","bf","15% AD · 15 AP","giant-slayer"],["Edge of Night","vest","bf","10% AD · 10 AP","edge-of-night"],["Adaptive Helm","tear","cloak","10% AD · 10 AP","adaptive-helm"],["Titan's Resolve","bow","vest","stacks both","titans-resolve"]]},{"k":"ad","title":"Attack damage","note":"attackers only","items":[["Deathblade","bf","bf","55% AD","deathblade"],["Infinity Edge","glove","bf","35% AD · crit","infinity-edge"],["Sterak's Gage","belt","bf","40% AD · 300 HP","sterak's-gage"],["Last Whisper","glove","bow","15% AD · sunder","last-whisper"],["Kraken's Fury","bow","cloak","10% AD · stacks","krakensfury"]]},{"k":"as","title":"Attack speed","note":"either type, if they auto-attack","items":[["Red Buff","bow","bow","45% speed · burn","redbuff"],["Guinsoo's Rageblade","bow","rod","stacking speed","guinsoos-rageblade"],["Quicksilver","glove","cloak","speed · CC immune","quicksilver"],["Striker's Flail","glove","belt","crit · amp","guardbreaker"]]},{"k":"tk","title":"No damage stat","note":"frontline","items":[["Warmog's Armor","belt","belt","500 HP","warmogs-armor"],["Bramble Vest","vest","vest","65 armour","bramble-vest"],["Dragon's Claw","cloak","cloak","75 MR","dragons-claw"],["Gargoyle Stoneplate","cloak","vest","scaling resists","gargoyle-stoneplate"],["Sunfire Cape","belt","vest","burn aura","sunfire-cape"],["Steadfast Heart","glove","vest","18% durability","steadfast-hammer"],["Evenshroud","cloak","belt","sunder aura","evenshroud"],["Protector's Vow","tear","vest","shield at 40%","fimbulwinter"],["Spirit Visage","tear","belt","300 HP · regen","spiritvisage"],["Thief's Gloves","glove","glove","2 random items","thiefs-gloves"]]}].flatMap(b => b.items.map(([name,,,, slug]) => [name, slug])));
+const TELLS = [["Spellweaver","AP","ap"],["Solar / Lunar","AP","ap"],["Hunter","AD","ad"],["Rapidfire","AD","ad"],["Adaptor","either","hy"],["Executioner","either","hy"]];
+const SRC = {"meta":["Meta","Curated by Mobalytics Challenger experts","https://mobalytics.gg/tft/team-comps"],"stats":["Data","Top boards from Diamond+ match data","https://mobalytics.gg/tft/team-comps-tier-list"],"community":["Community","Player-submitted, ranked by votes","https://mobalytics.gg/tft/community-comps"]};
+const COMPS = [{"n":"The Final Forest","diff":"Hard","style":"Fast 9","k":"ad","src":"meta","slug":"elderwood-cap-3HBMcPmR81fWMyuppwi8smQJ37O","board":["Draven","Maokai","Ezreal","Kennen","Gnar","Ivern","Taric","Amumu","Alistar"],"alts":[],"carries":[["Draven",["Deathblade","Guinsoo's Rageblade","Kraken's Fury"]],["Ezreal",["Last Whisper","Deathblade","Spear of Shojin"]],["Maokai",["Warmog's Armor","Dragon's Claw","Bramble Vest"]],["Kennen",["Thief's Gloves"]]],"when":["Strong opener to winstreak","Econ augment or encounter","Executioner emblem for Draven"],"tips":["Angle in if you get an early Maokai or Ivern, they scale","Leftover items go on Gnar","Taric is the main tank if Maokai is contested","At level 10 add Elderwood Lux to cap the board","Pair Taric with Maokai","Inferno gives built-in anti-heal"],"stats":{"place":null,"top4":null,"win":null,"pick":null}},{"n":"Ashe to Ashes","diff":"Hard","style":"Fast 9","k":"ad","src":"meta","slug":"ashe-to-ashes-3J9V7i6GFrOujQPGxcWbr4cqwKC","board":["Ashe","Amumu","Sivir","Kennen","Ivern","Lillia","Tristana","Vi","Shen"],"alts":[],"carries":[["Ashe",["Red Buff","Last Whisper","Spear of Shojin"]],["Sivir",["Infinity Edge","Spear of Shojin","Striker's Flail"]],["Amumu",["Warmog's Armor","Bramble Vest","Gargoyle Stoneplate"]],["Kennen",["Thief's Gloves"]]],"when":["AD components","Econ augment or encounter"],"tips":["If Amumu will not upgrade, make Lillia the main tank","With AP items, itemize Kennen or Ivern instead","Lose-streak into carousel Sivir items if the opener is weak"],"stats":{"place":null,"top4":null,"win":null,"pick":null}},{"n":"AD Exodia","diff":"Hard","style":"Fast 9","k":"ad","src":"meta","slug":"ad-fast-9-3HIz3Cx7oNI4RGtlcnOVu0H4xFh","board":["Draven","Maokai","Elder Dragon","Kennen","Ivern","Taric","Amumu","Sentinel"],"alts":["Morgana"],"carries":[["Draven",["Guinsoo's Rageblade","Deathblade","Kraken's Fury"]],["Elder Dragon",["Deathblade","Infinity Edge","Hand of Justice"]],["Maokai",["Warmog's Armor","Gargoyle Stoneplate","Evenshroud"]],["Kennen",["Thief's Gloves"]]],"when":["Strong opener to winstreak","Econ augment"],"tips":["Field Ivern and Maokai as soon as you find them","Morgana can replace Draven for Invoker","Pair Taric with the Elder Dragon","Taric can main-tank if Maokai comes late"],"stats":{"place":3.53,"top4":"65.0%","win":"31.1%","pick":"0.42%","as":"Riftbeast Inferno"}},{"n":"Bloom and Doom","diff":"Medium","style":"Fast 8","k":"ap","src":"meta","slug":"bloom-and-doom-3IYZrgrxpycIWCeI7z4uJ44MTMA","board":["Ahri","Morgana","Sett","Ivern","Taric","Sentinel","Krug","Karma","Pebbles"],"alts":["Elise","Cassiopeia","Fiddlesticks","Alune"],"carries":[["Ahri",["Jeweled Gauntlet","Striker's Flail","Spear of Shojin"]],["Morgana",["Morellonomicon","Void Staff","Adaptive Helm"]],["Sett",["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"]]],"when":["Invoker emblem for Ahri makes this much stronger","AP components","Blossom or Coven opener","Econ augment"],"tips":["Swap in the alternates to play around Coven","Invoker emblem goes on Ahri","Alpha Mark Krug so he dies early","Place Ahri on the same side as the enemy carries"],"stats":{"place":null,"top4":null,"win":null,"pick":null}},{"n":"The Hunters","diff":"Medium","style":"Fast 8","k":"ad","src":"meta","slug":"the-hunters-3IgkJx9eBNudXmmIjllH0uIcjp0","board":["Ashe","Malphite","Nidalee","Sivir","Sentinel","Kog'Maw","Krug","Cinderling","Rek'Sai"],"alts":["Aphelios","Brambleback"],"carries":[["Sivir",["Striker's Flail","Spear of Shojin","Infinity Edge"]],["Ashe",["Red Buff","Giant Slayer","Spear of Shojin"]],["Nidalee",["Infinity Edge","Hunter Emblem","Sterak's Gage"]],["Malphite",["Warmog's Armor","Crownguard","Gargoyle Stoneplate"]]],"when":["AD components","Hunter emblem","Econ augment"],"tips":["Sivir holds Red Buff until Ashe shows up","Sentinel can main-tank if Malphite is contested","Snowballing: take Item Primal, otherwise look for Execute","Kog'Maw applies Shred and Sunder","Krug goes in the Blackthorn hex","If carries are contested, hold Aphelios and Brambleback on the rolldown"],"stats":{"place":3.93,"top4":"61.7%","win":"15.0%","pick":"0.22%","as":"Hunter Riftbeast"}},{"n":"Riftbeast Ascension","diff":"Medium","style":"Fast 8","k":"hy","src":"meta","slug":"riftbeasts-3GPdjNA6ylpo7iCTllcNRj1b8fs","board":["Elder Dragon","Sentinel","Brambleback","Pebbles","Gnar","Taric","Krug","Murkwolf"],"alts":[],"carries":[["Pebbles",["Blue Buff","Rabadon's Deathcap","Jeweled Gauntlet"]],["Elder Dragon",["Infinity Edge","Last Whisper","Hand of Justice"]],["Brambleback",["Giant Slayer","Edge of Night","Quicksilver"]],["Sentinel",["Sunfire Cape","Protector's Vow","Warmog's Armor"]]],"when":["Riftbeast opener","Econ augment"],"tips":["Elder Dragon takes two slots and counts as two Riftbeasts","Alpha Mark the Elder Dragon","Pair Taric with the Elder Dragon","Pebbles is the 3-star that matters most","Murkwolf and Krug are interchangeable with Scuttlecrab"],"stats":{"place":null,"top4":null,"win":null,"pick":null}},{"n":"Lunar Adaptor","diff":"","style":"","k":"hy","src":"stats","slug":"","board":["Amumu","Sentinel","Aphelios","Nidalee","Alune","Diana","Kog'Maw","Vi","Varus"],"alts":[],"carries":[],"when":[],"tips":[],"stats":{"place":3.44,"top4":"75.2%","win":"11.8%","pick":"0.07%"}},{"n":"Blackthorn Executioner","diff":"","style":"","k":"ap","src":"stats","slug":"","board":["Malphite","Soraka","Zyra","Kennen","Amumu","Azir","Fiddlesticks","Yorick"],"alts":[],"carries":[],"when":[],"tips":[],"stats":{"place":3.8,"top4":"64.5%","win":"18.9%","pick":"0.07%"}},{"n":"Immortal Elise","diff":"Medium","style":"Level 7 slow roll","k":"ap","src":"community","slug":"","board":["Diana","Hecarim","Elise","Alune","Taric","Sentinel","Aphelios","Morgana","Rakan"],"alts":[],"carries":[],"when":[],"tips":[],"votes":14,"by":"zzombie pt"},{"n":"Caitlyn & Carapateur","diff":"Easy","style":"Level 6 slow roll","k":"ad","src":"community","slug":"","board":["Caitlyn","Scuttlecrab","Sejuani","Ashe","Sivir","Tristana","Vi","Rakan"],"alts":[],"carries":[],"when":[],"tips":[],"votes":8,"by":"BarbeRousse"},{"n":"Tee'Maw'Gana","diff":"Easy","style":"Level 6 slow roll","k":"hy","src":"community","slug":"","board":["Malphite","Morgana","Kog'Maw","Teemo","Sentinel","Gnar","Krug","Kobuko","Pebbles","Rek'Sai"],"alts":[],"carries":[],"when":[],"tips":[],"votes":5,"by":"marc abel"},{"n":"Big Infernal Eclipse","diff":"Medium","style":"Fast 9","k":"hy","src":"community","slug":"","board":["Alune","Amumu","Aphelios","Shen","Kennen","Diana","Kayle","Sejuani","Leona"],"alts":[],"carries":[],"when":[],"tips":[],"votes":3,"by":""},{"n":"Maître Yi & Vi","diff":"Easy","style":"Level 7 slow roll","k":"ad","src":"community","slug":"","board":["Kog'Maw","Master Yi","Vi","Nidalee","Sett","Krug","Gromp","Yorick"],"alts":[],"carries":[],"when":[],"tips":[],"votes":2,"by":"BarbeRousse"}];
+const RECIPE = {};
+BANDS.forEach(b => b.items.forEach(([n,a,c,e]) => { RECIPE[n] = [a,c,e,b.k]; }));
+
+const MAXES = {hp:1800, mm:150, ad:125, ar:75, mr:75};
+const STATC = {hp:"var(--c-belt)", mm:"var(--c-tear)", ad:"var(--c-bf)", ar:"var(--c-vest)", mr:"var(--c-cloak)"};
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const side = c => c.t.includes("Adaptor") ? "fx" : (c.r.startsWith("AP") ? "ap" : "ad");
+const tvar = s => s === "fx" ? "var(--hy)" : "var(--" + s + ")";
+
+/* portraits are hotlinked; if the host blocks them the hex badge underneath shows through */
+function wireImgs(root){
+  root.querySelectorAll("img.pimg, img.iimg").forEach(img => {
+    if (img.dataset.w) return;
+    img.dataset.w = "1";
+    const drop = () => { img.style.display = "none"; };
+    img.addEventListener("error", drop);
+    if (img.complete && img.naturalWidth === 0) drop();
+  });
+}
+
+
+/* component key */
+document.getElementById("key").innerHTML = Object.entries(COMP).map(([k,[n,s]]) => `
+  <div class="key-i"><span class="comp" style="--c:var(--c-${k})"><svg><use href="#g-${k}"/></svg>
+    ${COMPIMG[k] ? `<img class="cimg iimg" src="${ITEMBASE}${COMPIMG[k]}.png?v=74" alt=""
+         loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
+  <span><b>${esc(n)}</b><i>${esc(s)}</i></span></div>`).join("");
+wireImgs(document.getElementById("key"));
+
+/* items */
+/* the diagonal recipe icon stays underneath as the fallback if the art 404s */
+const icon = (name,a,b) => `<span class="ico" role="img" aria-label="${esc(name)}" data-item="${esc(name)}" tabindex="0">
+  <span class="sl a" style="--c:var(--c-${a})"><i></i><svg><use href="#g-${a}"/></svg></span>
+  <span class="sl b" style="--c:var(--c-${b})"><i></i><svg><use href="#g-${b}"/></svg></span>
+  <svg class="dg" viewBox="0 0 34 34"><line x1="34" y1="0" x2="0" y2="34"/></svg>
+  ${ITEMIMG[name] ? `<img class="iimg" src="${ITEMBASE}${ITEMIMG[name]}.png?v=74" alt=""
+       loading="lazy" referrerpolicy="no-referrer">` : ""}</span>`;
+
+/* recipe survives as two glyphs on the stat line once real art covers the tile */
+const mini = k => `<i class="mini" style="--c:var(--c-${k})" title="${esc(COMP[k][0])}"><svg><use href="#g-${k}"/></svg></i>`;
+
+document.getElementById("bands").innerHTML = BANDS.map(b => `
+  <div class="band" style="--c:var(--${b.k})">
+    <div class="band-head"><span class="band-title">${esc(b.title)}</span>
+      <span class="band-note">${esc(b.note)}</span><span class="band-n">${b.items.length}</span></div>
+    <div class="items">${b.items.map(([n,a,c,e]) =>
+      `<div class="item" style="--c:var(--${b.k})">${icon(n,a,c)}
+        <span><b>${esc(n)}</b><s>${mini(a)}${mini(c)}<em>${esc(e)}</em></s></span></div>`).join("")}</div>
+  </div>`).join("");
+
+wireImgs(document.getElementById("bands"));
+
+document.getElementById("tells").innerHTML = TELLS.map(([n,to,k]) =>
+  `<div class="tell" style="--c:var(--${k})"><b>${esc(n)}</b><span class="arw">&rarr;</span>
+   <span class="to">${esc(to)}</span></div>`).join("");
+
+/* recipe tooltip: hover or focus any completed-item icon */
+const tip = document.getElementById("tip");
+const compTile = k => `<span class="comp" style="--c:var(--c-${k})"><svg><use href="#g-${k}"/></svg>
+  ${COMPIMG[k] ? `<img class="cimg iimg" src="${ITEMBASE}${COMPIMG[k]}.png?v=74" alt="" referrerpolicy="no-referrer">` : ""}</span>`;
+function tipHTML(name){
+  const r = RECIPE[name];
+  if (!r) return `<b>${esc(name)}</b><div class="fx">Emblem &mdash; from an augment, carousel or Spatula recipe.</div>`;
+  const [a,c,e] = r;
+  return `<b>${esc(name)}</b>
+    <div class="rec">${compTile(a)}<span class="plus">+</span>${compTile(c)}<span class="eq">=</span>${icon(name,a,c)}</div>
+    <div class="cn">${esc(COMP[a][0])} + ${esc(COMP[c][0])}</div>
+    <div class="fx">${esc(e)}</div>`;
+}
+let tipFor = null;
+function showTip(el){
+  if (tip.contains(el)) return;
+  const name = el.dataset.item; if (!name) return;
+  tipFor = el;
+  tip.innerHTML = tipHTML(name); wireImgs(tip);
+  tip.querySelectorAll("[data-item]").forEach(n => { n.removeAttribute("data-item"); n.removeAttribute("tabindex"); });
+  tip.setAttribute("aria-hidden","false");
+  const r = el.getBoundingClientRect(), pad = 8;
+  tip.style.left = "0px"; tip.style.top = "0px"; tip.classList.add("on");
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = r.left + r.width/2 - w/2, y = r.top - h - pad;
+  if (y < pad) y = r.bottom + pad;
+  x = Math.max(pad, Math.min(x, window.innerWidth - w - pad));
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip(){ tipFor = null; tip.classList.remove("on"); tip.setAttribute("aria-hidden","true"); }
+const tipTarget = e => e.target.closest && e.target.closest("[data-item]");
+document.addEventListener("mouseover", e => { const t = tipTarget(e); if (t && t !== tipFor) showTip(t); });
+document.addEventListener("mouseout", e => { const t = tipTarget(e); if (t && !t.contains(e.relatedTarget)) hideTip(); });
+document.addEventListener("focusin", e => { const t = tipTarget(e); if (t) showTip(t); });
+document.addEventListener("focusout", hideTip);
+document.addEventListener("keydown", e => { if (e.key === "Escape") hideTip(); });
+/* touch: tap toggles, tap elsewhere closes */
+document.addEventListener("click", e => {
+  const t = tipTarget(e);
+  if (!t) { if (tipFor) hideTip(); return; }
+  if (t === tipFor) hideTip(); else showTip(t);
+});
+window.addEventListener("scroll", () => { if (tipFor) hideTip(); }, {passive:true});
+
+/* meta build tile */
+const metaItem = name => {
+  const r = RECIPE[name];
+  return r
+    ? `<span class="mi" data-item="${esc(name)}" tabindex="0">${icon(name,r[0],r[1])}${esc(name)}</span>`
+    : `<span class="mi emblem" data-item="${esc(name)}" tabindex="0">${esc(name)}</span>`;
+};
+function metaHTML(c){
+  const bis = BIS[c.n] || [], m = META[c.n] || [];
+  const rows = [];
+  if (bis.length) rows.push(`<div class="build"><span class="bl">Recommended</span>${bis.map(metaItem).join("")}</div>`);
+  m.forEach(([comp, items]) => rows.push(`<div class="build"><span class="bl">${esc(comp)}</span>${items.map(metaItem).join("")}</div>`));
+  if (!rows.length) return "";
+  const src = m.length
+    ? `<a href="${METASRC}" target="_blank" rel="noopener">Mobalytics</a> champion page and meta comps`
+    : `<a href="${METASRC.replace("team-comps","champions")}" target="_blank" rel="noopener">Mobalytics</a> champion page`;
+  return `<div class="c-meta"><div class="mh"><b>Meta build</b>
+      <i>patch ${_PATCH} &middot; ${src} &middot; hover an item for its recipe</i></div>
+    <div class="builds">${rows.join("")}</div></div>`;
+}
+
+function compsHTML(c){
+  const list = compsFor(c.n);
+  const body = list.length
+    ? `<div class="row">${list.map(cp => `<button class="cc" data-open="${esc(cp.n)}">${esc(cp.n)}
+         <i>${cp.src !== "meta" ? SRC[cp.src][0].toLowerCase() + " &middot; " : ""}${cp.alts.includes(c.n) ? "alternate" : cp.carries.some(([n]) => n === c.n) ? "carry" : "board"}</i></button>`).join("")}</div>`
+    : `<div class="none">Not in any listed comp. <button class="cc" data-filter-role="${esc(roleOf(c))}">Show ${esc(roleOf(c))} comps</button></div>`;
+  return `<div class="c-comps"><b>Meta comps</b>${body}</div>`;
+}
+
+/* champion chips */
+function initials(n){
+  if (n.includes(" ")) return n.split(" ").map(w => w[0]).join("").slice(0,2);
+  const i = n.search(/['\u2019]/);
+  if (i > -1) return (n[0] + n[i+1]).toUpperCase();
+  return n[0] + n[1].toLowerCase();
+}
+const HEXPTS = "50,4 92,27 92,73 50,96 8,73 8,27";
+const portrait = c => `<span class="por" style="--k:var(--k${c.c})">
+  <svg class="hexbg" viewBox="0 0 100 100" aria-hidden="true"><polygon points="${HEXPTS}"/>
+    <text x="50" y="53">${esc(initials(c.n))}</text></svg>
+  ${IMG[c.n] ? `<img class="pimg" src="${IMGBASE}${IMG[c.n]}.png" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}
+  <svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><polygon points="${HEXPTS}"/></svg></span>`;
+
+
+const chip = c => `<button class="u${c.r.includes("Tank") ? " tankrole" : ""}" data-name="${esc(c.n)}"
+  style="--t:${tvar(side(c))}" title="${esc(c.n)} · ${c.c} cost · ${esc(c.r)}">${portrait(c)}${esc(c.n)}</button>`;
+
+const grid = document.getElementById("grid");
+for (let n = 1; n <= 5; n++){
+  const at = s => CHAMPS.filter(c => c.c === n && side(c) === s).map(chip).join("");
+  const row = document.createElement("div");
+  row.className = "tier"; row.dataset.cost = n;
+  row.innerHTML = `<div class="cost" style="color:var(--k${n})">${n}</div>
+    <div class="cell left">${at("ap")}</div>
+    <div class="cell mid">${at("fx")}</div>
+    <div class="cell right">${at("ad")}</div>`;
+  grid.appendChild(row);
+}
+wireImgs(grid);
+
+/* detail card */
+const statRow = (c, k, label, suffix) => {
+  const v = c[k];
+  const pct = v == null ? 0 : Math.round(Math.min(1, v / MAXES[k]) * 100);
+  return `<div class="st"><div class="lab"><span>${label}</span><b>${v == null ? "?" : v}${suffix||""}</b></div>
+    <div class="track"><div class="fill" style="--s:${STATC[k]};width:${pct}%"></div></div></div>`;
+};
+
+function card(c){
+  const s = side(c);
+  const mana = c.ms > 0 ? ` (starts ${c.ms})` : "";
+  return `<article class="card" style="--t:${tvar(s)};--k:var(--k${c.c})">
+    <div class="c-top">${portrait(c)}<span class="c-name">${esc(c.n)}</span>
+      <span class="c-role">${esc(c.r)}</span><span class="c-cost">${c.c} cost</span></div>
+    <div class="c-traits">${esc(c.t)}${mana ? " · mana" + mana : ""}</div>
+    <div class="c-scale">${s === "fx"
+      ? `Adaptor &mdash; the ability rewrites itself for whichever is higher, <b>AD</b> or <b>AP</b>`
+      : s === "ap"
+        ? `Scales with <b>AP</b> &mdash; its ability deals magic damage`
+        : `Scales with <b>AD</b> &mdash; its ability deals physical damage`}</div>
+    <div class="stats">
+      ${statRow(c,"hp","Health")}${statRow(c,"mm","Mana")}${statRow(c,"ad","Attack dmg")}
+      ${statRow(c,"ar","Armour")}${statRow(c,"mr","Magic res")}
+    </div>
+    ${metaHTML(c)}
+    ${compsHTML(c)}
+    <div class="c-ability"><b>${esc(c.a)}</b>
+      ${c.d.split("\n").map(p => `<p>${esc(p)}</p>`).join("")}</div>
+  </article>`;
+}
+
+/* search */
+const q = document.getElementById("q"), clr = document.getElementById("clr");
+const browse = document.getElementById("browse"), cards = document.getElementById("cards");
+
+function show(list, term){
+  cards.innerHTML = list.length
+    ? list.map(card).join("")
+    : `<div class="empty">Nothing matches &ldquo;${esc(term)}&rdquo;. Try a champion, trait, role or a word from an ability.</div>`;
+  wireImgs(cards);
+}
+function run(){
+  const term = q.value.trim();
+  clr.style.display = term ? "block" : "none";
+  if (!term){ browse.classList.remove("hide"); cards.classList.add("hide"); return; }
+  const t = term.toLowerCase();
+  const hits = CHAMPS
+    .map(c => {
+      const name = c.n.toLowerCase();
+      let score = -1;
+      if (name === t) score = 0;
+      else if (name.startsWith(t)) score = 1;
+      else if (name.includes(t)) score = 2;
+      else if (c.t.toLowerCase().includes(t) || c.r.toLowerCase().includes(t)) score = 3;
+      else if (c.a.toLowerCase().includes(t) || c.d.toLowerCase().includes(t)) score = 4;
+      return {c, score};
+    })
+    .filter(x => x.score >= 0)
+    .sort((a,b) => a.score - b.score || a.c.c - b.c.c || a.c.n.localeCompare(b.c.n))
+    .map(x => x.c);
+  browse.classList.add("hide"); cards.classList.remove("hide");
+  show(hits, term);
+}
+
+q.addEventListener("input", run);
+q.addEventListener("keydown", e => { if (e.key === "Escape"){ q.value = ""; run(); } });
+clr.addEventListener("click", () => { q.value = ""; run(); q.focus(); });
+
+grid.addEventListener("click", e => {
+  const btn = e.target.closest(".u");
+  if (!btn) return;
+  q.value = btn.dataset.name;
+  run();
+  q.scrollIntoView({block:"center", behavior:"smooth"});
+});
+
+const filters = document.getElementById("filters");
+filters.addEventListener("click", e => {
+  const btn = e.target.closest("button"); if (!btn) return;
+  filters.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+  const want = btn.dataset.cost;
+  document.querySelectorAll(".tier").forEach(t => {
+    t.style.display = (want === "all" || t.dataset.cost === want) ? "" : "none";
+  });
+});
+/* ---- meta comps: section, filters, overlay ---- */
+const byName = Object.fromEntries(CHAMPS.map(c => [c.n, c]));
+const traitsOf = c => c.t.split(" \u00b7 ").map(t => t.trim()).filter(t => !t.startsWith("Avatar"));
+const roleOf = c => c.r.replace(/^(AP|AD) /, "");
+function compTraits(cp){
+  const n = {};
+  cp.board.forEach(name => { const c = byName[name]; if (c) traitsOf(c).forEach(t => { n[t] = (n[t]||0) + 1; }); });
+  if (cp.board.includes("Elder Dragon")) n["Riftbeast"] = (n["Riftbeast"]||0) + 1;
+  return Object.entries(n).sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+}
+const compsFor = name => COMPS.filter(cp => cp.board.includes(name) || cp.alts.includes(name));
+const fSrc = document.getElementById("f-src"), fTrait = document.getElementById("f-trait"), fRole = document.getElementById("f-role"),
+      fChamp = document.getElementById("f-champ"), fCnt = document.getElementById("f-cnt"),
+      compsEl = document.getElementById("comps");
+{
+  const traits = new Set(), roles = new Set();
+  CHAMPS.forEach(c => { traitsOf(c).forEach(t => traits.add(t)); roles.add(roleOf(c)); });
+  [...traits].sort().forEach(t => fTrait.insertAdjacentHTML("beforeend", `<option>${esc(t)}</option>`));
+  [...roles].sort().forEach(r => fRole.insertAdjacentHTML("beforeend", `<option>${esc(r)}</option>`));
+}
+const boardChip = (name, cls) => {
+  const c = byName[name];
+  return c ? chip(c).replace('class="u', `class="u ${cls||""}`) : `<span class="u">${esc(name)}</span>`;
+};
+const statLine = cp => cp.stats
+  ? `<div class="stat"><span><b>${cp.stats.place.toFixed(2)}</b> avg place</span><span><b>${cp.stats.top4}</b> top 4</span>
+     <span><b>${cp.stats.win}</b> win</span><span><b>${cp.stats.pick}</b> pick</span>${cp.stats.as ? `<i>tracked as &ldquo;${esc(cp.stats.as)}&rdquo;</i>` : ""}</div>`
+  : cp.votes != null ? `<div class="stat"><span><b>${cp.votes}</b> votes</span>${cp.by ? `<i>by ${esc(cp.by)}</i>` : ""}</div>` : "";
+function compCard(cp, f){
+  const tr = compTraits(cp);
+  const hitName = n => (f.champ && n.toLowerCase().includes(f.champ)) || (f.role && byName[n] && roleOf(byName[n]) === f.role) ? "hit" : "";
+  return `<article class="cp" style="--c:var(--${cp.k})" data-comp="${esc(cp.n)}">
+    <div class="cp-head"><span class="cp-name">${esc(cp.n)}</span>
+      <span class="tag src-${cp.src}">${SRC[cp.src][0]}</span>${cp.diff ? `<span class="tag ${cp.diff.toLowerCase()}">${esc(cp.diff)}</span>` : ""}${cp.style ? `<span class="tag">${esc(cp.style)}</span>` : ""}${cp.stale ? `<span class="tag stale" title="Community feedback: possibly outdated">⚠ stale?</span>` : ""}
+      <button class="cp-open" data-open="${esc(cp.n)}">Details</button></div>
+    ${statLine(cp)}
+    <div class="traits">${tr.map(([t,n]) => `<button class="tr${f.trait === t ? " hit" : ""}" data-trait="${esc(t)}"><b>${n}</b>${esc(t)}</button>`).join("")}</div>
+    <div class="board">${cp.board.map(n => boardChip(n, hitName(n))).join("")}${cp.alts.map(n => boardChip(n, "alt " + hitName(n))).join("")}</div>
+    <div class="cp-carry">${cp.carries.map(([n, items]) =>
+      `<div class="build"><span class="bl">${esc(n)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div>
+    ${cp.when.length ? `<div class="cp-when"><span class="cp-lbl">When to play</span><ul>${cp.when.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    ${cp.tips.length ? `<div class="cp-tips"><span class="cp-lbl">Tips</span><ul>${cp.tips.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    <div class="cp-vote" data-comp="${esc(cp.n)}">
+      <span class="cp-lbl">Still meta?</span>
+      <button class="vote-btn vote-up" data-comp="${esc(cp.n)}" data-vote="up" title="Yes, still meta">👍</button>
+      <button class="vote-btn vote-dn" data-comp="${esc(cp.n)}" data-vote="down" title="No, outdated">👎</button>
+      <span class="vote-thanks" hidden>Thanks!</span>
+    </div>
+  </article>`;
+}
+function renderComps(){
+  const f = {src:fSrc.value, trait:fTrait.value, role:fRole.value, champ:fChamp.value.trim().toLowerCase()};
+  const list = COMPS.filter(cp => {
+    const all = cp.board.concat(cp.alts);
+    if (f.src && cp.src !== f.src) return false;
+    if (f.trait && !compTraits(cp).some(([t]) => t === f.trait)) return false;
+    if (f.role && !all.some(n => byName[n] && roleOf(byName[n]) === f.role)) return false;
+    if (f.champ && !all.some(n => n.toLowerCase().includes(f.champ))) return false;
+    return true;
+  });
+  fCnt.textContent = `${list.length} of ${COMPS.length} comps`;
+  compsEl.innerHTML = list.length ? list.map(cp => compCard(cp, f)).join("")
+    : `<div class="empty cp-empty">No current meta comp matches that filter. Try clearing one of them.</div>`;
+  wireImgs(compsEl);
+  refreshVoteUI(compsEl);
+}
+[fSrc, fTrait, fRole].forEach(el => el.addEventListener("change", renderComps));
+fChamp.addEventListener("input", renderComps);
+document.getElementById("f-reset").addEventListener("click", () => { fSrc.value = ""; fTrait.value = ""; fRole.value = ""; fChamp.value = ""; renderComps(); });
+function filterComps(o){
+  if ("trait" in o) fTrait.value = [...fTrait.options].some(x => x.value === o.trait) ? o.trait : "";
+  if ("role" in o) fRole.value = o.role;
+  if ("champ" in o) fChamp.value = o.champ;
+  renderComps();
+  compsEl.scrollIntoView({block:"start", behavior:"smooth"});
+}
+
+/* initialize vote state before first renderComps() so refreshVoteUI has access */
+const VOTED_KEY = "tft-voted-comps";
+function loadVoted(){
+  try { return new Set(JSON.parse(localStorage.getItem(VOTED_KEY) || "[]")); } catch { return new Set(); }
+}
+function saveVoted(set){
+  try { localStorage.setItem(VOTED_KEY, JSON.stringify([...set])); } catch {}
+}
+const voted = loadVoted();
+function refreshVoteUI(root){
+  root.querySelectorAll(".vote-btn").forEach(btn => {
+    const slug = btn.dataset.comp + ":" + btn.dataset.vote;
+    if (voted.has(slug)) btn.classList.add("voted");
+  });
+}
+
+renderComps();
+
+/* overlay */
+const ov = document.getElementById("ov");
+function openComp(name){
+  const cp = COMPS.find(x => x.n === name); if (!cp) return;
+  const tr = compTraits(cp);
+  ov.innerHTML = `<div class="ovp" style="--c:var(--${cp.k})">
+    <button class="ovx" aria-label="Close">&times;</button>
+    <div><h3>${esc(cp.n)}</h3><div class="sub">${SRC[cp.src][0]} comp${cp.diff ? " &middot; " + esc(cp.diff) : ""}${cp.style ? " &middot; " + esc(cp.style) : ""} &middot; patch ${_PATCH}</div>${statLine(cp)}</div>
+    <div><h4>Synergies</h4><div class="traits">${tr.map(([t,n]) => `<button class="tr" data-trait="${esc(t)}"><b>${n}</b>${esc(t)}</button>`).join("")}</div></div>
+    <div><h4>Final board</h4><div class="board">${cp.board.map(n => boardChip(n)).join("")}</div>
+      ${cp.alts.length ? `<div class="sub" style="margin-top:6px">Interchangeable: ${cp.alts.map(esc).join(", ")}</div>` : ""}</div>
+    ${cp.carries.length
+      ? `<div><h4>Carries and items</h4><div class="cp-carry">${cp.carries.map(([n, items]) =>
+          `<div class="build"><span class="bl">${esc(n)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div></div>`
+      : `<div><h4>Recommended items per champion</h4><div class="sub" style="margin-bottom:6px">No carry list is published for this comp, so these are each unit's own recommended items.</div>
+         <div class="cp-carry">${cp.board.filter(n => BIS[n] && byName[n] && !byName[n].r.includes("Tank")).map(n =>
+          `<div class="build"><span class="bl">${esc(n)}</span>${BIS[n].map(metaItem).join("")}</div>`).join("")}</div></div>`}
+    ${cp.when.length ? `<div><h4>When to play it</h4><ul>${cp.when.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    ${cp.tips.length ? `<div><h4>Tips</h4><ul>${cp.tips.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    <div class="ext">${SRC[cp.src][1]} &middot; <a href="${cp.slug ? COMPBASE + cp.slug : SRC[cp.src][2]}" target="_blank" rel="noopener">${cp.slug ? "Full guide" : "Source list"} on Mobalytics</a></div>
+  </div>`;
+  wireImgs(ov);
+  ov.classList.add("on"); document.body.classList.add("lock");
+  ov.querySelector(".ovx").focus();
+}
+function closeOv(){ ov.classList.remove("on"); document.body.classList.remove("lock"); ov.innerHTML = ""; }
+ov.addEventListener("click", e => { if (e.target === ov || e.target.closest(".ovx")) closeOv(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && ov.classList.contains("on")) closeOv(); });
+
+/* delegated clicks: open a comp, filter by trait, jump to a champion */
+document.addEventListener("click", e => {
+  const open = e.target.closest("[data-open]");
+  if (open){ openComp(open.dataset.open); return; }
+  const fr = e.target.closest("[data-filter-role]");
+  if (fr){ filterComps({role: fr.dataset.filterRole, trait:"", champ:""}); return; }
+  const tr = e.target.closest(".tr[data-trait]");
+  if (tr){ closeOv(); filterComps({trait: tr.dataset.trait}); return; }
+  const u = e.target.closest(".board .u[data-name], #cards .board .u[data-name]");
+  if (u){ closeOv(); q.value = u.dataset.name; run(); q.scrollIntoView({block:"center", behavior:"smooth"}); }
+});
+document.getElementById("tells").addEventListener("click", e => {
+  const t = e.target.closest(".tell"); if (!t) return;
+  const label = t.querySelector("b").textContent;
+  filterComps({trait: label.includes("/") ? label.split("/")[0].trim() : label});
+});
+
+/* ---- vote click handler ---- */
+document.addEventListener("click", async e => {
+  const btn = e.target.closest(".vote-btn");
+  if (!btn) return;
+  const compName = btn.dataset.comp, voteType = btn.dataset.vote;
+  if (!compName || !voteType) return;
+  const slug = compName + ":" + voteType;
+  if (voted.has(slug)) return;
+  btn.classList.add("voted");
+  voted.add(slug);
+  saveVoted(voted);
+  const thanks = btn.closest(".cp-vote")?.querySelector(".vote-thanks");
+  if (thanks) thanks.hidden = false;
+  try {
+    await fetch("/api/vote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ comp: compName, vote: voteType, patch: _PATCH })
+    });
+  } catch { /* offline — vote stored locally */ }
+});
+
+/* ---- submit comp form ---- */
+const submitToggle = document.getElementById("submit-toggle");
+const submitForm   = document.getElementById("submit-form");
+const submitBtn    = document.getElementById("sf-submit");
+const cancelBtn    = document.getElementById("sf-cancel");
+const submitMsg    = document.getElementById("sf-msg");
+submitToggle.addEventListener("click", () => {
+  const open = submitForm.classList.toggle("open");
+  submitToggle.textContent = open ? "\u00d7 Cancel submission" : "+ Submit a comp";
+});
+cancelBtn.addEventListener("click", () => {
+  submitForm.classList.remove("open");
+  submitToggle.textContent = "+ Submit a comp";
+});
+submitBtn.addEventListener("click", async () => {
+  const name  = document.getElementById("sf-name").value.trim();
+  const board = document.getElementById("sf-board").value.trim();
+  if (!name || !board) {
+    submitMsg.style.color = "#E07A42";
+    submitMsg.textContent = "Comp name and board units are required.";
+    submitMsg.style.display = "block";
+    return;
+  }
+  const payload = {
+    n:     name,
+    style: document.getElementById("sf-style").value.trim(),
+    diff:  document.getElementById("sf-diff").value,
+    board: board.split(",").map(s => s.trim()).filter(Boolean),
+    when:  document.getElementById("sf-when").value.split("\n").map(s => s.trim()).filter(Boolean),
+    tips:  document.getElementById("sf-tips").value.split("\n").map(s => s.trim()).filter(Boolean),
+    patch: _PATCH
+  };
+  submitBtn.disabled = true;
+  try {
+    const res = await fetch("/api/submit-comp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      submitMsg.style.color = "#4FB393";
+      submitMsg.textContent = "Thanks! Your comp has been submitted and will appear after 3 community votes.";
+    } else {
+      throw new Error(await res.text());
+    }
+  } catch (err) {
+    submitMsg.style.color = "#E07A42";
+    submitMsg.textContent = "Submission failed \u2014 " + (err.message || "please try again.");
+  }
+  submitMsg.style.display = "block";
+  submitBtn.disabled = false;
+});
+
+</script>
+</body>
+</html>

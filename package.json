@@ -1,0 +1,15 @@
+{
+  "name": "tft-guide",
+  "version": "1.0.0",
+  "description": "TFT Set 18 AP/AD champion & comp reference — auto-updated guide",
+  "private": true,
+  "engines": { "node": ">=18" },
+  "scripts": {
+    "build": "node build.js",
+    "fetch:champions": "node scripts/fetch-champions.js",
+    "fetch:comps":     "node scripts/fetch-comps.js",
+    "refresh":         "npm run fetch:champions && npm run fetch:comps && npm run build"
+  },
+  "dependencies": {},
+  "devDependencies": {}
+}

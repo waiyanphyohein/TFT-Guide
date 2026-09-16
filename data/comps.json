@@ -1,0 +1,230 @@
+{
+  "_meta": {
+    "patch": "18.2",
+    "sources": {
+      "meta":      ["Meta",      "Curated by Mobalytics Challenger experts", "https://mobalytics.gg/tft/team-comps"],
+      "stats":     ["Data",      "Top boards from Diamond+ match data",      "https://mobalytics.gg/tft/team-comps-tier-list"],
+      "community": ["Community", "Player-submitted, ranked by votes",        "https://mobalytics.gg/tft/community-comps"]
+    },
+    "compBase": "https://mobalytics.gg/tft/comps-guide/",
+    "updatedAt": "2026-09-16"
+  },
+  "comps": [
+    {
+      "n": "The Final Forest",
+      "diff": "Hard",
+      "style": "Fast 9",
+      "k": "ad",
+      "src": "meta",
+      "slug": "elderwood-cap-3HBMcPmR81fWMyuppwi8smQJ37O",
+      "board": ["Draven","Maokai","Ezreal","Kennen","Gnar","Ivern","Taric","Amumu","Alistar"],
+      "alts": [],
+      "carries": [
+        ["Draven",  ["Deathblade","Guinsoo's Rageblade","Kraken's Fury"]],
+        ["Ezreal",  ["Last Whisper","Deathblade","Spear of Shojin"]],
+        ["Maokai",  ["Warmog's Armor","Dragon's Claw","Bramble Vest"]],
+        ["Kennen",  ["Thief's Gloves"]]
+      ],
+      "when": ["Strong opener to winstreak","Econ augment or encounter","Executioner emblem for Draven"],
+      "tips":  ["Angle in if you get an early Maokai or Ivern, they scale","Leftover items go on Gnar","Taric is the main tank if Maokai is contested","At level 10 add Elderwood Lux to cap the board","Pair Taric with Maokai","Inferno gives built-in anti-heal"],
+      "stats": {"place":null,"top4":null,"win":null,"pick":null}
+    },
+    {
+      "n": "Ashe to Ashes",
+      "diff": "Hard",
+      "style": "Fast 9",
+      "k": "ad",
+      "src": "meta",
+      "slug": "ashe-to-ashes-3J9V7i6GFrOujQPGxcWbr4cqwKC",
+      "board": ["Ashe","Amumu","Sivir","Kennen","Ivern","Lillia","Tristana","Vi","Shen"],
+      "alts": [],
+      "carries": [
+        ["Ashe",  ["Red Buff","Last Whisper","Spear of Shojin"]],
+        ["Sivir", ["Infinity Edge","Spear of Shojin","Striker's Flail"]],
+        ["Amumu", ["Warmog's Armor","Bramble Vest","Gargoyle Stoneplate"]],
+        ["Kennen",["Thief's Gloves"]]
+      ],
+      "when": ["AD components","Econ augment or encounter"],
+      "tips":  ["If Amumu will not upgrade, make Lillia the main tank","With AP items, itemize Kennen or Ivern instead","Lose-streak into carousel Sivir items if the opener is weak"],
+      "stats": {"place":null,"top4":null,"win":null,"pick":null}
+    },
+    {
+      "n": "AD Exodia",
+      "diff": "Hard",
+      "style": "Fast 9",
+      "k": "ad",
+      "src": "meta",
+      "slug": "ad-fast-9-3HIz3Cx7oNI4RGtlcnOVu0H4xFh",
+      "board": ["Draven","Maokai","Elder Dragon","Kennen","Ivern","Taric","Amumu","Sentinel"],
+      "alts": ["Morgana"],
+      "carries": [
+        ["Draven",       ["Guinsoo's Rageblade","Deathblade","Kraken's Fury"]],
+        ["Elder Dragon", ["Deathblade","Infinity Edge","Hand of Justice"]],
+        ["Maokai",       ["Warmog's Armor","Gargoyle Stoneplate","Evenshroud"]],
+        ["Kennen",       ["Thief's Gloves"]]
+      ],
+      "when": ["Strong opener to winstreak","Econ augment"],
+      "tips":  ["Field Ivern and Maokai as soon as you find them","Morgana can replace Draven for Invoker","Pair Taric with the Elder Dragon","Taric can main-tank if Maokai comes late"],
+      "stats": {"place":3.53,"top4":"65.0%","win":"31.1%","pick":"0.42%","as":"Riftbeast Inferno"}
+    },
+    {
+      "n": "Bloom and Doom",
+      "diff": "Medium",
+      "style": "Fast 8",
+      "k": "ap",
+      "src": "meta",
+      "slug": "bloom-and-doom-3IYZrgrxpycIWCeI7z4uJ44MTMA",
+      "board": ["Ahri","Morgana","Sett","Ivern","Taric","Sentinel","Krug","Karma","Pebbles"],
+      "alts": ["Elise","Cassiopeia","Fiddlesticks","Alune"],
+      "carries": [
+        ["Ahri",   ["Jeweled Gauntlet","Striker's Flail","Spear of Shojin"]],
+        ["Morgana",["Morellonomicon","Void Staff","Adaptive Helm"]],
+        ["Sett",   ["Warmog's Armor","Gargoyle Stoneplate","Steadfast Heart"]]
+      ],
+      "when": ["Invoker emblem for Ahri makes this much stronger","AP components","Blossom or Coven opener","Econ augment"],
+      "tips":  ["Swap in the alternates to play around Coven","Invoker emblem goes on Ahri","Alpha Mark Krug so he dies early","Place Ahri on the same side as the enemy carries"],
+      "stats": {"place":null,"top4":null,"win":null,"pick":null}
+    },
+    {
+      "n": "The Hunters",
+      "diff": "Medium",
+      "style": "Fast 8",
+      "k": "ad",
+      "src": "meta",
+      "slug": "the-hunters-3IgkJx9eBNudXmmIjllH0uIcjp0",
+      "board": ["Ashe","Malphite","Nidalee","Sivir","Sentinel","Kog'Maw","Krug","Cinderling","Rek'Sai"],
+      "alts": ["Aphelios","Brambleback"],
+      "carries": [
+        ["Sivir",    ["Striker's Flail","Spear of Shojin","Infinity Edge"]],
+        ["Ashe",     ["Red Buff","Giant Slayer","Spear of Shojin"]],
+        ["Nidalee",  ["Infinity Edge","Hunter Emblem","Sterak's Gage"]],
+        ["Malphite", ["Warmog's Armor","Crownguard","Gargoyle Stoneplate"]]
+      ],
+      "when": ["AD components","Hunter emblem","Econ augment"],
+      "tips":  ["Sivir holds Red Buff until Ashe shows up","Sentinel can main-tank if Malphite is contested","Snowballing: take Item Primal, otherwise look for Execute","Kog'Maw applies Shred and Sunder","Krug goes in the Blackthorn hex","If carries are contested, hold Aphelios and Brambleback on the rolldown"],
+      "stats": {"place":3.93,"top4":"61.7%","win":"15.0%","pick":"0.22%","as":"Hunter Riftbeast"}
+    },
+    {
+      "n": "Riftbeast Ascension",
+      "diff": "Medium",
+      "style": "Fast 8",
+      "k": "hy",
+      "src": "meta",
+      "slug": "riftbeasts-3GPdjNA6ylpo7iCTllcNRj1b8fs",
+      "board": ["Elder Dragon","Sentinel","Brambleback","Pebbles","Gnar","Taric","Krug","Murkwolf"],
+      "alts": [],
+      "carries": [
+        ["Pebbles",      ["Blue Buff","Rabadon's Deathcap","Jeweled Gauntlet"]],
+        ["Elder Dragon", ["Infinity Edge","Last Whisper","Hand of Justice"]],
+        ["Brambleback",  ["Giant Slayer","Edge of Night","Quicksilver"]],
+        ["Sentinel",     ["Sunfire Cape","Protector's Vow","Warmog's Armor"]]
+      ],
+      "when": ["Riftbeast opener","Econ augment"],
+      "tips":  ["Elder Dragon takes two slots and counts as two Riftbeasts","Alpha Mark the Elder Dragon","Pair Taric with the Elder Dragon","Pebbles is the 3-star that matters most","Murkwolf and Krug are interchangeable with Scuttlecrab"],
+      "stats": {"place":null,"top4":null,"win":null,"pick":null}
+    },
+    {
+      "n": "Lunar Adaptor",
+      "diff": "",
+      "style": "",
+      "k": "hy",
+      "src": "stats",
+      "slug": "",
+      "board": ["Amumu","Sentinel","Aphelios","Nidalee","Alune","Diana","Kog'Maw","Vi","Varus"],
+      "alts": [],
+      "carries": [],
+      "when": [],
+      "tips": [],
+      "stats": {"place":3.44,"top4":"75.2%","win":"11.8%","pick":"0.07%"}
+    },
+    {
+      "n": "Blackthorn Executioner",
+      "diff": "",
+      "style": "",
+      "k": "ap",
+      "src": "stats",
+      "slug": "",
+      "board": ["Malphite","Soraka","Zyra","Kennen","Amumu","Azir","Fiddlesticks","Yorick"],
+      "alts": [],
+      "carries": [],
+      "when": [],
+      "tips": [],
+      "stats": {"place":3.80,"top4":"64.5%","win":"18.9%","pick":"0.07%"}
+    },
+    {
+      "n": "Immortal Elise",
+      "diff": "Medium",
+      "style": "Level 7 slow roll",
+      "k": "ap",
+      "src": "community",
+      "slug": "",
+      "board": ["Diana","Hecarim","Elise","Alune","Taric","Sentinel","Aphelios","Morgana","Rakan"],
+      "alts": [],
+      "carries": [],
+      "when": [],
+      "tips": [],
+      "votes": 14,
+      "by": "zzombie pt"
+    },
+    {
+      "n": "Caitlyn & Carapateur",
+      "diff": "Easy",
+      "style": "Level 6 slow roll",
+      "k": "ad",
+      "src": "community",
+      "slug": "",
+      "board": ["Caitlyn","Scuttlecrab","Sejuani","Ashe","Sivir","Tristana","Vi","Rakan"],
+      "alts": [],
+      "carries": [],
+      "when": [],
+      "tips": [],
+      "votes": 8,
+      "by": "BarbeRousse"
+    },
+    {
+      "n": "Tee'Maw'Gana",
+      "diff": "Easy",
+      "style": "Level 6 slow roll",
+      "k": "hy",
+      "src": "community",
+      "slug": "",
+      "board": ["Malphite","Morgana","Kog'Maw","Teemo","Sentinel","Gnar","Krug","Kobuko","Pebbles","Rek'Sai"],
+      "alts": [],
+      "carries": [],
+      "when": [],
+      "tips": [],
+      "votes": 5,
+      "by": "marc abel"
+    },
+    {
+      "n": "Big Infernal Eclipse",
+      "diff": "Medium",
+      "style": "Fast 9",
+      "k": "hy",
+      "src": "community",
+      "slug": "",
+      "board": ["Alune","Amumu","Aphelios","Shen","Kennen","Diana","Kayle","Sejuani","Leona"],
+      "alts": [],
+      "carries": [],
+      "when": [],
+      "tips": [],
+      "votes": 3,
+      "by": ""
+    },
+    {
+      "n": "Maître Yi & Vi",
+      "diff": "Easy",
+      "style": "Level 7 slow roll",
+      "k": "ad",
+      "src": "community",
+      "slug": "",
+      "board": ["Kog'Maw","Master Yi","Vi","Nidalee","Sett","Krug","Gromp","Yorick"],
+      "alts": [],
+      "carries": [],
+      "when": [],
+      "tips": [],
+      "votes": 2,
+      "by": "BarbeRousse"
+    }
+  ]
+}
