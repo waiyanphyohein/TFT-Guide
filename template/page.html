@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<meta name="description" content="TFT Set 18 Enchanted Wilds: which items give ability power vs attack damage, and which of the 65 champions use each. Searchable, with stats and abilities.">
+<meta name="robots" content="noindex">
+<title>TFT Set 18 — AP vs AD</title>
+<style>
+  :root{
+    --bg:#0E1511; --panel:#16211A; --panel-2:#1B2822; --line:#2A3A31;
+    --ink:#E6EADF; --ink-dim:#8FA096;
+    --ap:#9B87F5; --ad:#E07A42; --hy:#D6B457; --as:#4FB393; --tk:#7C8C83;
+    --c-bf:#E05C3E; --c-bow:#D9C24A; --c-rod:#9B87F5; --c-tear:#57A9E0;
+    --c-vest:#7D93A8; --c-cloak:#B07AC4; --c-belt:#5FB36A; --c-glove:#E38AA8;
+    --k1:#9AA5A0; --k2:#4FB36A; --k3:#3D8FD4; --k4:#B45AC4; --k5:#D8A63C;
+  }
+  *{box-sizing:border-box}
+  html{background:var(--bg);-webkit-text-size-adjust:100%}
+  body{margin:0;min-height:100vh;background:
+      radial-gradient(900px 500px at 12% -10%, rgba(155,135,245,.11), transparent 60%),
+      radial-gradient(900px 500px at 90% -5%, rgba(224,122,66,.11), transparent 60%), var(--bg);
+    color:var(--ink);font:15px/1.5 ui-sans-serif,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased}
+  .wrap{max-width:1120px;margin:0 auto;padding:36px 20px 64px}
+  h1{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+     font-size:clamp(26px,4.4vw,40px);line-height:1.05;letter-spacing:-.015em;font-weight:600;margin:0 0 4px}
+  h1 .ap{color:var(--ap)} h1 .ad{color:var(--ad)}
+  .stamp{font-size:12.5px;color:var(--ink-dim)}
+  h2{font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+     font-size:20px;font-weight:600;letter-spacing:-.01em;margin:38px 0 12px;
+     padding-bottom:8px;border-bottom:1px solid var(--line)}
+
+  .rules{display:grid;gap:8px;margin:22px 0 0}
+  .rl{display:flex;align-items:center;gap:14px;padding:13px 16px;
+      background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c)}
+  .rl .arw{color:var(--ink-dim);font-size:17px;margin-left:auto}
+  .rl .got{font-size:14px;font-weight:600;color:var(--c);white-space:nowrap}
+  .bigcomp{width:34px;height:34px;flex:0 0 34px;display:grid;place-items:center;border-radius:7px;
+      background:color-mix(in srgb,var(--c) 16%,transparent);border:1px solid color-mix(in srgb,var(--c) 42%,transparent)}
+  .bigcomp svg{width:21px;height:21px;stroke:var(--c);fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+
+  .key{display:grid;grid-template-columns:repeat(auto-fit,minmax(124px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .key-i{background:var(--panel);padding:10px 12px;display:flex;align-items:center;gap:9px}
+  .key-i b{font-weight:550;font-size:12.5px;display:block;line-height:1.25}
+  .key-i i{font-style:normal;font-size:11px;color:var(--ink-dim)}
+  .comp{width:24px;height:24px;flex:0 0 24px;display:grid;place-items:center;border-radius:5px;
+      background:color-mix(in srgb,var(--c) 16%,transparent);border:1px solid color-mix(in srgb,var(--c) 42%,transparent)}
+  .comp svg{width:15px;height:15px;stroke:var(--c);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .comp{position:relative;overflow:hidden}
+  .comp .cimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+
+  .band{border:1px solid var(--line);border-left:3px solid var(--c);background:var(--panel);margin-bottom:10px}
+  .band-head{display:flex;align-items:center;gap:10px;padding:10px 16px}
+  .band-title{font-size:15px;font-weight:650;color:var(--c)}
+  .band-note{font-size:12.5px;color:var(--ink-dim)}
+  .band-n{margin-left:auto;font-size:12px;color:var(--ink-dim)}
+  .items{display:grid;grid-template-columns:repeat(auto-fill,minmax(186px,1fr));gap:1px;background:var(--line);border-top:1px solid var(--line)}
+  .item{background:var(--panel);padding:9px 12px;display:flex;gap:10px;align-items:center}
+  .item b{display:block;font-weight:550;font-size:13.5px;line-height:1.25}
+  .item s{display:block;text-decoration:none;font-size:11.5px;color:var(--c);opacity:.9;margin-top:1px}
+  .ico{position:relative;width:34px;height:34px;flex:0 0 34px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--panel-2)}
+  .ico .sl{position:absolute;inset:0}
+  .ico .sl.a{clip-path:polygon(0 0,100% 0,0 100%)}
+  .ico .sl.b{clip-path:polygon(100% 0,100% 100%,0 100%)}
+  .ico .sl i{position:absolute;inset:0;background:color-mix(in srgb,var(--c) 24%,transparent)}
+  .ico .sl svg{position:absolute;width:14px;height:14px;stroke:var(--c);fill:none;stroke-width:2.1;stroke-linecap:round;stroke-linejoin:round}
+  .ico .sl.a svg{top:2px;left:2px} .ico .sl.b svg{bottom:2px;right:2px}
+  .ico .dg{position:absolute;inset:0} .ico .dg line{stroke:var(--line);stroke-width:1}
+  .ico .iimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;
+             display:block;background:#101A14}
+  .mini{display:inline-grid;place-items:center;width:13px;height:13px;vertical-align:-2px;margin-right:1px}
+  .mini svg{width:12px;height:12px;stroke:var(--c);fill:none;stroke-width:2.2;
+            stroke-linecap:round;stroke-linejoin:round}
+  .item s{display:flex;align-items:center;gap:1px}
+  .item s em{font-style:normal;margin-left:4px}
+
+  /* ---- search ---- */
+  .searchbar{position:relative;margin:0 0 12px}
+  .searchbar svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;
+                 stroke:var(--ink-dim);fill:none;stroke-width:2;stroke-linecap:round;pointer-events:none}
+  #q{width:100%;font:inherit;font-size:14.5px;color:var(--ink);background:var(--panel);
+     border:1px solid var(--line);border-radius:4px;padding:11px 40px 11px 36px}
+  #q::placeholder{color:var(--ink-dim)}
+  #q:focus{outline:none;border-color:#4A6355;background:var(--panel-2)}
+  #clr{position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;
+       color:var(--ink-dim);cursor:pointer;font:inherit;font-size:18px;padding:4px 10px;line-height:1;display:none}
+  #clr:hover{color:var(--ink)}
+
+  .filters{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 14px}
+  .filters button{font:inherit;font-size:12.5px;color:var(--ink-dim);cursor:pointer;background:var(--panel);
+    border:1px solid var(--line);border-radius:3px;padding:5px 12px;transition:color .12s,border-color .12s,background .12s}
+  .filters button:hover{color:var(--ink);border-color:#3C5145}
+  .filters button[aria-pressed="true"]{background:var(--panel-2);color:var(--ink);border-color:#4A6355}
+  .filters button:focus-visible,#q:focus-visible{outline:2px solid var(--ap);outline-offset:2px}
+
+  .grid{border:1px solid var(--line);background:var(--panel)}
+  .head-row,.tier{display:grid;grid-template-columns:52px 1fr 146px 1fr;border-bottom:1px solid var(--line)}
+  .tier:last-child{border-bottom:0}
+  .head-row{background:var(--panel-2)}
+  .head-row div{padding:8px 12px;font-size:12px;color:var(--ink-dim)}
+  .head-row .h-ap{color:var(--ap)} .head-row .h-ad{color:var(--ad)} .head-row .h-fx{color:var(--hy);text-align:center}
+  .head-row b{font-weight:700;letter-spacing:.01em}
+  .head-row i{font-style:normal;color:var(--ink-dim);font-weight:400}
+  .rl em{font-style:normal;color:var(--c);font-weight:700}
+  .c-scale{font-size:12.5px;color:var(--ink-dim);margin:0 0 12px;
+           padding:6px 10px;border-left:2px solid var(--t);background:var(--panel-2)}
+  .c-scale b{color:var(--t);font-weight:700}
+  .cost{padding:13px 0 0;text-align:center;font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:20px;border-right:1px solid var(--line)}
+  .cell{padding:10px 12px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start}
+  .cell.mid{border-left:1px solid var(--line);border-right:1px solid var(--line);justify-content:center;background:rgba(214,180,87,.035)}
+  .u{display:inline-flex;align-items:center;gap:5px;font:inherit;font-size:12.5px;padding:2px 9px 2px 2px;
+     border-radius:20px;background:color-mix(in srgb,var(--t) 13%,transparent);cursor:pointer;
+     border:1px solid color-mix(in srgb,var(--t) 32%,transparent);color:var(--ink);white-space:nowrap;
+     transition:border-color .12s,background .12s}
+  .u:hover{background:color-mix(in srgb,var(--t) 24%,transparent);border-color:color-mix(in srgb,var(--t) 60%,transparent)}
+  .u:focus-visible{outline:2px solid var(--t);outline-offset:2px}
+  .u.tankrole{opacity:.62}
+  .por{position:relative;display:block;flex:0 0 22px;width:22px;height:22px}
+  .por svg,.por img{position:absolute;inset:0;width:100%;height:100%;display:block}
+  .por img{object-fit:cover;background:#0E1511;
+           clip-path:polygon(50% 3%,93% 26%,93% 74%,50% 97%,7% 74%,7% 26%)}
+  .por .hexbg polygon{fill:color-mix(in srgb,var(--k) 26%,#0E1511);stroke:var(--k);stroke-width:6}
+  .por .hexbg text{fill:var(--k);font:600 36px ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif;
+                   text-anchor:middle;dominant-baseline:central}
+  .por .ring polygon{fill:none;stroke:var(--k);stroke-width:7}
+
+  .legend{display:flex;flex-wrap:wrap;gap:13px;margin:0 0 14px;font-size:12px;color:var(--ink-dim)}
+  .legend span{display:inline-flex;align-items:center;gap:5px}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--k)}
+
+  /* ---- detail cards ---- */
+  #cards{display:grid;gap:10px}
+  .card{border:1px solid var(--line);border-left:3px solid var(--t);background:var(--panel);padding:14px 16px}
+  .c-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .c-top .por{width:42px;height:42px;flex:0 0 42px}
+  .c-name{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:20px;font-weight:600;letter-spacing:-.01em}
+  .c-role{font-size:12.5px;font-weight:600;color:var(--t);border:1px solid color-mix(in srgb,var(--t) 38%,transparent);
+          background:color-mix(in srgb,var(--t) 12%,transparent);border-radius:3px;padding:2px 8px}
+  .c-cost{margin-left:auto;font-size:12.5px;color:var(--k)}
+  .c-traits{font-size:12.5px;color:var(--ink-dim);margin:6px 0 12px}
+  .stats{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:13px}
+  .st .lab{display:flex;justify-content:space-between;font-size:11px;color:var(--ink-dim);margin-bottom:3px}
+  .st .lab b{color:var(--ink);font-weight:600;font-size:12px}
+  .st .track{height:4px;border-radius:2px;background:var(--panel-2);overflow:hidden}
+  .st .fill{height:100%;background:var(--s);border-radius:2px}
+  .c-ability{border-top:1px solid var(--line);padding-top:11px}
+  .c-ability b{display:block;font-size:14px;font-weight:600;margin-bottom:4px;color:var(--t)}
+  .c-ability p{margin:0 0 6px;font-size:13.5px;color:var(--ink-dim);max-width:78ch}
+  .c-ability p:last-child{margin-bottom:0}
+  .empty{border:1px dashed var(--line);padding:22px;text-align:center;color:var(--ink-dim);font-size:13.5px}
+  .hide{display:none}
+
+  .tells{display:grid;grid-template-columns:repeat(auto-fit,minmax(168px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .tell{background:var(--panel);padding:11px 14px;display:flex;align-items:center;gap:9px}
+  .tell b{font-size:13.5px;font-weight:550}
+  .tell .arw{color:var(--ink-dim);margin-left:auto;font-size:15px}
+  .tell .to{font-size:12.5px;font-weight:600;color:var(--c);white-space:nowrap}
+
+
+  /* ---- recipe tooltip ---- */
+  .ico,.mi{cursor:help}
+  #tip{position:fixed;z-index:50;pointer-events:none;opacity:0;transition:opacity .1s;
+       background:var(--panel-2);border:1px solid #3C5145;border-radius:6px;padding:9px 11px;
+       box-shadow:0 8px 24px rgba(0,0,0,.45);max-width:260px;font-size:12.5px;line-height:1.35}
+  #tip.on{opacity:1}
+  #tip b{display:block;font-size:13px;margin-bottom:6px}
+  #tip .rec{display:flex;align-items:center;gap:6px}
+  #tip .rec .comp{width:26px;height:26px;flex:0 0 26px}
+  #tip .rec .plus,#tip .rec .eq{color:var(--ink-dim);font-size:14px}
+  #tip .rec .ico{width:28px;height:28px;flex:0 0 28px;cursor:default}
+  #tip .cn{font-size:11.5px;color:var(--ink-dim);margin-top:5px}
+  #tip .fx{color:var(--ink-dim);margin-top:5px}
+
+  /* ---- meta build ---- */
+  .c-meta{border-top:1px solid var(--line);padding-top:11px;margin-bottom:12px}
+  .c-meta .mh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .c-meta .mh b{font-size:14px;font-weight:600;color:var(--t)}
+  .c-meta .mh i{font-style:normal;font-size:11.5px;color:var(--ink-dim)}
+  .c-meta .mh a{color:var(--ink-dim);text-decoration:underline dotted}
+  .c-meta .mh a:hover{color:var(--ink)}
+  .builds{display:grid;gap:6px}
+  .build{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .build .bl{font-size:11.5px;color:var(--ink-dim);min-width:112px}
+  .mi{display:inline-flex;align-items:center;gap:6px;padding:3px 9px 3px 3px;border-radius:4px;
+      background:var(--panel-2);border:1px solid var(--line);font-size:12.5px;white-space:nowrap}
+  .mi .ico{width:26px;height:26px;flex:0 0 26px}
+  .mi.emblem{padding-left:9px;color:var(--hy);border-color:color-mix(in srgb,var(--hy) 40%,transparent)}
+
+
+  /* ---- meta comps ---- */
+  .cbar{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 12px;align-items:center}
+  .cbar select,.cbar input{font:inherit;font-size:13px;color:var(--ink);background:var(--panel);
+     border:1px solid var(--line);border-radius:4px;padding:7px 10px;min-width:150px}
+  .cbar select:focus,.cbar input:focus{outline:none;border-color:#4A6355;background:var(--panel-2)}
+  .cbar .cnt{font-size:12.5px;color:var(--ink-dim);margin-left:auto}
+  .cbar .reset{font:inherit;font-size:12.5px;color:var(--ink-dim);background:none;border:1px solid var(--line);
+     border-radius:3px;padding:6px 10px;cursor:pointer}
+  .cbar .reset:hover{color:var(--ink);border-color:#3C5145}
+  .comps{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:10px}
+  .cp{border:1px solid var(--line);border-left:3px solid var(--c);background:var(--panel);padding:13px 15px;
+      display:flex;flex-direction:column;gap:9px}
+  .cp-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .cp-name{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:19px;font-weight:600;letter-spacing:-.01em}
+  .tag{font-size:11.5px;padding:2px 7px;border-radius:3px;border:1px solid var(--line);color:var(--ink-dim);white-space:nowrap}
+  .tag.hard{color:#E07A42;border-color:rgba(224,122,66,.4)} .tag.medium{color:#D6B457;border-color:rgba(214,180,87,.4)}
+  .tag.easy{color:#4FB393;border-color:rgba(79,179,147,.4)}
+  .tag.src-meta{color:var(--ap);border-color:color-mix(in srgb,var(--ap) 45%,transparent)}
+  .tag.src-stats{color:#57A9E0;border-color:rgba(87,169,224,.45)}
+  .tag.src-community{color:var(--ink-dim);border-style:dashed}
+  .stat{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;color:var(--ink-dim)}
+  .stat b{color:var(--ink);font-weight:600} .stat i{font-style:normal}
+  .cp-open{margin-left:auto;font:inherit;font-size:12.5px;color:var(--ink);background:var(--panel-2);
+      border:1px solid var(--line);border-radius:3px;padding:5px 10px;cursor:pointer}
+  .cp-open:hover{border-color:#4A6355}
+  .traits{display:flex;flex-wrap:wrap;gap:5px}
+  .tr{font:inherit;font-size:11.5px;color:var(--ink-dim);background:var(--panel-2);border:1px solid var(--line);
+      border-radius:3px;padding:2px 7px;cursor:pointer;display:inline-flex;gap:5px;align-items:center}
+  .tr b{color:var(--ink);font-weight:600}
+  .tr:hover,.tr.hit{border-color:#4A6355;color:var(--ink)}
+  .tr.hit{background:color-mix(in srgb,var(--ap) 18%,transparent)}
+  .board{display:flex;flex-wrap:wrap;gap:5px}
+  .board .u.hit{outline:2px solid var(--ink);outline-offset:1px}
+  .board .u.alt{opacity:.55}
+  .cp-carry{display:grid;gap:5px}
+  .cp-carry .build .bl{min-width:96px}
+  .cp-lbl{font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em}
+  .cp-when,.cp-tips{border-top:1px solid var(--line);padding-top:8px}
+  .cp-when ul,.cp-tips ul{margin:4px 0 0;padding-left:16px;font-size:12.5px;color:var(--ink-dim)}
+  .cp-when li,.cp-tips li{margin:2px 0}
+  .cp-empty{grid-column:1/-1}
+  .c-comps{border-top:1px solid var(--line);padding-top:11px;margin-bottom:12px}
+  .c-comps b{display:block;font-size:14px;font-weight:600;color:var(--t);margin-bottom:6px}
+  .c-comps .row{display:flex;flex-wrap:wrap;gap:6px}
+  .cc{font:inherit;font-size:12.5px;color:var(--ink);background:var(--panel-2);border:1px solid var(--line);
+      border-radius:3px;padding:5px 10px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+  .cc:hover{border-color:#4A6355}
+  .cc i{font-style:normal;color:var(--ink-dim);font-size:11.5px}
+  .c-comps .none{font-size:12.5px;color:var(--ink-dim)}
+  .tell{cursor:pointer} .tell:hover{background:var(--panel-2)}
+
+  /* ---- overlay ---- */
+  #ov{position:fixed;inset:0;z-index:60;background:rgba(6,10,8,.72);display:none;align-items:flex-start;
+      justify-content:center;padding:28px 14px;overflow-y:auto}
+  #ov.on{display:flex}
+  .ovp{width:min(760px,100%);background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--c);
+       padding:18px 20px 22px;display:grid;gap:14px;position:relative}
+  .ovx{position:absolute;top:8px;right:8px;font:inherit;font-size:20px;line-height:1;color:var(--ink-dim);
+       background:none;border:0;cursor:pointer;padding:6px 10px}
+  .ovx:hover{color:var(--ink)}
+  .ovp h3{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:24px;font-weight:600;margin:0;letter-spacing:-.015em}
+  .ovp .sub{font-size:13px;color:var(--ink-dim)}
+  .ovp h4{font-size:12px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em;margin:0 0 6px;font-weight:600}
+  .ovp ul{margin:0;padding-left:18px;font-size:13.5px;color:var(--ink-dim)}
+  .ovp li{margin:3px 0}
+  .ovp .board .u{font-size:13px}
+  .ovp .ext{font-size:12.5px} .ovp .ext a{color:var(--ink-dim)}
+  body.lock{overflow:hidden}
+
+  @media (max-width:760px){
+    .head-row,.tier{grid-template-columns:1fr}
+    .cost{text-align:left;padding:9px 12px 2px;border-right:0;border-bottom:1px solid var(--line);background:var(--panel-2)}
+    .cell.mid{border-left:0;border-right:0;justify-content:flex-start}
+    .cell{border-bottom:1px solid var(--line)}
+    .tier:last-child .cell:last-child{border-bottom:0}
+    .head-row{display:none}
+    .cell::before{flex-basis:100%;font-size:11px;color:var(--ink-dim);margin-bottom:1px}
+    .cell.left::before{content:"AP \2014 magic damage";color:var(--ap)}
+    .cell.mid::before{content:"Adaptor \2014 either";color:var(--hy)}
+    .cell.right::before{content:"AD \2014 physical damage";color:var(--ad)}
+    .rl .arw{display:none}
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .build .bl{flex-basis:100%;min-width:0}
+    .comps{grid-template-columns:1fr}
+    .cbar select,.cbar input{flex:1 1 140px;min-width:0}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  /* ---- stale tag ---- */
+  .tag.stale{color:#E07A42;border-color:rgba(224,122,66,.4);font-style:italic}
+
+  /* ---- vote widget ---- */
+  .cp-vote{display:flex;align-items:center;gap:8px;padding-top:8px;border-top:1px solid var(--line);margin-top:4px}
+  .vote-btn{font:inherit;font-size:15px;background:none;border:1px solid var(--line);border-radius:4px;
+    padding:3px 9px;cursor:pointer;color:var(--ink-dim);transition:border-color .12s,background .12s}
+  .vote-btn:hover{border-color:#4A6355;background:var(--panel-2)}
+  .vote-btn.voted{border-color:#4FB393;background:color-mix(in srgb,#4FB393 14%,transparent);color:var(--ink)}
+  .vote-thanks{font-size:12px;color:#4FB393}
+
+  /* ---- submit comp modal ---- */
+  #submit-toggle{font:inherit;font-size:13px;color:var(--ink-dim);background:var(--panel);
+    border:1px solid var(--line);border-radius:3px;padding:6px 12px;cursor:pointer;margin-bottom:14px}
+  #submit-toggle:hover{color:var(--ink);border-color:#3C5145}
+  #submit-form{display:none;background:var(--panel);border:1px solid var(--line);
+    padding:16px 18px;margin-bottom:14px;display:none}
+  #submit-form.open{display:block}
+  #submit-form h3{font-family:"Iowan Old Style",Palatino,Georgia,serif;font-size:17px;font-weight:600;margin:0 0 12px}
+  .sf-row{display:grid;grid-template-columns:160px 1fr;align-items:start;gap:6px 12px;margin-bottom:8px}
+  .sf-row label{font-size:13px;color:var(--ink-dim);padding-top:9px}
+  .sf-row input,.sf-row textarea,.sf-row select{font:inherit;font-size:13.5px;color:var(--ink);
+    background:var(--panel-2);border:1px solid var(--line);border-radius:4px;padding:8px 10px;width:100%}
+  .sf-row textarea{resize:vertical;min-height:60px}
+  .sf-row input:focus,.sf-row textarea:focus,.sf-row select:focus{outline:none;border-color:#4A6355}
+  .sf-actions{display:flex;gap:8px;margin-top:12px}
+  .sf-submit{font:inherit;font-size:13.5px;background:color-mix(in srgb,var(--ap) 22%,transparent);
+    color:var(--ink);border:1px solid color-mix(in srgb,var(--ap) 45%,transparent);
+    border-radius:4px;padding:8px 18px;cursor:pointer}
+  .sf-submit:hover{background:color-mix(in srgb,var(--ap) 34%,transparent)}
+  .sf-cancel{font:inherit;font-size:13.5px;background:none;color:var(--ink-dim);
+    border:1px solid var(--line);border-radius:4px;padding:8px 14px;cursor:pointer}
+  .sf-cancel:hover{color:var(--ink);border-color:#3C5145}
+  .sf-msg{font-size:13px;color:#4FB393;margin-top:8px;display:none}
+  @media (max-width:600px){.sf-row{grid-template-columns:1fr}}
+</style>
+
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <symbol id="g-bf" viewBox="0 0 24 24"><path d="M20 4 11 13"/><path d="M8 10l6 6"/><path d="M11 17l-4 4"/><path d="M5 18l1 1"/></symbol>
+  <symbol id="g-bow" viewBox="0 0 24 24"><path d="M7 3a13 13 0 0 1 0 18"/><path d="M7 3v18"/><path d="M6 12h11"/><path d="M14 9l4 3-4 3"/></symbol>
+  <symbol id="g-rod" viewBox="0 0 24 24"><path d="M5 20 15 10"/><path d="M18 3v7"/><path d="M14.5 6.5h7"/><path d="M16 4.5l4 4"/><path d="M20 4.5l-4 4"/></symbol>
+  <symbol id="g-tear" viewBox="0 0 24 24"><path d="M12 3c4 5.5 6.5 8.5 6.5 11.5a6.5 6.5 0 0 1-13 0C5.5 11.5 8 8.5 12 3z"/></symbol>
+  <symbol id="g-vest" viewBox="0 0 24 24"><path d="M12 3l7.5 3v6.5c0 4.5-3.5 7.5-7.5 9-4-1.5-7.5-4.5-7.5-9V6z"/><path d="M8.5 12h7"/></symbol>
+  <symbol id="g-cloak" viewBox="0 0 24 24"><path d="M9 3l3 2.5L15 3l3.5 5-2 13h-9l-2-13z"/><path d="M12 5.5V21"/></symbol>
+  <symbol id="g-belt" viewBox="0 0 24 24"><path d="M2 9h20v6H2z"/><path d="M9 7h6v10H9z"/></symbol>
+  <symbol id="g-glove" viewBox="0 0 24 24"><path d="M7.5 11V7.5a2 2 0 0 1 4 0V11"/><path d="M11.5 11V6a2 2 0 0 1 4 0v5"/><path d="M15.5 11V8.5a1.8 1.8 0 0 1 3.5 0V14a7 7 0 0 1-7 7h-1a7 7 0 0 1-7-7v-3.5a1.8 1.8 0 0 1 3.5 0"/></symbol>
+</defs></svg>
+
+<div class="wrap">
+<h1>Set 18 <span class="ap">AP</span> / <span class="ad">AD</span></h1>
+<div class="stamp">__SET_NAME__ · patch __PATCH__ · 65 champions</div>
+
+<div class="rules">
+  <div class="rl" style="--c:var(--ap)">
+    <span class="bigcomp" style="--c:var(--ap)"><svg><use href="#g-rod"/></svg></span>
+    <span>Ability says <b>magic damage</b> <em>= AP</em></span>
+    <span class="arw">&rarr;</span><span class="got">Rod items</span>
+  </div>
+  <div class="rl" style="--c:var(--ad)">
+    <span class="bigcomp" style="--c:var(--ad)"><svg><use href="#g-bf"/></svg></span>
+    <span>Ability says <b>physical damage</b> <em>= AD</em></span>
+    <span class="arw">&rarr;</span><span class="got">Sword items</span>
+  </div>
+</div>
+
+<h2>Components</h2>
+<div class="key" id="key"></div>
+
+<h2>Items</h2>
+<div id="bands"></div>
+
+<h2>Champions</h2>
+<div class="searchbar">
+  <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M16.5 16.5 21 21"/></svg>
+  <input id="q" type="search" autocomplete="off" spellcheck="false"
+         placeholder="Search a champion, trait, role or ability — try Nidalee, Spellweaver, or burn">
+  <button id="clr" aria-label="Clear search">&times;</button>
+</div>
+
+<div id="browse">
+  <div class="legend">
+    <span><i class="dot" style="--k:var(--k1)"></i>1</span>
+    <span><i class="dot" style="--k:var(--k2)"></i>2</span>
+    <span><i class="dot" style="--k:var(--k3)"></i>3</span>
+    <span><i class="dot" style="--k:var(--k4)"></i>4</span>
+    <span><i class="dot" style="--k:var(--k5)"></i>5 cost</span>
+    <span style="opacity:.62">faded = tank role</span>
+    <span>tap any name for stats</span>
+  </div>
+  <div class="filters" id="filters">
+    <button aria-pressed="true" data-cost="all">All</button>
+    <button aria-pressed="false" data-cost="1">1</button>
+    <button aria-pressed="false" data-cost="2">2</button>
+    <button aria-pressed="false" data-cost="3">3</button>
+    <button aria-pressed="false" data-cost="4">4</button>
+    <button aria-pressed="false" data-cost="5">5</button>
+  </div>
+  <div class="grid" id="grid">
+    <div class="head-row"><div></div><div class="h-ap"><b>AP</b> <i>&mdash; magic damage</i></div>
+      <div class="h-fx"><b>Adaptor</b> <i>&mdash; either</i></div>
+      <div class="h-ad"><b>AD</b> <i>&mdash; physical damage</i></div></div>
+  </div>
+</div>
+
+<div id="cards" class="hide"></div>
+
+<h2>Meta comps</h2>
+<div class="cbar">
+  <select id="f-src" aria-label="Filter by source"><option value="">All sources</option>
+    <option value="meta">Meta comps</option><option value="stats">Data comps</option><option value="community">Community comps</option></select>
+  <select id="f-trait" aria-label="Filter by trait"><option value="">Any trait</option></select>
+  <select id="f-role" aria-label="Filter by role"><option value="">Any role</option></select>
+  <input id="f-champ" type="search" placeholder="Champion" autocomplete="off" aria-label="Filter by champion">
+  <button class="reset" id="f-reset">Clear</button>
+  <span class="cnt" id="f-cnt"></span>
+</div>
+<div class="comps" id="comps"></div>
+
+<button id="submit-toggle">+ Submit a comp</button>
+<div id="submit-form" role="form" aria-label="Submit a comp">
+  <h3>Submit a comp</h3>
+  <div class="sf-row"><label for="sf-name">Comp name</label>
+    <input id="sf-name" type="text" placeholder="e.g. Invoker Fast 8" maxlength="80"></div>
+  <div class="sf-row"><label for="sf-board">Board units</label>
+    <input id="sf-board" type="text" placeholder="Comma-separated champion names" maxlength="300"></div>
+  <div class="sf-row"><label for="sf-style">Style</label>
+    <input id="sf-style" type="text" placeholder="e.g. Fast 8, Level 6 slow roll" maxlength="60"></div>
+  <div class="sf-row"><label for="sf-diff">Difficulty</label>
+    <select id="sf-diff"><option value="">—</option><option>Easy</option><option>Medium</option><option>Hard</option></select></div>
+  <div class="sf-row"><label for="sf-when">When to play</label>
+    <textarea id="sf-when" placeholder="One condition per line" rows="3"></textarea></div>
+  <div class="sf-row"><label for="sf-tips">Tips</label>
+    <textarea id="sf-tips" placeholder="One tip per line" rows="3"></textarea></div>
+  <div class="sf-actions">
+    <button class="sf-submit" id="sf-submit">Submit</button>
+    <button class="sf-cancel" id="sf-cancel">Cancel</button>
+  </div>
+  <div class="sf-msg" id="sf-msg"></div>
+</div>
+
+<h2>Trait shortcuts</h2>
+<div class="tells" id="tells"></div>
+
+<noscript><div class="empty" style="margin-top:24px">
+  This page builds its item and champion lists with JavaScript. Enable it, or open the file in
+  any normal browser, to see them.
+</div></noscript>
+</div>
+<div id="tip" role="tooltip" aria-hidden="true"></div>
+<div id="ov" role="dialog" aria-modal="true" aria-label="Comp details"></div>
+
+<script>
+// __INJECT_DATA__
+const RECIPE = {};
+BANDS.forEach(b => b.items.forEach(([n,a,c,e]) => { RECIPE[n] = [a,c,e,b.k]; }));
+
+const MAXES = {hp:1800, mm:150, ad:125, ar:75, mr:75};
+const STATC = {hp:"var(--c-belt)", mm:"var(--c-tear)", ad:"var(--c-bf)", ar:"var(--c-vest)", mr:"var(--c-cloak)"};
+
+const esc = s => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+const side = c => c.t.includes("Adaptor") ? "fx" : (c.r.startsWith("AP") ? "ap" : "ad");
+const tvar = s => s === "fx" ? "var(--hy)" : "var(--" + s + ")";
+
+/* portraits are hotlinked; if the host blocks them the hex badge underneath shows through */
+function wireImgs(root){
+  root.querySelectorAll("img.pimg, img.iimg").forEach(img => {
+    if (img.dataset.w) return;
+    img.dataset.w = "1";
+    const drop = () => { img.style.display = "none"; };
+    img.addEventListener("error", drop);
+    if (img.complete && img.naturalWidth === 0) drop();
+  });
+}
+
+
+/* component key */
+document.getElementById("key").innerHTML = Object.entries(COMP).map(([k,[n,s]]) => `
+  <div class="key-i"><span class="comp" style="--c:var(--c-${k})"><svg><use href="#g-${k}"/></svg>
+    ${COMPIMG[k] ? `<img class="cimg iimg" src="${ITEMBASE}${COMPIMG[k]}.png?v=74" alt=""
+         loading="lazy" referrerpolicy="no-referrer">` : ""}</span>
+  <span><b>${esc(n)}</b><i>${esc(s)}</i></span></div>`).join("");
+wireImgs(document.getElementById("key"));
+
+/* items */
+/* the diagonal recipe icon stays underneath as the fallback if the art 404s */
+const icon = (name,a,b) => `<span class="ico" role="img" aria-label="${esc(name)}" data-item="${esc(name)}" tabindex="0">
+  <span class="sl a" style="--c:var(--c-${a})"><i></i><svg><use href="#g-${a}"/></svg></span>
+  <span class="sl b" style="--c:var(--c-${b})"><i></i><svg><use href="#g-${b}"/></svg></span>
+  <svg class="dg" viewBox="0 0 34 34"><line x1="34" y1="0" x2="0" y2="34"/></svg>
+  ${ITEMIMG[name] ? `<img class="iimg" src="${ITEMBASE}${ITEMIMG[name]}.png?v=74" alt=""
+       loading="lazy" referrerpolicy="no-referrer">` : ""}</span>`;
+
+/* recipe survives as two glyphs on the stat line once real art covers the tile */
+const mini = k => `<i class="mini" style="--c:var(--c-${k})" title="${esc(COMP[k][0])}"><svg><use href="#g-${k}"/></svg></i>`;
+
+document.getElementById("bands").innerHTML = BANDS.map(b => `
+  <div class="band" style="--c:var(--${b.k})">
+    <div class="band-head"><span class="band-title">${esc(b.title)}</span>
+      <span class="band-note">${esc(b.note)}</span><span class="band-n">${b.items.length}</span></div>
+    <div class="items">${b.items.map(([n,a,c,e]) =>
+      `<div class="item" style="--c:var(--${b.k})">${icon(n,a,c)}
+        <span><b>${esc(n)}</b><s>${mini(a)}${mini(c)}<em>${esc(e)}</em></s></span></div>`).join("")}</div>
+  </div>`).join("");
+
+wireImgs(document.getElementById("bands"));
+
+document.getElementById("tells").innerHTML = TELLS.map(([n,to,k]) =>
+  `<div class="tell" style="--c:var(--${k})"><b>${esc(n)}</b><span class="arw">&rarr;</span>
+   <span class="to">${esc(to)}</span></div>`).join("");
+
+/* recipe tooltip: hover or focus any completed-item icon */
+const tip = document.getElementById("tip");
+const compTile = k => `<span class="comp" style="--c:var(--c-${k})"><svg><use href="#g-${k}"/></svg>
+  ${COMPIMG[k] ? `<img class="cimg iimg" src="${ITEMBASE}${COMPIMG[k]}.png?v=74" alt="" referrerpolicy="no-referrer">` : ""}</span>`;
+function tipHTML(name){
+  const r = RECIPE[name];
+  if (!r) return `<b>${esc(name)}</b><div class="fx">Emblem &mdash; from an augment, carousel or Spatula recipe.</div>`;
+  const [a,c,e] = r;
+  return `<b>${esc(name)}</b>
+    <div class="rec">${compTile(a)}<span class="plus">+</span>${compTile(c)}<span class="eq">=</span>${icon(name,a,c)}</div>
+    <div class="cn">${esc(COMP[a][0])} + ${esc(COMP[c][0])}</div>
+    <div class="fx">${esc(e)}</div>`;
+}
+let tipFor = null;
+function showTip(el){
+  if (tip.contains(el)) return;
+  const name = el.dataset.item; if (!name) return;
+  tipFor = el;
+  tip.innerHTML = tipHTML(name); wireImgs(tip);
+  tip.querySelectorAll("[data-item]").forEach(n => { n.removeAttribute("data-item"); n.removeAttribute("tabindex"); });
+  tip.setAttribute("aria-hidden","false");
+  const r = el.getBoundingClientRect(), pad = 8;
+  tip.style.left = "0px"; tip.style.top = "0px"; tip.classList.add("on");
+  const w = tip.offsetWidth, h = tip.offsetHeight;
+  let x = r.left + r.width/2 - w/2, y = r.top - h - pad;
+  if (y < pad) y = r.bottom + pad;
+  x = Math.max(pad, Math.min(x, window.innerWidth - w - pad));
+  tip.style.left = x + "px"; tip.style.top = y + "px";
+}
+function hideTip(){ tipFor = null; tip.classList.remove("on"); tip.setAttribute("aria-hidden","true"); }
+const tipTarget = e => e.target.closest && e.target.closest("[data-item]");
+document.addEventListener("mouseover", e => { const t = tipTarget(e); if (t && t !== tipFor) showTip(t); });
+document.addEventListener("mouseout", e => { const t = tipTarget(e); if (t && !t.contains(e.relatedTarget)) hideTip(); });
+document.addEventListener("focusin", e => { const t = tipTarget(e); if (t) showTip(t); });
+document.addEventListener("focusout", hideTip);
+document.addEventListener("keydown", e => { if (e.key === "Escape") hideTip(); });
+/* touch: tap toggles, tap elsewhere closes */
+document.addEventListener("click", e => {
+  const t = tipTarget(e);
+  if (!t) { if (tipFor) hideTip(); return; }
+  if (t === tipFor) hideTip(); else showTip(t);
+});
+window.addEventListener("scroll", () => { if (tipFor) hideTip(); }, {passive:true});
+
+/* meta build tile */
+const metaItem = name => {
+  const r = RECIPE[name];
+  return r
+    ? `<span class="mi" data-item="${esc(name)}" tabindex="0">${icon(name,r[0],r[1])}${esc(name)}</span>`
+    : `<span class="mi emblem" data-item="${esc(name)}" tabindex="0">${esc(name)}</span>`;
+};
+function metaHTML(c){
+  const bis = BIS[c.n] || [], m = META[c.n] || [];
+  const rows = [];
+  if (bis.length) rows.push(`<div class="build"><span class="bl">Recommended</span>${bis.map(metaItem).join("")}</div>`);
+  m.forEach(([comp, items]) => rows.push(`<div class="build"><span class="bl">${esc(comp)}</span>${items.map(metaItem).join("")}</div>`));
+  if (!rows.length) return "";
+  const src = m.length
+    ? `<a href="${METASRC}" target="_blank" rel="noopener">Mobalytics</a> champion page and meta comps`
+    : `<a href="${METASRC.replace("team-comps","champions")}" target="_blank" rel="noopener">Mobalytics</a> champion page`;
+  return `<div class="c-meta"><div class="mh"><b>Meta build</b>
+      <i>patch 18.2 &middot; ${src} &middot; hover an item for its recipe</i></div>
+    <div class="builds">${rows.join("")}</div></div>`;
+}
+
+function compsHTML(c){
+  const list = compsFor(c.n);
+  const body = list.length
+    ? `<div class="row">${list.map(cp => `<button class="cc" data-open="${esc(cp.n)}">${esc(cp.n)}
+         <i>${cp.src !== "meta" ? SRC[cp.src][0].toLowerCase() + " &middot; " : ""}${cp.alts.includes(c.n) ? "alternate" : cp.carries.some(([n]) => n === c.n) ? "carry" : "board"}</i></button>`).join("")}</div>`
+    : `<div class="none">Not in any listed comp. <button class="cc" data-filter-role="${esc(roleOf(c))}">Show ${esc(roleOf(c))} comps</button></div>`;
+  return `<div class="c-comps"><b>Meta comps</b>${body}</div>`;
+}
+
+/* champion chips */
+function initials(n){
+  if (n.includes(" ")) return n.split(" ").map(w => w[0]).join("").slice(0,2);
+  const i = n.search(/['\u2019]/);
+  if (i > -1) return (n[0] + n[i+1]).toUpperCase();
+  return n[0] + n[1].toLowerCase();
+}
+const HEXPTS = "50,4 92,27 92,73 50,96 8,73 8,27";
+const portrait = c => `<span class="por" style="--k:var(--k${c.c})">
+  <svg class="hexbg" viewBox="0 0 100 100" aria-hidden="true"><polygon points="${HEXPTS}"/>
+    <text x="50" y="53">${esc(initials(c.n))}</text></svg>
+  ${IMG[c.n] ? `<img class="pimg" src="${IMGBASE}${IMG[c.n]}.png" alt="" loading="lazy" referrerpolicy="no-referrer">` : ""}
+  <svg class="ring" viewBox="0 0 100 100" aria-hidden="true"><polygon points="${HEXPTS}"/></svg></span>`;
+
+
+const chip = c => `<button class="u${c.r.includes("Tank") ? " tankrole" : ""}" data-name="${esc(c.n)}"
+  style="--t:${tvar(side(c))}" title="${esc(c.n)} · ${c.c} cost · ${esc(c.r)}">${portrait(c)}${esc(c.n)}</button>`;
+
+const grid = document.getElementById("grid");
+for (let n = 1; n <= 5; n++){
+  const at = s => CHAMPS.filter(c => c.c === n && side(c) === s).map(chip).join("");
+  const row = document.createElement("div");
+  row.className = "tier"; row.dataset.cost = n;
+  row.innerHTML = `<div class="cost" style="color:var(--k${n})">${n}</div>
+    <div class="cell left">${at("ap")}</div>
+    <div class="cell mid">${at("fx")}</div>
+    <div class="cell right">${at("ad")}</div>`;
+  grid.appendChild(row);
+}
+wireImgs(grid);
+
+/* detail card */
+const statRow = (c, k, label, suffix) => {
+  const v = c[k];
+  const pct = v == null ? 0 : Math.round(Math.min(1, v / MAXES[k]) * 100);
+  return `<div class="st"><div class="lab"><span>${label}</span><b>${v == null ? "?" : v}${suffix||""}</b></div>
+    <div class="track"><div class="fill" style="--s:${STATC[k]};width:${pct}%"></div></div></div>`;
+};
+
+function card(c){
+  const s = side(c);
+  const mana = c.ms > 0 ? ` (starts ${c.ms})` : "";
+  return `<article class="card" style="--t:${tvar(s)};--k:var(--k${c.c})">
+    <div class="c-top">${portrait(c)}<span class="c-name">${esc(c.n)}</span>
+      <span class="c-role">${esc(c.r)}</span><span class="c-cost">${c.c} cost</span></div>
+    <div class="c-traits">${esc(c.t)}${mana ? " · mana" + mana : ""}</div>
+    <div class="c-scale">${s === "fx"
+      ? `Adaptor &mdash; the ability rewrites itself for whichever is higher, <b>AD</b> or <b>AP</b>`
+      : s === "ap"
+        ? `Scales with <b>AP</b> &mdash; its ability deals magic damage`
+        : `Scales with <b>AD</b> &mdash; its ability deals physical damage`}</div>
+    <div class="stats">
+      ${statRow(c,"hp","Health")}${statRow(c,"mm","Mana")}${statRow(c,"ad","Attack dmg")}
+      ${statRow(c,"ar","Armour")}${statRow(c,"mr","Magic res")}
+    </div>
+    ${metaHTML(c)}
+    ${compsHTML(c)}
+    <div class="c-ability"><b>${esc(c.a)}</b>
+      ${c.d.split("\n").map(p => `<p>${esc(p)}</p>`).join("")}</div>
+  </article>`;
+}
+
+/* search */
+const q = document.getElementById("q"), clr = document.getElementById("clr");
+const browse = document.getElementById("browse"), cards = document.getElementById("cards");
+
+function show(list, term){
+  cards.innerHTML = list.length
+    ? list.map(card).join("")
+    : `<div class="empty">Nothing matches &ldquo;${esc(term)}&rdquo;. Try a champion, trait, role or a word from an ability.</div>`;
+  wireImgs(cards);
+}
+function run(){
+  const term = q.value.trim();
+  clr.style.display = term ? "block" : "none";
+  if (!term){ browse.classList.remove("hide"); cards.classList.add("hide"); return; }
+  const t = term.toLowerCase();
+  const hits = CHAMPS
+    .map(c => {
+      const name = c.n.toLowerCase();
+      let score = -1;
+      if (name === t) score = 0;
+      else if (name.startsWith(t)) score = 1;
+      else if (name.includes(t)) score = 2;
+      else if (c.t.toLowerCase().includes(t) || c.r.toLowerCase().includes(t)) score = 3;
+      else if (c.a.toLowerCase().includes(t) || c.d.toLowerCase().includes(t)) score = 4;
+      return {c, score};
+    })
+    .filter(x => x.score >= 0)
+    .sort((a,b) => a.score - b.score || a.c.c - b.c.c || a.c.n.localeCompare(b.c.n))
+    .map(x => x.c);
+  browse.classList.add("hide"); cards.classList.remove("hide");
+  show(hits, term);
+}
+
+q.addEventListener("input", run);
+q.addEventListener("keydown", e => { if (e.key === "Escape"){ q.value = ""; run(); } });
+clr.addEventListener("click", () => { q.value = ""; run(); q.focus(); });
+
+grid.addEventListener("click", e => {
+  const btn = e.target.closest(".u");
+  if (!btn) return;
+  q.value = btn.dataset.name;
+  run();
+  q.scrollIntoView({block:"center", behavior:"smooth"});
+});
+
+const filters = document.getElementById("filters");
+filters.addEventListener("click", e => {
+  const btn = e.target.closest("button"); if (!btn) return;
+  filters.querySelectorAll("button").forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+  const want = btn.dataset.cost;
+  document.querySelectorAll(".tier").forEach(t => {
+    t.style.display = (want === "all" || t.dataset.cost === want) ? "" : "none";
+  });
+});
+/* ---- meta comps: section, filters, overlay ---- */
+const byName = Object.fromEntries(CHAMPS.map(c => [c.n, c]));
+const traitsOf = c => c.t.split(" \u00b7 ").map(t => t.trim()).filter(t => !t.startsWith("Avatar"));
+const roleOf = c => c.r.replace(/^(AP|AD) /, "");
+function compTraits(cp){
+  const n = {};
+  cp.board.forEach(name => { const c = byName[name]; if (c) traitsOf(c).forEach(t => { n[t] = (n[t]||0) + 1; }); });
+  if (cp.board.includes("Elder Dragon")) n["Riftbeast"] = (n["Riftbeast"]||0) + 1;
+  return Object.entries(n).sort((a,b) => b[1] - a[1] || a[0].localeCompare(b[0]));
+}
+const compsFor = name => COMPS.filter(cp => cp.board.includes(name) || cp.alts.includes(name));
+const fSrc = document.getElementById("f-src"), fTrait = document.getElementById("f-trait"), fRole = document.getElementById("f-role"),
+      fChamp = document.getElementById("f-champ"), fCnt = document.getElementById("f-cnt"),
+      compsEl = document.getElementById("comps");
+{
+  const traits = new Set(), roles = new Set();
+  CHAMPS.forEach(c => { traitsOf(c).forEach(t => traits.add(t)); roles.add(roleOf(c)); });
+  [...traits].sort().forEach(t => fTrait.insertAdjacentHTML("beforeend", `<option>${esc(t)}</option>`));
+  [...roles].sort().forEach(r => fRole.insertAdjacentHTML("beforeend", `<option>${esc(r)}</option>`));
+}
+const boardChip = (name, cls) => {
+  const c = byName[name];
+  return c ? chip(c).replace('class="u', `class="u ${cls||""}`) : `<span class="u">${esc(name)}</span>`;
+};
+const statLine = cp => cp.stats
+  ? `<div class="stat"><span><b>${cp.stats.place.toFixed(2)}</b> avg place</span><span><b>${cp.stats.top4}</b> top 4</span>
+     <span><b>${cp.stats.win}</b> win</span><span><b>${cp.stats.pick}</b> pick</span>${cp.stats.as ? `<i>tracked as &ldquo;${esc(cp.stats.as)}&rdquo;</i>` : ""}</div>`
+  : cp.votes != null ? `<div class="stat"><span><b>${cp.votes}</b> votes</span>${cp.by ? `<i>by ${esc(cp.by)}</i>` : ""}</div>` : "";
+function compCard(cp, f){
+  const tr = compTraits(cp);
+  const hitName = n => (f.champ && n.toLowerCase().includes(f.champ)) || (f.role && byName[n] && roleOf(byName[n]) === f.role) ? "hit" : "";
+  return `<article class="cp" style="--c:var(--${cp.k})" data-comp="${esc(cp.n)}">
+    <div class="cp-head"><span class="cp-name">${esc(cp.n)}</span>
+      <span class="tag src-${cp.src}">${SRC[cp.src][0]}</span>${cp.diff ? `<span class="tag ${cp.diff.toLowerCase()}">${esc(cp.diff)}</span>` : ""}${cp.style ? `<span class="tag">${esc(cp.style)}</span>` : ""}${cp.stale ? `<span class="tag stale" title="Community feedback: possibly outdated">⚠ stale?</span>` : ""}
+      <button class="cp-open" data-open="${esc(cp.n)}">Details</button></div>
+    ${statLine(cp)}
+    <div class="traits">${tr.map(([t,n]) => `<button class="tr${f.trait === t ? " hit" : ""}" data-trait="${esc(t)}"><b>${n}</b>${esc(t)}</button>`).join("")}</div>
+    <div class="board">${cp.board.map(n => boardChip(n, hitName(n))).join("")}${cp.alts.map(n => boardChip(n, "alt " + hitName(n))).join("")}</div>
+    <div class="cp-carry">${cp.carries.map(([n, items]) =>
+      `<div class="build"><span class="bl">${esc(n)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div>
+    ${cp.when.length ? `<div class="cp-when"><span class="cp-lbl">When to play</span><ul>${cp.when.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    ${cp.tips.length ? `<div class="cp-tips"><span class="cp-lbl">Tips</span><ul>${cp.tips.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    <div class="cp-vote" data-comp="${esc(cp.n)}">
+      <span class="cp-lbl">Still meta?</span>
+      <button class="vote-btn vote-up" data-comp="${esc(cp.n)}" data-vote="up" title="Yes, still meta">👍</button>
+      <button class="vote-btn vote-dn" data-comp="${esc(cp.n)}" data-vote="down" title="No, outdated">👎</button>
+      <span class="vote-thanks" hidden>Thanks!</span>
+    </div>
+  </article>`;
+}
+function renderComps(){
+  const f = {src:fSrc.value, trait:fTrait.value, role:fRole.value, champ:fChamp.value.trim().toLowerCase()};
+  const list = COMPS.filter(cp => {
+    const all = cp.board.concat(cp.alts);
+    if (f.src && cp.src !== f.src) return false;
+    if (f.trait && !compTraits(cp).some(([t]) => t === f.trait)) return false;
+    if (f.role && !all.some(n => byName[n] && roleOf(byName[n]) === f.role)) return false;
+    if (f.champ && !all.some(n => n.toLowerCase().includes(f.champ))) return false;
+    return true;
+  });
+  fCnt.textContent = `${list.length} of ${COMPS.length} comps`;
+  compsEl.innerHTML = list.length ? list.map(cp => compCard(cp, f)).join("")
+    : `<div class="empty cp-empty">No current meta comp matches that filter. Try clearing one of them.</div>`;
+  wireImgs(compsEl);
+  refreshVoteUI(compsEl);
+}
+[fSrc, fTrait, fRole].forEach(el => el.addEventListener("change", renderComps));
+fChamp.addEventListener("input", renderComps);
+document.getElementById("f-reset").addEventListener("click", () => { fSrc.value = ""; fTrait.value = ""; fRole.value = ""; fChamp.value = ""; renderComps(); });
+function filterComps(o){
+  if ("trait" in o) fTrait.value = [...fTrait.options].some(x => x.value === o.trait) ? o.trait : "";
+  if ("role" in o) fRole.value = o.role;
+  if ("champ" in o) fChamp.value = o.champ;
+  renderComps();
+  compsEl.scrollIntoView({block:"start", behavior:"smooth"});
+}
+
+/* initialize vote state before first renderComps() so refreshVoteUI has access */
+const VOTED_KEY = "tft-voted-comps";
+function loadVoted(){
+  try { return new Set(JSON.parse(localStorage.getItem(VOTED_KEY) || "[]")); } catch { return new Set(); }
+}
+function saveVoted(set){
+  try { localStorage.setItem(VOTED_KEY, JSON.stringify([...set])); } catch {}
+}
+const voted = loadVoted();
+function refreshVoteUI(root){
+  root.querySelectorAll(".vote-btn").forEach(btn => {
+    const slug = btn.dataset.comp + ":" + btn.dataset.vote;
+    if (voted.has(slug)) btn.classList.add("voted");
+  });
+}
+
+renderComps();
+
+/* overlay */
+const ov = document.getElementById("ov");
+function openComp(name){
+  const cp = COMPS.find(x => x.n === name); if (!cp) return;
+  const tr = compTraits(cp);
+  ov.innerHTML = `<div class="ovp" style="--c:var(--${cp.k})">
+    <button class="ovx" aria-label="Close">&times;</button>
+    <div><h3>${esc(cp.n)}</h3><div class="sub">${SRC[cp.src][0]} comp${cp.diff ? " &middot; " + esc(cp.diff) : ""}${cp.style ? " &middot; " + esc(cp.style) : ""} &middot; patch ${_PATCH}</div>${statLine(cp)}</div>
+    <div><h4>Synergies</h4><div class="traits">${tr.map(([t,n]) => `<button class="tr" data-trait="${esc(t)}"><b>${n}</b>${esc(t)}</button>`).join("")}</div></div>
+    <div><h4>Final board</h4><div class="board">${cp.board.map(n => boardChip(n)).join("")}</div>
+      ${cp.alts.length ? `<div class="sub" style="margin-top:6px">Interchangeable: ${cp.alts.map(esc).join(", ")}</div>` : ""}</div>
+    ${cp.carries.length
+      ? `<div><h4>Carries and items</h4><div class="cp-carry">${cp.carries.map(([n, items]) =>
+          `<div class="build"><span class="bl">${esc(n)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div></div>`
+      : `<div><h4>Recommended items per champion</h4><div class="sub" style="margin-bottom:6px">No carry list is published for this comp, so these are each unit's own recommended items.</div>
+         <div class="cp-carry">${cp.board.filter(n => BIS[n] && byName[n] && !byName[n].r.includes("Tank")).map(n =>
+          `<div class="build"><span class="bl">${esc(n)}</span>${BIS[n].map(metaItem).join("")}</div>`).join("")}</div></div>`}
+    ${cp.when.length ? `<div><h4>When to play it</h4><ul>${cp.when.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    ${cp.tips.length ? `<div><h4>Tips</h4><ul>${cp.tips.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    <div class="ext">${SRC[cp.src][1]} &middot; <a href="${cp.slug ? COMPBASE + cp.slug : SRC[cp.src][2]}" target="_blank" rel="noopener">${cp.slug ? "Full guide" : "Source list"} on Mobalytics</a></div>
+  </div>`;
+  wireImgs(ov);
+  ov.classList.add("on"); document.body.classList.add("lock");
+  ov.querySelector(".ovx").focus();
+}
+function closeOv(){ ov.classList.remove("on"); document.body.classList.remove("lock"); ov.innerHTML = ""; }
+ov.addEventListener("click", e => { if (e.target === ov || e.target.closest(".ovx")) closeOv(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && ov.classList.contains("on")) closeOv(); });
+
+/* delegated clicks: open a comp, filter by trait, jump to a champion */
+document.addEventListener("click", e => {
+  const open = e.target.closest("[data-open]");
+  if (open){ openComp(open.dataset.open); return; }
+  const fr = e.target.closest("[data-filter-role]");
+  if (fr){ filterComps({role: fr.dataset.filterRole, trait:"", champ:""}); return; }
+  const tr = e.target.closest(".tr[data-trait]");
+  if (tr){ closeOv(); filterComps({trait: tr.dataset.trait}); return; }
+  const u = e.target.closest(".board .u[data-name], #cards .board .u[data-name]");
+  if (u){ closeOv(); q.value = u.dataset.name; run(); q.scrollIntoView({block:"center", behavior:"smooth"}); }
+});
+document.getElementById("tells").addEventListener("click", e => {
+  const t = e.target.closest(".tell"); if (!t) return;
+  const label = t.querySelector("b").textContent;
+  filterComps({trait: label.includes("/") ? label.split("/")[0].trim() : label});
+});
+
+/* ---- vote click handler ---- */
+document.addEventListener("click", async e => {
+  const btn = e.target.closest(".vote-btn");
+  if (!btn) return;
+  const compName = btn.dataset.comp, voteType = btn.dataset.vote;
+  if (!compName || !voteType) return;
+  const slug = compName + ":" + voteType;
+  if (voted.has(slug)) return;
+  btn.classList.add("voted");
+  voted.add(slug);
+  saveVoted(voted);
+  const thanks = btn.closest(".cp-vote")?.querySelector(".vote-thanks");
+  if (thanks) thanks.hidden = false;
+  try {
+    await fetch("/api/vote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ comp: compName, vote: voteType, patch: _PATCH })
+    });
+  } catch { /* offline — vote stored locally */ }
+});
+
+/* ---- submit comp form ---- */
+const submitToggle = document.getElementById("submit-toggle");
+const submitForm   = document.getElementById("submit-form");
+const submitBtn    = document.getElementById("sf-submit");
+const cancelBtn    = document.getElementById("sf-cancel");
+const submitMsg    = document.getElementById("sf-msg");
+submitToggle.addEventListener("click", () => {
+  const open = submitForm.classList.toggle("open");
+  submitToggle.textContent = open ? "\u00d7 Cancel submission" : "+ Submit a comp";
+});
+cancelBtn.addEventListener("click", () => {
+  submitForm.classList.remove("open");
+  submitToggle.textContent = "+ Submit a comp";
+});
+submitBtn.addEventListener("click", async () => {
+  const name  = document.getElementById("sf-name").value.trim();
+  const board = document.getElementById("sf-board").value.trim();
+  if (!name || !board) {
+    submitMsg.style.color = "#E07A42";
+    submitMsg.textContent = "Comp name and board units are required.";
+    submitMsg.style.display = "block";
+    return;
+  }
+  const payload = {
+    n:     name,
+    style: document.getElementById("sf-style").value.trim(),
+    diff:  document.getElementById("sf-diff").value,
+    board: board.split(",").map(s => s.trim()).filter(Boolean),
+    when:  document.getElementById("sf-when").value.split("\n").map(s => s.trim()).filter(Boolean),
+    tips:  document.getElementById("sf-tips").value.split("\n").map(s => s.trim()).filter(Boolean),
+    patch: _PATCH
+  };
+  submitBtn.disabled = true;
+  try {
+    const res = await fetch("/api/submit-comp", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+    if (res.ok) {
+      submitMsg.style.color = "#4FB393";
+      submitMsg.textContent = "Thanks! Your comp has been submitted and will appear after 3 community votes.";
+    } else {
+      throw new Error(await res.text());
+    }
+  } catch (err) {
+    submitMsg.style.color = "#E07A42";
+    submitMsg.textContent = "Submission failed \u2014 " + (err.message || "please try again.");
+  }
+  submitMsg.style.display = "block";
+  submitBtn.disabled = false;
+});
+
+</script>
+</body>
+</html>

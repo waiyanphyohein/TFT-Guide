@@ -1,0 +1,117 @@
+name: Daily refresh
+
+on:
+  schedule:
+    - cron: "0 6 * * *"   # 06:00 UTC every day
+  workflow_dispatch:        # allow manual trigger from the Actions tab
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  refresh:
+    name: Refresh data & rebuild
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # ── Step 1: Fetch latest champion stats from Data Dragon ──────────────
+      - name: Fetch champion data (Data Dragon)
+        id: champions
+        run: node scripts/fetch-champions.js
+        continue-on-error: true   # don't block the build on network errors
+
+      # ── Step 2: Fetch comp stats and promote community submissions ─────────
+      - name: Fetch comp stats & community submissions
+        id: comps
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://tft-guide.vercel.app' }}
+        run: node scripts/fetch-comps.js --site-url "$SITE_URL"
+        continue-on-error: true
+
+      # ── Step 3: Build the HTML ─────────────────────────────────────────────
+      - name: Build dist/index.html
+        run: node build.js
+
+      # ── Step 4: Determine what changed ────────────────────────────────────
+      - name: Detect changes
+        id: diff
+        run: |
+          git diff --quiet data/champions.json && echo "champs_changed=false" >> $GITHUB_OUTPUT || echo "champs_changed=true" >> $GITHUB_OUTPUT
+          git diff --quiet data/comps.json     && echo "comps_changed=false"  >> $GITHUB_OUTPUT || echo "comps_changed=true"  >> $GITHUB_OUTPUT
+          git diff --quiet data/scores.json    && echo "scores_changed=false" >> $GITHUB_OUTPUT || echo "scores_changed=true" >> $GITHUB_OUTPUT
+          git diff --quiet dist/index.html     && echo "html_changed=false"   >> $GITHUB_OUTPUT || echo "html_changed=true"   >> $GITHUB_OUTPUT
+
+          # Detect if new champions were added (structural change → needs review)
+          NEW_CHAMPS=$(node -e "
+            try {
+              const f = require('./data/classification-flags.json');
+              console.log(f.added && f.added.length > 0 ? 'true' : 'false');
+            } catch { console.log('false'); }
+          ")
+          echo "new_champions=$NEW_CHAMPS" >> $GITHUB_OUTPUT
+
+      # ── Step 5a: Stats-only changes → commit directly to main & deploy ─────
+      - name: Commit stats-only changes
+        if: |
+          steps.diff.outputs.html_changed == 'true' &&
+          steps.diff.outputs.new_champions == 'false'
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/ dist/
+          git commit -m "chore: daily data refresh [skip ci]
+
+          - Comp stats updated from tactics.tools
+          - Vote scores applied
+          - Rebuilt dist/index.html"
+          git push
+
+      # ── Step 5b: Structural changes (new champions) → open a PR ───────────
+      - name: Create PR for structural changes
+        if: |
+          steps.diff.outputs.new_champions == 'true'
+        uses: peter-evans/create-pull-request@v6
+        with:
+          commit-message: "feat: new champions detected (Set update)"
+          branch: "auto/champion-update-${{ github.run_number }}"
+          title: "🆕 New champions detected — please review AP/AD classification"
+          body: |
+            Automated data refresh detected **new champions** in Data Dragon.
+
+            ## What changed
+            - `data/champions.json` — updated champion stats, new champions added
+            - `data/classification-flags.json` — AP/AD classification review needed
+            - `dist/index.html` — rebuilt
+
+            ## Action required
+            1. Open `data/classification-flags.json` and review the **ambiguous** list.
+            2. Edit `data/champions.json` to correct any wrong `r` (role) values.
+            3. Approve and merge this PR to deploy.
+
+            _This PR was opened automatically by the daily refresh workflow._
+          labels: "automated,needs-review"
+
+      # ── Step 6: Always report summary ─────────────────────────────────────
+      - name: Summary
+        if: always()
+        run: |
+          echo "### Refresh complete" >> $GITHUB_STEP_SUMMARY
+          echo "| File | Changed |" >> $GITHUB_STEP_SUMMARY
+          echo "|------|---------|" >> $GITHUB_STEP_SUMMARY
+          echo "| data/champions.json | ${{ steps.diff.outputs.champs_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| data/comps.json     | ${{ steps.diff.outputs.comps_changed  }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| data/scores.json    | ${{ steps.diff.outputs.scores_changed }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| dist/index.html     | ${{ steps.diff.outputs.html_changed   }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| New champions       | ${{ steps.diff.outputs.new_champions  }} |" >> $GITHUB_STEP_SUMMARY

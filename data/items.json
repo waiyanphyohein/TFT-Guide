@@ -1,0 +1,100 @@
+{
+  "_meta": {
+    "patch": "18.2",
+    "source": "manually transcribed from in-game data and mobalytics.gg",
+    "updatedAt": "2026-09-16",
+    "itemImgBase": "https://cdn.mobalytics.gg/assets/tft/images/game-items/set18/",
+    "compImgBase": "https://cdn.mobalytics.gg/assets/tft/images/game-items/set18/"
+  },
+  "components": {
+    "bf":   ["B.F. Sword",    "Attack damage",  "bf-sword"],
+    "bow":  ["Recurve Bow",   "Attack speed",   "recurve-bow"],
+    "rod":  ["Large Rod",     "Ability power",  "needlessly-large-rod"],
+    "tear": ["Tear",          "Mana",           "tear-of-the-goddess"],
+    "vest": ["Chain Vest",    "Armour",         "chain-vest"],
+    "cloak":["Negatron",      "Magic resist",   "negatron-cloak"],
+    "belt": ["Giant\u2019s Belt", "Health",    "giants-belt"],
+    "glove":["Sparring Gloves","Crit",          "sparring-gloves"]
+  },
+  "bands": [
+    {
+      "k": "ap",
+      "title": "Ability power",
+      "note": "casters only",
+      "items": [
+        ["Rabadon's Deathcap",  "rod",   "rod",   "50 AP",             "rabadons-deathcap"],
+        ["Jeweled Gauntlet",    "glove", "rod",   "35 AP \u00b7 crit", "jeweled-gauntlet"],
+        ["Archangel's Staff",   "tear",  "rod",   "30 AP \u00b7 stacks","archangels-staff"],
+        ["Void Staff",          "tear",  "bow",   "35 AP \u00b7 shred","voidstaff"],
+        ["Nashor's Tooth",      "bow",   "belt",  "18 AP \u00b7 speed","nashor's-tooth"],
+        ["Morellonomicon",      "rod",   "belt",  "20 AP \u00b7 burn", "morellonomicon"],
+        ["Crownguard",          "rod",   "vest",  "20 AP \u00b7 shield","crownguard"],
+        ["Ionic Spark",         "cloak", "rod",   "15 AP \u00b7 aura", "ionic-spark"]
+      ]
+    },
+    {
+      "k": "hy",
+      "title": "Both at once",
+      "note": "safe to slam early",
+      "items": [
+        ["Spear of Shojin",   "tear",  "bf",    "15% AD \u00b7 15 AP", "spear-of-shojin2"],
+        ["Blue Buff",         "tear",  "tear",  "15% AD \u00b7 15 AP", "blue-buff2"],
+        ["Hand of Justice",   "tear",  "glove", "15% AD \u00b7 15 AP", "hand-of-justice"],
+        ["Hextech Gunblade",  "rod",   "bf",    "20% AD \u00b7 20 AP", "hextech-gunblade"],
+        ["Bloodthirster",     "cloak", "bf",    "15% AD \u00b7 15 AP", "bloodthirster"],
+        ["Giant Slayer",      "bow",   "bf",    "15% AD \u00b7 15 AP", "giant-slayer"],
+        ["Edge of Night",     "vest",  "bf",    "10% AD \u00b7 10 AP", "edge-of-night"],
+        ["Adaptive Helm",     "tear",  "cloak", "10% AD \u00b7 10 AP", "adaptive-helm"],
+        ["Titan's Resolve",   "bow",   "vest",  "stacks both",         "titans-resolve"]
+      ]
+    },
+    {
+      "k": "ad",
+      "title": "Attack damage",
+      "note": "attackers only",
+      "items": [
+        ["Deathblade",      "bf",    "bf",    "55% AD",              "deathblade"],
+        ["Infinity Edge",   "glove", "bf",    "35% AD \u00b7 crit",  "infinity-edge"],
+        ["Sterak's Gage",   "belt",  "bf",    "40% AD \u00b7 300 HP","sterak's-gage"],
+        ["Last Whisper",    "glove", "bow",   "15% AD \u00b7 sunder","last-whisper"],
+        ["Kraken's Fury",   "bow",   "cloak", "10% AD \u00b7 stacks","krakensfury"]
+      ]
+    },
+    {
+      "k": "as",
+      "title": "Attack speed",
+      "note": "either type, if they auto-attack",
+      "items": [
+        ["Red Buff",             "bow",   "bow",   "45% speed \u00b7 burn", "redbuff"],
+        ["Guinsoo's Rageblade",  "bow",   "rod",   "stacking speed",         "guinsoos-rageblade"],
+        ["Quicksilver",          "glove", "cloak", "speed \u00b7 CC immune", "quicksilver"],
+        ["Striker's Flail",      "glove", "belt",  "crit \u00b7 amp",        "guardbreaker"]
+      ]
+    },
+    {
+      "k": "tk",
+      "title": "No damage stat",
+      "note": "frontline",
+      "items": [
+        ["Warmog's Armor",    "belt",  "belt",  "500 HP",                  "warmogs-armor"],
+        ["Bramble Vest",      "vest",  "vest",  "65 armour",               "bramble-vest"],
+        ["Dragon's Claw",     "cloak", "cloak", "75 MR",                   "dragons-claw"],
+        ["Gargoyle Stoneplate","cloak","vest",  "scaling resists",          "gargoyle-stoneplate"],
+        ["Sunfire Cape",      "belt",  "vest",  "burn aura",               "sunfire-cape"],
+        ["Steadfast Heart",   "glove", "vest",  "18% durability",          "steadfast-hammer"],
+        ["Evenshroud",        "cloak", "belt",  "sunder aura",             "evenshroud"],
+        ["Protector's Vow",   "tear",  "vest",  "shield at 40%",           "fimbulwinter"],
+        ["Spirit Visage",     "tear",  "belt",  "300 HP \u00b7 regen",     "spiritvisage"],
+        ["Thief's Gloves",    "glove", "glove", "2 random items",          "thiefs-gloves"]
+      ]
+    }
+  ],
+  "tells": [
+    ["Spellweaver", "AP",     "ap"],
+    ["Solar / Lunar","AP",    "ap"],
+    ["Hunter",      "AD",     "ad"],
+    ["Rapidfire",   "AD",     "ad"],
+    ["Adaptor",     "either", "hy"],
+    ["Executioner", "either", "hy"]
+  ]
+}
