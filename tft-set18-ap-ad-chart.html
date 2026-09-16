@@ -226,6 +226,9 @@
   .cp-carry{display:grid;gap:5px}
   .cp-carry .build .bl{min-width:96px}
   .cp-lbl{font-size:11px;color:var(--ink-dim);text-transform:uppercase;letter-spacing:.05em}
+  .cp-when,.cp-tips{border-top:1px solid var(--line);padding-top:8px}
+  .cp-when ul,.cp-tips ul{margin:4px 0 0;padding-left:16px;font-size:12.5px;color:var(--ink-dim)}
+  .cp-when li,.cp-tips li{margin:2px 0}
   .cp-empty{grid-column:1/-1}
   .c-comps{border-top:1px solid var(--line);padding-top:11px;margin-bottom:12px}
   .c-comps b{display:block;font-size:14px;font-weight:600;color:var(--t);margin-bottom:6px}
@@ -981,6 +984,8 @@ function compCard(cp, f){
     <div class="board">${cp.board.map(n => boardChip(n, hitName(n))).join("")}${cp.alts.map(n => boardChip(n, "alt " + hitName(n))).join("")}</div>
     <div class="cp-carry">${cp.carries.map(([n, items]) =>
       `<div class="build"><span class="bl">${esc(n)}</span>${items.map(metaItem).join("")}</div>`).join("")}</div>
+    ${cp.when.length ? `<div class="cp-when"><span class="cp-lbl">When to play</span><ul>${cp.when.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
+    ${cp.tips.length ? `<div class="cp-tips"><span class="cp-lbl">Tips</span><ul>${cp.tips.map(x => `<li>${esc(x)}</li>`).join("")}</ul></div>` : ""}
   </article>`;
 }
 function renderComps(){
