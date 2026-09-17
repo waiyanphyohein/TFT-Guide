@@ -720,10 +720,13 @@ const boardChip = (name, cls) => {
   const c = byName[name];
   return c ? chip(c).replace('class="u', `class="u ${cls||""}`) : `<span class="u">${esc(name)}</span>`;
 };
-const statLine = cp => cp.stats
-  ? `<div class="stat"><span><b>${cp.stats.place.toFixed(2)}</b> avg place</span><span><b>${cp.stats.top4}</b> top 4</span>
-     <span><b>${cp.stats.win}</b> win</span><span><b>${cp.stats.pick}</b> pick</span>${cp.stats.as ? `<i>tracked as &ldquo;${esc(cp.stats.as)}&rdquo;</i>` : ""}</div>`
-  : cp.votes != null ? `<div class="stat"><span><b>${cp.votes}</b> votes</span>${cp.by ? `<i>by ${esc(cp.by)}</i>` : ""}</div>` : "";
+const statLine = cp => {
+  if (typeof cp.stats?.place === "number") {
+    return `<div class="stat"><span><b>${cp.stats.place.toFixed(2)}</b> avg place</span><span><b>${cp.stats.top4}</b> top 4</span>
+     <span><b>${cp.stats.win}</b> win</span><span><b>${cp.stats.pick}</b> pick</span>${cp.stats.as ? `<i>tracked as &ldquo;${esc(cp.stats.as)}&rdquo;</i>` : ""}</div>`;
+  }
+  return cp.votes != null ? `<div class="stat"><span><b>${cp.votes}</b> votes</span>${cp.by ? `<i>by ${esc(cp.by)}</i>` : ""}</div>` : "";
+};
 function compCard(cp, f){
   const tr = compTraits(cp);
   const hitName = n => (f.champ && n.toLowerCase().includes(f.champ)) || (f.role && byName[n] && roleOf(byName[n]) === f.role) ? "hit" : "";
