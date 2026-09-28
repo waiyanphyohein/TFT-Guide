@@ -36,7 +36,7 @@ jobs:
       - name: Fetch comp stats & community submissions
         id: comps
         env:
-          SITE_URL: ${{ vars.SITE_URL || 'https://tft-guide.vercel.app' }}
+          SITE_URL: ${{ vars.SITE_URL || 'https://tft-guide-gamma.vercel.app' }}
         run: node scripts/fetch-comps.js --site-url "$SITE_URL"
         continue-on-error: true
 

@@ -5,7 +5,7 @@ item data, and meta comps without requiring manual HTML edits.
 
 ## Live site
 
-Deployed on Vercel at [https://tft-guide.vercel.app](https://tft-guide.vercel.app).
+Deployed on Vercel at [https://tft-guide-gamma.vercel.app](https://tft-guide-gamma.vercel.app).
 
 ---
 
@@ -94,7 +94,7 @@ They require a **Vercel KV** database (free tier is sufficient).
 1. In the Vercel dashboard, create a KV store and link it to this project.
 2. Vercel automatically injects `KV_REST_API_URL` and `KV_REST_API_TOKEN`
    as environment variables — no manual work needed.
-3. Add `SITE_URL` as a Vercel project variable (e.g. `https://tft-guide.vercel.app`)
+3. Add `SITE_URL` as a Vercel project variable (e.g. `https://tft-guide-gamma.vercel.app`)
    — used by `scripts/fetch-comps.js` to call `api/vote-scores` and `api/pending-comps`.
 
 ### Endpoints

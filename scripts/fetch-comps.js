@@ -14,7 +14,7 @@
  * Usage:
  *   node scripts/fetch-comps.js
  *   node scripts/fetch-comps.js --dry-run
- *   node scripts/fetch-comps.js --site-url https://tft-guide.vercel.app
+ *   node scripts/fetch-comps.js --site-url https://tft-guide-gamma.vercel.app
  *
  * Environment variables:
  *   SITE_URL — base URL of the deployed site (for fetching community submissions)
