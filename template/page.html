@@ -258,6 +258,36 @@
   .ovp .ext{font-size:12.5px} .ovp .ext a{color:var(--ink-dim)}
   body.lock{overflow:hidden}
 
+  /* ---- artifacts ---- */
+  .note{font-size:13px;color:var(--ink-dim);margin:-4px 0 12px;max-width:80ch}
+  .note a{color:var(--ink-dim)}
+  .arts{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .art{background:var(--panel);padding:11px 12px;display:grid;grid-template-columns:38px 1fr;gap:4px 10px}
+  .art .aico{grid-row:1/3;width:38px;height:38px;border-radius:6px;overflow:hidden;border:1px solid var(--line);background:var(--panel-2);position:relative}
+  .art .aico img,.ai .aico img,#tip .aico img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+  .art .aico::before,.ai .aico::before,#tip .aico::before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,rgba(214,180,87,.25),transparent)}
+  .art b{font-size:13.5px;font-weight:600}
+  .art .fx{font-size:12px;color:var(--ink-dim);line-height:1.35}
+  .art .on{grid-column:1/3;display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-top:4px}
+  .art .on i{font-style:normal;font-size:11px;color:var(--ink-dim);margin-right:2px}
+  .art .on .u{font-size:11.5px;padding:1px 7px 1px 1px}
+  .art .on .u .por{width:18px;height:18px;flex-basis:18px}
+  .c-art{border-top:1px solid var(--line);padding-top:11px;margin-bottom:12px}
+  .c-art .mh{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+  .c-art .mh b{font-size:14px;font-weight:600;color:var(--hy)}
+  .c-art .mh i{font-style:normal;font-size:11.5px;color:var(--ink-dim)}
+  .c-art .mh a{color:var(--ink-dim);text-decoration:underline dotted}
+  .ais{display:flex;flex-wrap:wrap;gap:6px}
+  .ai{display:inline-flex;align-items:center;gap:7px;padding:3px 10px 3px 3px;border-radius:4px;cursor:help;
+      background:var(--panel-2);border:1px solid var(--line);font-size:12.5px}
+  .ai .aico{width:26px;height:26px;flex:0 0 26px;border-radius:5px;overflow:hidden;position:relative;background:var(--panel)}
+  .ai .st{font-size:11px;color:var(--ink-dim);white-space:nowrap}
+  .ai .st b{color:var(--ink);font-weight:600}
+  .ai .st .up{color:var(--as)} .ai .st .dn{color:var(--ad)}
+  .c-art .none{font-size:12.5px;color:var(--ink-dim)}
+  #tip .arow{display:flex;gap:9px;align-items:flex-start}
+  #tip .aico{width:34px;height:34px;flex:0 0 34px;border-radius:6px;overflow:hidden;position:relative;background:var(--panel)}
+
   @media (max-width:760px){
     .head-row,.tier{grid-template-columns:1fr}
     .cost{text-align:left;padding:9px 12px 2px;border-right:0;border-bottom:1px solid var(--line);background:var(--panel-2)}
@@ -349,6 +379,10 @@
 
 <h2>Items</h2>
 <div id="bands"></div>
+
+<h2>Artifacts</h2>
+<p class="note">Artifacts come from anvils, augments and encounters, not from components. Each card shows the effect and the champions who place best holding it in ranked games, from <a href="https://www.metatft.com/items" target="_blank" rel="noopener">MetaTFT</a> (Platinum+, patch __ART_PATCH__). Every champion card below also lists its own best artifacts.</p>
+<div class="arts" id="arts"></div>
 
 <h2>Champions</h2>
 <div class="searchbar">
@@ -493,7 +527,8 @@ document.getElementById("tells").innerHTML = TELLS.map(([n,to,k]) =>
 const tip = document.getElementById("tip");
 const compTile = k => `<span class="comp" style="--c:var(--c-${k})"><svg><use href="#g-${k}"/></svg>
   ${COMPIMG[k] ? `<img class="cimg iimg" src="${ITEMBASE}${COMPIMG[k]}.png?v=74" alt="" referrerpolicy="no-referrer">` : ""}</span>`;
-function tipHTML(name){
+function tipHTML(name, art){
+  if (art) return `<div class="arow">${artIcon(art)}<div><b>${esc(ARTS[art][0])}</b><div class="fx" style="margin-top:0">${esc(ARTS[art][2])}</div></div></div>`;
   const r = RECIPE[name];
   if (!r) return `<b>${esc(name)}</b><div class="fx">Emblem &mdash; from an augment, carousel or Spatula recipe.</div>`;
   const [a,c,e] = r;
@@ -505,10 +540,10 @@ function tipHTML(name){
 let tipFor = null;
 function showTip(el){
   if (tip.contains(el)) return;
-  const name = el.dataset.item; if (!name) return;
+  const name = el.dataset.item, art = el.dataset.art; if (!name && !art) return;
   tipFor = el;
-  tip.innerHTML = tipHTML(name); wireImgs(tip);
-  tip.querySelectorAll("[data-item]").forEach(n => { n.removeAttribute("data-item"); n.removeAttribute("tabindex"); });
+  tip.innerHTML = tipHTML(name, art); wireImgs(tip);
+  tip.querySelectorAll("[data-item],[data-art]").forEach(n => { n.removeAttribute("data-item"); n.removeAttribute("data-art"); n.removeAttribute("tabindex"); });
   tip.setAttribute("aria-hidden","false");
   const r = el.getBoundingClientRect(), pad = 8;
   tip.style.left = "0px"; tip.style.top = "0px"; tip.classList.add("on");
@@ -519,7 +554,7 @@ function showTip(el){
   tip.style.left = x + "px"; tip.style.top = y + "px";
 }
 function hideTip(){ tipFor = null; tip.classList.remove("on"); tip.setAttribute("aria-hidden","true"); }
-const tipTarget = e => e.target.closest && e.target.closest("[data-item]");
+const tipTarget = e => e.target.closest && e.target.closest("[data-item],[data-art]");
 document.addEventListener("mouseover", e => { const t = tipTarget(e); if (t && t !== tipFor) showTip(t); });
 document.addEventListener("mouseout", e => { const t = tipTarget(e); if (t && !t.contains(e.relatedTarget)) hideTip(); });
 document.addEventListener("focusin", e => { const t = tipTarget(e); if (t) showTip(t); });
@@ -619,6 +654,7 @@ function card(c){
       ${statRow(c,"ar","Armour")}${statRow(c,"mr","Magic res")}
     </div>
     ${metaHTML(c)}
+    ${artHTML(c)}
     ${compsHTML(c)}
     <div class="c-ability"><b>${esc(c.a)}</b>
       ${c.d.split("\n").map(p => `<p>${esc(p)}</p>`).join("")}</div>
@@ -679,6 +715,35 @@ filters.addEventListener("click", e => {
     t.style.display = (want === "all" || t.dataset.cost === want) ? "" : "none";
   });
 });
+/* ---- artifacts ---- */
+const artIcon = k => `<span class="aico"><img class="iimg" src="${ITEMBASE}${ARTS[k][1]}.png?v=74" alt="" loading="lazy" referrerpolicy="no-referrer"></span>`;
+const fmtG = g => g >= 1000 ? (g/1000).toFixed(g >= 10000 ? 0 : 1) + "k" : String(g);
+const artTile = (c, [k, g, p]) => {
+  const d = p - (ARTUA[c.n] || p), cls = d <= -0.15 ? "up" : d >= 0.15 ? "dn" : "";
+  return `<span class="ai" data-art="${k}" tabindex="0">${artIcon(k)}<span>${esc(ARTS[k][0])}
+    <span class="st"><b>${p.toFixed(2)}</b> avg${cls ? ` <span class="${cls}">${d > 0 ? "+" : ""}${d.toFixed(2)}</span>` : ""} &middot; ${fmtG(g)} games</span></span></span>`;
+};
+function artHTML(c){
+  const rows = (ART[c.n] || []).slice(0, 4);
+  const body = rows.length
+    ? `<div class="ais">${rows.map(r => artTile(c, r)).join("")}</div>`
+    : `<div class="none">Too few ranked games with any artifact on ${esc(c.n)} to rank them. Pick by role: ${c.r.includes("Tank") ? "Lightshield Crest, The Indomitable or Mogul's Mail" : side(c) === "ap" ? "Dawncore, Manazane or Luden's Tempest" : "Gold Collector, Flickerblade or Fishbones"} are the usual defaults.</div>`;
+  return `<div class="c-art"><div class="mh"><b>Best artifacts</b>
+    <i>avg place with the artifact, and the change vs ${esc(c.n)}'s overall ${(ARTUA[c.n]||0).toFixed(2)} &middot; <a href="${ARTSRC}" target="_blank" rel="noopener">MetaTFT</a> Platinum+ &middot; hover for the effect</i></div>${body}</div>`;
+}
+/* artifact reference: best holders = lowest avg place with 1000+ games, top 4 */
+{
+  const best = {};
+  for (const n in ART) ART[n].forEach(([k,g,p]) => { if (g >= 1000) (best[k] = best[k] || []).push([n, p, g]); });
+  document.getElementById("arts").innerHTML = Object.keys(ARTS).map(k => {
+    const on = (best[k] || []).sort((a,b) => a[1] - b[1]).slice(0, 4);
+    const ch = n => CHAMPS.find(c => c.n === n);
+    return `<div class="art">${artIcon(k)}<b>${esc(ARTS[k][0])}</b><span class="fx">${esc(ARTS[k][2])}</span>
+      <span class="on">${on.length ? `<i>Best on</i>${on.map(([n,p]) => ch(n) ? chip(ch(n)).replace("</button>", ` <i style="opacity:.8">${p.toFixed(2)}</i></button>`) : "").join("")}` : `<i>No champion has 1,000+ ranked games holding it yet.</i>`}</span></div>`;
+  }).join("");
+  wireImgs(document.getElementById("arts"));
+}
+
 /* ---- meta comps: section, filters, overlay ---- */
 const byName = Object.fromEntries(CHAMPS.map(c => [c.n, c]));
 const traitsOf = c => c.t.split(" \u00b7 ").map(t => t.trim()).filter(t => !t.startsWith("Avatar"));
@@ -814,7 +879,7 @@ document.addEventListener("click", e => {
   if (fr){ filterComps({role: fr.dataset.filterRole, trait:"", champ:""}); return; }
   const tr = e.target.closest(".tr[data-trait]");
   if (tr){ closeOv(); filterComps({trait: tr.dataset.trait}); return; }
-  const u = e.target.closest(".board .u[data-name], #cards .board .u[data-name]");
+  const u = e.target.closest(".board .u[data-name], #cards .board .u[data-name], #arts .u[data-name]");
   if (u){ closeOv(); q.value = u.dataset.name; run(); q.scrollIntoView({block:"center", behavior:"smooth"}); }
 });
 document.getElementById("tells").addEventListener("click", e => {

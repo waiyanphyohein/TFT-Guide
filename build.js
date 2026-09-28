@@ -26,6 +26,7 @@ const DIST_OUT = path.join(DIST_DIR, "index.html");
 // items.json     → COMPONENTS, BANDS, TELLS
 // champions.json → CHAMPS, BIS, META_BUILDS, IMGBASE
 // comps.json     → COMPS, SRC, COMPBASE
+// artifacts.json → ARTS, ART, ARTUA, ARTSRC
 // Optional: merge community-score overrides written by the daily workflow
 const SCORE_FILE = path.join(ROOT, "data", "scores.json");
 
@@ -37,6 +38,7 @@ function buildDataBlock() {
   const items    = loadJSON(path.join(ROOT, "data", "items.json"));
   const champs   = loadJSON(path.join(ROOT, "data", "champions.json"));
   const compsRaw = loadJSON(path.join(ROOT, "data", "comps.json"));
+  const arts     = loadJSON(path.join(ROOT, "data", "artifacts.json"));
 
   // Load optional community vote scores and apply them
   let scores = {};
@@ -97,6 +99,11 @@ function buildDataBlock() {
     `const TELLS = ${JSON.stringify(items.tells)};`,
     `const SRC = ${JSON.stringify(compsRaw._meta.sources, null, 0)};`,
     `const COMPS = ${JSON.stringify(comps)};`,
+    `const ARTS = ${JSON.stringify(arts.artifacts, null, 0)};`,
+    `const ARTUA = ${JSON.stringify(arts.champAvg, null, 0)};`,
+    `const ART = ${JSON.stringify(arts.byChampion, null, 0)};`,
+    `const ARTSRC = ${JSON.stringify(arts._meta.statsSite)};`,
+    `const ART_PATCH = ${JSON.stringify(arts._meta.patch)};`,
   ];
 
   return { block: lines.join("\n"), patchStr, setName };
@@ -122,6 +129,7 @@ function build() {
   // Update the patch stamp dynamically (values already parsed in buildDataBlock)
   html = html.replace(/__PATCH__/g, patchStr);
   html = html.replace(/__SET_NAME__/g, setName);
+  html = html.replace(/__ART_PATCH__/g, loadJSON(path.join(ROOT, "data", "artifacts.json"))._meta.patch);
 
   if (!fs.existsSync(DIST_DIR)) fs.mkdirSync(DIST_DIR, { recursive: true });
   fs.writeFileSync(DIST_OUT, html, "utf8");
