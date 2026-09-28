@@ -3,12 +3,13 @@
   "patch": "18.3",
   "sources": {
    "effects": "https://mobalytics.gg/tft/items/artifacts",
-   "stats": "https://api-hc.metatft.com/tft-stat-api/unit_detail_items (queue=1100, rank Platinum+, last 3 days)"
+   "stats": "https://api-hc.metatft.com/tft-stat-api/unit_detail_items (queue=1100, rank Platinum+, last 3 days)",
+   "iconsFallback": "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/"
   },
   "statsSite": "https://www.metatft.com/units",
   "minGames": 150,
   "updatedAt": "2026-09-28",
-  "notes": "artifacts: key -> [name, Mobalytics art slug, effect]. byChampion: champion -> [[artifactKey, games, avgPlace]...] sorted by avgPlace. champAvg: champion -> overall avg place in the same sample."
+  "notes": "artifacts: key -> [name, Mobalytics art slug or a full icon URL (Community Dragon for icons Mobalytics lacks), effect]. byChampion: champion -> [[artifactKey, games, avgPlace]...] sorted by avgPlace. champAvg: champion -> overall avg place in the same sample."
  },
  "artifacts": {
   "AegisOfDawn": [
@@ -93,7 +94,7 @@
   ],
   "LudensTempest": [
    "Luden's Tempest",
-   "ludens-tempest",
+   "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_ludenstempest.png",
    "Overkill damage plus 130 hits the two nearest enemies as magic damage."
   ],
   "Manazane": [
@@ -118,7 +119,7 @@
   ],
   "SeekersArmguard": [
    "Seeker's Armguard",
-   "seekers-armguard",
+   "https://raw.communitydragon.org/latest/game/assets/maps/tft/icons/items/hexcore/tft_item_artifact_seekersarmguard.png",
    "Takedowns grant 20 Armor, MR and AP."
   ],
   "SilvermereDawn": [

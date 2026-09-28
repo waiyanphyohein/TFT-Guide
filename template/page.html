@@ -716,7 +716,8 @@ filters.addEventListener("click", e => {
   });
 });
 /* ---- artifacts ---- */
-const artIcon = k => `<span class="aico"><img class="iimg" src="${ITEMBASE}${ARTS[k][1]}.png?v=74" alt="" loading="lazy" referrerpolicy="no-referrer"></span>`;
+const artSrc = k => /^https?:/.test(ARTS[k][1]) ? ARTS[k][1] : `${ITEMBASE}${ARTS[k][1]}.png?v=74`;
+const artIcon = k => `<span class="aico"><img class="iimg" src="${artSrc(k)}" alt="" loading="lazy" referrerpolicy="no-referrer"></span>`;
 const fmtG = g => g >= 1000 ? (g/1000).toFixed(g >= 10000 ? 0 : 1) + "k" : String(g);
 const artTile = (c, [k, g, p]) => {
   const d = p - (ARTUA[c.n] || p), cls = d <= -0.15 ? "up" : d >= 0.15 ? "dn" : "";
