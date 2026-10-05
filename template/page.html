@@ -690,6 +690,10 @@ function run(){
     .filter(x => x.score >= 0)
     .sort((a,b) => a.score - b.score || a.c.c - b.c.c || a.c.n.localeCompare(b.c.n))
     .map(x => x.c);
+  /* an exact champion name (typed, or set by clicking a champion anywhere on the page)
+     selects just that champion, so "Vi" no longer pulls in Sivir or ability-text matches */
+  const exact = hits.filter(c => c.n.toLowerCase() === t);
+  if (exact.length) hits.splice(0, hits.length, ...exact);
   browse.classList.add("hide"); cards.classList.remove("hide");
   show(hits, term);
 }
